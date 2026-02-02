@@ -2,6 +2,7 @@
 #define DICTIONARY_H
 
 #include <string>
+#include <stdexcept>
 
 template <typename T>
 class DictionaryNode
@@ -244,7 +245,7 @@ public:
             current = current->next;
         }
 
-        throw - 1;  // Key not found (simplified exception)
+        throw std::runtime_error("Key not found in dictionary");
     }
 
     // Check if key exists

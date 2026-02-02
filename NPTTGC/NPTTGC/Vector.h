@@ -1,6 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include <stdexcept>
+
 template <typename T>
 class Vector
 {
@@ -74,7 +76,7 @@ public:
     {
         if (index < 0 || index >= size)
         {
-            throw -1;
+            throw std::out_of_range("Vector index out of range");
         }
         return items[index];
     }
@@ -84,7 +86,7 @@ public:
     {
         if (index < 0 || index >= size)
         {
-            throw -1;
+            throw std::out_of_range("Vector index out of range");
         }
         return items[index];
     }
@@ -94,7 +96,7 @@ public:
     {
         if (index < 0 || index >= size)
         {
-            throw -1;
+            throw std::out_of_range("Vector index out of range");
         }
 
         // Shift elements left
@@ -121,7 +123,7 @@ public:
     {
         if (index < 0 || index > size)
         {
-            throw -1;
+            throw std::out_of_range("Vector index out of range");
         }
 
         if (size >= capacity)
