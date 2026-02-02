@@ -2,6 +2,7 @@
 //
 
 #include <cstdio>
+#include <string>
 #include "Vector.h"
 #include "Dictionary.h"
 
@@ -35,33 +36,33 @@ int main()
     }
     printf("\n\n");
 
-    // Example usage of Dictionary<String>
-    printf("=== Dictionary<String> Example ===\n");
-    Dictionary<String> userDict(5);
+    // Example usage of Dictionary<std::string>
+    printf("=== Dictionary<std::string> Example ===\n");
+    Dictionary<std::string> userDict(5);
 
     // Insert key-value pairs
-    userDict.insert(String("user1"), String("Alice"));
-    userDict.insert(String("user2"), String("Bob"));
-    userDict.insert(String("user3"), String("Charlie"));
-    userDict.insert(String("user4"), String("Diana"));
-    userDict.insert(String("user5"), String("Eve"));
+    userDict.insert("user1", "Alice");
+    userDict.insert("user2", "Bob");
+    userDict.insert("user3", "Charlie");
+    userDict.insert("user4", "Diana");
+    userDict.insert("user5", "Eve");
 
     printf("Dictionary size: %d\n", userDict.getSize());
     printf("Dictionary capacity: %d\n\n", userDict.getCapacity());
 
     // Get values
-    printf("user1: %s\n", userDict.get(String("user1")).c_str());
-    printf("user3: %s\n", userDict.get(String("user3")).c_str());
+    printf("user1: %s\n", userDict.get("user1").c_str());
+    printf("user3: %s\n", userDict.get("user3").c_str());
 
     // Check existence
-    printf("Does 'user2' exist? %s\n", userDict.exists(String("user2")) ? "Yes" : "No");
-    printf("Does 'user99' exist? %s\n\n", userDict.exists(String("user99")) ? "Yes" : "No");
+    printf("Does 'user2' exist? %s\n", userDict.exists("user2") ? "Yes" : "No");
+    printf("Does 'user99' exist? %s\n\n", userDict.exists("user99") ? "Yes" : "No");
 
     // Remove entry
     printf("Removing 'user2'...\n");
-    userDict.remove(String("user2"));
+    userDict.remove("user2");
     printf("Dictionary size after removal: %d\n", userDict.getSize());
-    printf("Does 'user2' exist? %s\n", userDict.exists(String("user2")) ? "Yes" : "No");
+    printf("Does 'user2' exist? %s\n", userDict.exists("user2") ? "Yes" : "No");
 
     return 0;
 }
@@ -71,7 +72,7 @@ int main()
 
 // Tips for Getting Started: 
 //   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
+//   2. Use the Team Explorer window to add/manage files
 //   3. Use the Output window to see build output and other messages
 //   4. Use the Error List window to view errors
 //   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project

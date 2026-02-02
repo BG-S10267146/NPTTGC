@@ -1,101 +1,18 @@
 #ifndef DICTIONARY_H
 #define DICTIONARY_H
 
-// Simple string utility functions (no STL)
-class String
-{
-private:
-    char* data;
-    int length;
-
-public:
-    // Constructor from C-string
-    String(const char* str = "")
-    {
-        if (str == nullptr)
-        {
-            data = new char[1];
-            data[0] = '\0';
-            length = 0;
-        }
-        else
-        {
-            length = 0;
-            while (str[length] != '\0')
-                length++;
-
-            data = new char[length + 1];
-            for (int i = 0; i < length; i++)
-                data[i] = str[i];
-            data[length] = '\0';
-        }
-    }
-
-    // Copy constructor
-    String(const String& other)
-    {
-        length = other.length;
-        data = new char[length + 1];
-        for (int i = 0; i < length; i++)
-            data[i] = other.data[i];
-        data[length] = '\0';
-    }
-
-    // Assignment operator
-    String& operator=(const String& other)
-    {
-        if (this != &other)
-        {
-            delete[] data;
-            length = other.length;
-            data = new char[length + 1];
-            for (int i = 0; i < length; i++)
-                data[i] = other.data[i];
-            data[length] = '\0';
-        }
-        return *this;
-    }
-
-    // Destructor
-    ~String()
-    {
-        delete[] data;
-    }
-
-    // Comparison operator
-    bool operator==(const String& other) const
-    {
-        if (length != other.length)
-            return false;
-        for (int i = 0; i < length; i++)
-            if (data[i] != other.data[i])
-                return false;
-        return true;
-    }
-
-    // Get C-string
-    const char* c_str() const
-    {
-        return data;
-    }
-
-    // Get length
-    int getLength() const
-    {
-        return length;
-    }
-};
+#include <string>
 
 template <typename T>
 class DictionaryNode
 {
 public:
-    String key;
+    std::string key;
     T item;
     DictionaryNode<T>* next;
 
     // Constructor
-    DictionaryNode(const String& k, const T& value)
+    DictionaryNode(const std::string& k, const T& value)
         : key(k), item(value), next(nullptr)
     {
     }
@@ -110,12 +27,12 @@ private:
     int capacity;
 
     // Hash function to map string key to index
-    int hash(const String& key) const
+    int hash(const std::string& key) const
     {
         int hashValue = 0;
-        for (int i = 0; i < key.getLength(); i++)
+        for (size_t i = 0; i < key.length(); i++)
         {
-            hashValue = (hashValue * 31 + key.c_str()[i]) % capacity;
+            hashValue = (hashValue * 31 + key[i]) % capacity;
         }
         return (hashValue + capacity) % capacity;  // Ensure positive value
     }
@@ -253,7 +170,7 @@ public:
     }
 
     // Insert or update key-value pair
-    void insert(const String& key, const T& item)
+    void insert(const std::string& key, const T& item)
     {
         // Check load factor and resize if necessary
         if (size >= capacity / 2)
@@ -283,7 +200,7 @@ public:
     }
 
     // Remove key-value pair by key
-    bool remove(const String& key)
+    bool remove(const std::string& key)
     {
         int index = hash(key);
         DictionaryNode<T>* current = items[index];
@@ -313,7 +230,7 @@ public:
     }
 
     // Get value by key
-    T get(const String& key) const
+    T get(const std::string& key) const
     {
         int index = hash(key);
         DictionaryNode<T>* current = items[index];
@@ -331,7 +248,7 @@ public:
     }
 
     // Check if key exists
-    bool exists(const String& key) const
+    bool exists(const std::string& key) const
     {
         int index = hash(key);
         DictionaryNode<T>* current = items[index];
