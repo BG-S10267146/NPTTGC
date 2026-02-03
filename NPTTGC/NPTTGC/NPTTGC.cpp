@@ -36,9 +36,9 @@ int main()
     }
     printf("\n\n");
 
-    // Example usage of Dictionary<std::string>
-    printf("=== Dictionary<std::string> Example ===\n");
-    Dictionary<std::string> userDict(5);
+    // Example usage of Dictionary<std::string, std::string>
+    printf("=== Dictionary<std::string, std::string> Example ===\n");
+    Dictionary<std::string, std::string> userDict(5);
 
     // Insert key-value pairs
     userDict.insert("user1", "Alice");
