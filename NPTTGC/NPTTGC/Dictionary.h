@@ -3,40 +3,53 @@
 
 #include <string>
 #include <stdexcept>
-#include <cstring>
 
 // Generic DictionaryNode for any key type
-template <typename K, typename T>
+template <typename K, typename V>
 class DictionaryNode
 {
 public:
     K key;
-    T item;
-    DictionaryNode<K, T>* next;
+    V item;
+    DictionaryNode<K, V>* next;
 
     // Constructor
-    DictionaryNode(const K& k, const T& value)
+    DictionaryNode(const K& k, const V& value)
         : key(k), item(value), next(nullptr)
     {
     }
 };
 
-// Generic Dictionary implementation
-template <typename K, typename T>
+// Dictionary implementation with generic key support
+// Note: String keys are handled specially (character-by-character hashing)
+// All other data types (like int, float, etc.) are hashed by their raw byte values
+template <typename K, typename V>
 class Dictionary
 {
 private:
-    DictionaryNode<K, T>** items;  // Array of pointers to DictionaryNode
+    DictionaryNode<K, V>** items;  // Array of pointers to DictionaryNode
     int size;
     int capacity;
 
+    // Hash function for std::string - hashes character content
+    int hash(const std::string& key) const
+    {
+        int hashValue = 0;
+        for (size_t i = 0; i < key.length(); i++)
+        {
+            hashValue = (hashValue * 31 + key[i]) % capacity;
+        }
+        return (hashValue + capacity) % capacity;  // Ensure positive value
+    }
+
     // Hash function for generic types - hashes raw bytes
-    int hash(const K& key) const
+    template <typename T>
+    int hash(const T& key) const
     {
         const unsigned char* bytes = reinterpret_cast<const unsigned char*>(&key);
         int hashValue = 0;
         
-        for (size_t i = 0; i < sizeof(K); i++)
+        for (size_t i = 0; i < sizeof(T); i++)
         {
             hashValue = (hashValue * 31 + bytes[i]) % capacity;
         }
@@ -47,11 +60,11 @@ private:
     void resize()
     {
         int oldCapacity = capacity;
-        DictionaryNode<K, T>** oldItems = items;
+        DictionaryNode<K, V>** oldItems = items;
 
         // Create new hash table with doubled capacity
         capacity = capacity * 2;
-        items = new DictionaryNode<K, T>*[capacity];
+        items = new DictionaryNode<K, V>*[capacity];
         for (int i = 0; i < capacity; i++)
         {
             items[i] = nullptr;
@@ -62,7 +75,7 @@ private:
         // Rehash all existing entries into the new table
         for (int i = 0; i < oldCapacity; i++)
         {
-            DictionaryNode<K, T>* current = oldItems[i];
+            DictionaryNode<K, V>* current = oldItems[i];
             while (current != nullptr)
             {
                 insert(current->key, current->item);
@@ -73,10 +86,10 @@ private:
         // Delete old hash table
         for (int i = 0; i < oldCapacity; i++)
         {
-            DictionaryNode<K, T>* current = oldItems[i];
+            DictionaryNode<K, V>* current = oldItems[i];
             while (current != nullptr)
             {
-                DictionaryNode<K, T>* temp = current;
+                DictionaryNode<K, V>* temp = current;
                 current = current->next;
                 delete temp;
             }
@@ -89,7 +102,7 @@ public:
     Dictionary(int initialCapacity = 10)
         : capacity(initialCapacity), size(0)
     {
-        items = new DictionaryNode<K, T>*[capacity];
+        items = new DictionaryNode<K, V>*[capacity];
         for (int i = 0; i < capacity; i++)
         {
             items[i] = nullptr;
@@ -102,10 +115,10 @@ public:
         // Clean up all nodes
         for (int i = 0; i < capacity; i++)
         {
-            DictionaryNode<K, T>* current = items[i];
+            DictionaryNode<K, V>* current = items[i];
             while (current != nullptr)
             {
-                DictionaryNode<K, T>* temp = current;
+                DictionaryNode<K, V>* temp = current;
                 current = current->next;
                 delete temp;
             }
@@ -117,7 +130,7 @@ public:
     Dictionary(const Dictionary& other)
         : capacity(other.capacity), size(other.size)
     {
-        items = new DictionaryNode<K, T>*[capacity];
+        items = new DictionaryNode<K, V>*[capacity];
         for (int i = 0; i < capacity; i++)
         {
             items[i] = nullptr;
@@ -126,7 +139,7 @@ public:
         // Deep copy all nodes
         for (int i = 0; i < other.capacity; i++)
         {
-            DictionaryNode<K, T>* otherCurrent = other.items[i];
+            DictionaryNode<K, V>* otherCurrent = other.items[i];
             while (otherCurrent != nullptr)
             {
                 insert(otherCurrent->key, otherCurrent->item);
@@ -143,10 +156,10 @@ public:
             // Clean up current data
             for (int i = 0; i < capacity; i++)
             {
-                DictionaryNode<K, T>* current = items[i];
+                DictionaryNode<K, V>* current = items[i];
                 while (current != nullptr)
                 {
-                    DictionaryNode<K, T>* temp = current;
+                    DictionaryNode<K, V>* temp = current;
                     current = current->next;
                     delete temp;
                 }
@@ -156,7 +169,7 @@ public:
             // Copy from other
             capacity = other.capacity;
             size = 0;
-            items = new DictionaryNode<K, T>*[capacity];
+            items = new DictionaryNode<K, V>*[capacity];
             for (int i = 0; i < capacity; i++)
             {
                 items[i] = nullptr;
@@ -164,7 +177,7 @@ public:
 
             for (int i = 0; i < other.capacity; i++)
             {
-                DictionaryNode<K, T>* otherCurrent = other.items[i];
+                DictionaryNode<K, V>* otherCurrent = other.items[i];
                 while (otherCurrent != nullptr)
                 {
                     insert(otherCurrent->key, otherCurrent->item);
@@ -176,7 +189,7 @@ public:
     }
 
     // Insert or update key-value pair
-    void insert(const K& key, const T& item)
+    void insert(const K& key, const V& item)
     {
         // Check load factor and resize if necessary
         if (size >= capacity / 2)
@@ -185,12 +198,12 @@ public:
         }
 
         int index = hash(key);
-        DictionaryNode<K, T>* current = items[index];
+        DictionaryNode<K, V>* current = items[index];
 
         // Check if key already exists and update it
         while (current != nullptr)
         {
-            if (memcmp(&current->key, &key, sizeof(K)) == 0)
+            if (current->key == key)
             {
                 current->item = item;
                 return;
@@ -199,7 +212,7 @@ public:
         }
 
         // Key doesn't exist, insert at the beginning of the chain
-        DictionaryNode<K, T>* newNode = new DictionaryNode<K, T>(key, item);
+        DictionaryNode<K, V>* newNode = new DictionaryNode<K, V>(key, item);
         newNode->next = items[index];
         items[index] = newNode;
         size++;
@@ -209,12 +222,12 @@ public:
     bool remove(const K& key)
     {
         int index = hash(key);
-        DictionaryNode<K, T>* current = items[index];
-        DictionaryNode<K, T>* prev = nullptr;
+        DictionaryNode<K, V>* current = items[index];
+        DictionaryNode<K, V>* prev = nullptr;
 
         while (current != nullptr)
         {
-            if (memcmp(&current->key, &key, sizeof(K)) == 0)
+            if (current->key == key)
             {
                 if (prev == nullptr)
                 {
@@ -236,14 +249,14 @@ public:
     }
 
     // Get value by key
-    T get(const K& key) const
+    V get(const K& key) const
     {
         int index = hash(key);
-        DictionaryNode<K, T>* current = items[index];
+        DictionaryNode<K, V>* current = items[index];
 
         while (current != nullptr)
         {
-            if (memcmp(&current->key, &key, sizeof(K)) == 0)
+            if (current->key == key)
             {
                 return current->item;
             }
@@ -257,11 +270,11 @@ public:
     bool exists(const K& key) const
     {
         int index = hash(key);
-        DictionaryNode<K, T>* current = items[index];
+        DictionaryNode<K, V>* current = items[index];
 
         while (current != nullptr)
         {
-            if (memcmp(&current->key, &key, sizeof(K)) == 0)
+            if (current->key == key)
             {
                 return true;
             }
@@ -294,271 +307,10 @@ public:
     {
         for (int i = 0; i < capacity; i++)
         {
-            DictionaryNode<K, T>* current = items[i];
+            DictionaryNode<K, V>* current = items[i];
             while (current != nullptr)
             {
-                DictionaryNode<K, T>* temp = current;
-                current = current->next;
-                delete temp;
-            }
-            items[i] = nullptr;
-        }
-        size = 0;
-    }
-};
-
-// Template specialization for std::string keys (optimized string hashing)
-template <typename T>
-class Dictionary<std::string, T>
-{
-private:
-    DictionaryNode<std::string, T>** items;
-    int size;
-    int capacity;
-
-    // Optimized hash function for std::string
-    int hash(const std::string& key) const
-    {
-        int hashValue = 0;
-        for (size_t i = 0; i < key.length(); i++)
-        {
-            hashValue = (hashValue * 31 + key[i]) % capacity;
-        }
-        return (hashValue + capacity) % capacity;
-    }
-
-    void resize()
-    {
-        int oldCapacity = capacity;
-        DictionaryNode<std::string, T>** oldItems = items;
-
-        capacity = capacity * 2;
-        items = new DictionaryNode<std::string, T>*[capacity];
-        for (int i = 0; i < capacity; i++)
-        {
-            items[i] = nullptr;
-        }
-
-        size = 0;
-
-        for (int i = 0; i < oldCapacity; i++)
-        {
-            DictionaryNode<std::string, T>* current = oldItems[i];
-            while (current != nullptr)
-            {
-                insert(current->key, current->item);
-                current = current->next;
-            }
-        }
-
-        for (int i = 0; i < oldCapacity; i++)
-        {
-            DictionaryNode<std::string, T>* current = oldItems[i];
-            while (current != nullptr)
-            {
-                DictionaryNode<std::string, T>* temp = current;
-                current = current->next;
-                delete temp;
-            }
-        }
-        delete[] oldItems;
-    }
-
-public:
-    Dictionary(int initialCapacity = 10)
-        : capacity(initialCapacity), size(0)
-    {
-        items = new DictionaryNode<std::string, T>*[capacity];
-        for (int i = 0; i < capacity; i++)
-        {
-            items[i] = nullptr;
-        }
-    }
-
-    ~Dictionary()
-    {
-        for (int i = 0; i < capacity; i++)
-        {
-            DictionaryNode<std::string, T>* current = items[i];
-            while (current != nullptr)
-            {
-                DictionaryNode<std::string, T>* temp = current;
-                current = current->next;
-                delete temp;
-            }
-        }
-        delete[] items;
-    }
-
-    Dictionary(const Dictionary& other)
-        : capacity(other.capacity), size(other.size)
-    {
-        items = new DictionaryNode<std::string, T>*[capacity];
-        for (int i = 0; i < capacity; i++)
-        {
-            items[i] = nullptr;
-        }
-
-        for (int i = 0; i < other.capacity; i++)
-        {
-            DictionaryNode<std::string, T>* otherCurrent = other.items[i];
-            while (otherCurrent != nullptr)
-            {
-                insert(otherCurrent->key, otherCurrent->item);
-                otherCurrent = otherCurrent->next;
-            }
-        }
-    }
-
-    Dictionary& operator=(const Dictionary& other)
-    {
-        if (this != &other)
-        {
-            for (int i = 0; i < capacity; i++)
-            {
-                DictionaryNode<std::string, T>* current = items[i];
-                while (current != nullptr)
-                {
-                    DictionaryNode<std::string, T>* temp = current;
-                    current = current->next;
-                    delete temp;
-                }
-            }
-            delete[] items;
-
-            capacity = other.capacity;
-            size = 0;
-            items = new DictionaryNode<std::string, T>*[capacity];
-            for (int i = 0; i < capacity; i++)
-            {
-                items[i] = nullptr;
-            }
-
-            for (int i = 0; i < other.capacity; i++)
-            {
-                DictionaryNode<std::string, T>* otherCurrent = other.items[i];
-                while (otherCurrent != nullptr)
-                {
-                    insert(otherCurrent->key, otherCurrent->item);
-                    otherCurrent = otherCurrent->next;
-                }
-            }
-        }
-        return *this;
-    }
-
-    void insert(const std::string& key, const T& item)
-    {
-        if (size >= capacity / 2)
-        {
-            resize();
-        }
-
-        int index = hash(key);
-        DictionaryNode<std::string, T>* current = items[index];
-
-        while (current != nullptr)
-        {
-            if (current->key == key)
-            {
-                current->item = item;
-                return;
-            }
-            current = current->next;
-        }
-
-        DictionaryNode<std::string, T>* newNode = new DictionaryNode<std::string, T>(key, item);
-        newNode->next = items[index];
-        items[index] = newNode;
-        size++;
-    }
-
-    bool remove(const std::string& key)
-    {
-        int index = hash(key);
-        DictionaryNode<std::string, T>* current = items[index];
-        DictionaryNode<std::string, T>* prev = nullptr;
-
-        while (current != nullptr)
-        {
-            if (current->key == key)
-            {
-                if (prev == nullptr)
-                {
-                    items[index] = current->next;
-                }
-                else
-                {
-                    prev->next = current->next;
-                }
-                delete current;
-                size--;
-                return true;
-            }
-            prev = current;
-            current = current->next;
-        }
-
-        return false;
-    }
-
-    T get(const std::string& key) const
-    {
-        int index = hash(key);
-        DictionaryNode<std::string, T>* current = items[index];
-
-        while (current != nullptr)
-        {
-            if (current->key == key)
-            {
-                return current->item;
-            }
-            current = current->next;
-        }
-
-        throw std::runtime_error("Key not found in dictionary");
-    }
-
-    bool exists(const std::string& key) const
-    {
-        int index = hash(key);
-        DictionaryNode<std::string, T>* current = items[index];
-
-        while (current != nullptr)
-        {
-            if (current->key == key)
-            {
-                return true;
-            }
-            current = current->next;
-        }
-
-        return false;
-    }
-
-    int getSize() const
-    {
-        return size;
-    }
-
-    int getCapacity() const
-    {
-        return capacity;
-    }
-
-    bool isEmpty() const
-    {
-        return size == 0;
-    }
-
-    void clear()
-    {
-        for (int i = 0; i < capacity; i++)
-        {
-            DictionaryNode<std::string, T>* current = items[i];
-            while (current != nullptr)
-            {
-                DictionaryNode<std::string, T>* temp = current;
+                DictionaryNode<K, V>* temp = current;
                 current = current->next;
                 delete temp;
             }
