@@ -261,7 +261,8 @@ public:
 
         // Collect matching item indices, removing duplicates
         Vector<bool> found;
-        for (int i = 0; i < 100; i++)
+        // Dynamically size the found vector - accommodate all 629+ games
+        for (int i = 0; i < 1000; i++)
         {
             found.append(false);
         }
@@ -269,7 +270,7 @@ public:
         for (int i = lower; i < upper; i++)
         {
             int itemIndex = suffixArray[i].j;
-            if (!found[itemIndex])
+            if (itemIndex < 1000 && !found[itemIndex])
             {
                 results.append(itemIndex);
                 found[itemIndex] = true;
