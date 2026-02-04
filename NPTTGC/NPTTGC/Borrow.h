@@ -4,17 +4,23 @@
 #include <string>
 #include <cstdio>
 #include <cstring>
+#include <fstream>
+#include <sstream>
+#include <ctime>
 #include "Vector.h"
 #include "Set.h"
 #include "SuffixArray.h"
 #include "Game.h"
+#include "CSVHelper.h"
 
 typedef int GameID;
 
 struct Borrow
 {
+    int borrowId;
     int memberId;
     int gameId;
+    std::string gameName;
     std::string dateBorrowed;
     std::string dateReturned;
 };
@@ -22,6 +28,113 @@ struct Borrow
 // Global data structures
 Vector<Borrow> borrows;
 Set<GameID> borrowedGames;
+
+// Helper function to convert int to string (cross-platform compatible)
+std::string intToString(int value) {
+    std::stringstream ss;
+    ss << value;
+    return ss.str();
+}
+
+// Helper function to get current local datetime (YYYY-MM-DD HH:MM)
+std::string getCurrentDateTime()
+{
+    std::time_t now = std::time(nullptr);
+    std::tm timeInfo;
+#ifdef _WIN32
+    localtime_s(&timeInfo, &now);
+#else
+    timeInfo = *std::localtime(&now);
+#endif
+    char buffer[20];
+    std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M", &timeInfo);
+    return std::string(buffer);
+}
+
+// Function to load borrows from CSV
+void loadBorrowsFromCSV(Vector<Borrow>& borrows, Set<GameID>& borrowedGames, const std::string& filename)
+{
+    std::ifstream file(filename.c_str());
+    if (!file.is_open())
+    {
+        printf("Warning: Could not open %s. Starting with empty borrows list.\n", filename.c_str());
+        return;
+    }
+
+    std::string line;
+    // Skip header line
+    std::getline(file, line);
+
+    while (std::getline(file, line))
+    {
+        if (line.empty()) continue;
+
+        Vector<std::string> fields = splitCSVLine(line);
+        if (fields.getSize() >= 6)
+        {
+            Borrow borrow;
+            borrow.borrowId = atoi(fields.get(0).c_str());
+            borrow.memberId = atoi(fields.get(1).c_str());
+            borrow.gameId = atoi(fields.get(2).c_str());
+            borrow.gameName = trim(fields.get(3));
+            borrow.dateBorrowed = trim(fields.get(4));
+            borrow.dateReturned = trim(fields.get(5));
+            
+            borrows.append(borrow);
+            
+            // If not yet returned, mark as borrowed
+            if (borrow.dateReturned.empty() || borrow.dateReturned == "N/A")
+            {
+                borrowedGames.insert(intToString(borrow.gameId), borrow.gameId);
+            }
+        }
+    }
+    file.close();
+
+    printf("Loaded %d borrow records from %s\n", borrows.getSize(), filename.c_str());
+}
+
+// Function to save borrows to CSV
+void saveBorrowsToCSV(Vector<Borrow>& borrows, const std::string& filename)
+{
+    std::ofstream file(filename.c_str());
+    if (!file.is_open())
+    {
+        printf("Error: Could not open %s for writing.\n", filename.c_str());
+        return;
+    }
+
+    // Write header
+    file << "borrowId,memberId,gameId,gameName,dateBorrowed,dateReturned\n";
+
+    // Write borrows
+    for (int i = 0; i < borrows.getSize(); i++)
+    {
+        Borrow borrow = borrows.get(i);
+        file << borrow.borrowId << ","
+             << borrow.memberId << ","
+             << borrow.gameId << ","
+             << escapeCSVField(borrow.gameName) << ","
+             << escapeCSVField(borrow.dateBorrowed) << ","
+             << escapeCSVField(borrow.dateReturned) << "\n";
+    }
+
+    file.close();
+}
+
+// Function to get next borrow ID
+int getNextBorrowId(Vector<Borrow>& borrows)
+{
+    int maxId = 0;
+    for (int i = 0; i < borrows.getSize(); i++)
+    {
+        if (borrows.get(i).borrowId > maxId)
+        {
+            maxId = borrows.get(i).borrowId;
+        }
+    }
+    return maxId + 1;
+}
 
 // Helper function to compare dates (YYYY-MM-DD format)
 int compareDates(const std::string& date1, const std::string& date2)
@@ -128,7 +241,7 @@ void memberBorrowGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
         int gameIdx = matchingGameIndices.get(i);
         Game game = games.get(gameIdx);
         
-        if (!borrowedGames.exists(std::to_string(game.id)))
+        if (!borrowedGames.exists(intToString(game.id)))
         {
             availableIndices.append(gameIdx);
         }
@@ -145,8 +258,8 @@ void memberBorrowGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
     {
         int gameIdx = availableIndices.get(i);
         Game game = games.get(gameIdx);
-        printf("  %d. ID: %d, Name: %s, Publisher: %s, Players: %d-%d\n",
-               i, game.id, game.name.c_str(), game.publisher.c_str(),
+        printf("  %d. ID: %d, Name: %s, Players: %d-%d\n",
+               i, game.id, game.name.c_str(),
                game.minPlayers, game.maxPlayers);
     }
 
@@ -164,24 +277,23 @@ void memberBorrowGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
 
     Game selectedGame = games.get(availableIndices.get(selection));
 
-    // Prompt for borrow date
-    char dateBorrowedBuf[20];
-    printf("Enter date borrowed (YYYY-MM-DD): ");
-    fgets(dateBorrowedBuf, sizeof(dateBorrowedBuf), stdin);
-    dateBorrowedBuf[strcspn(dateBorrowedBuf, "\n")] = 0;
-
     // Add borrow record
     Borrow newBorrow;
+    newBorrow.borrowId = getNextBorrowId(borrows);
     newBorrow.memberId = memberId;
     newBorrow.gameId = selectedGame.id;
-    newBorrow.dateBorrowed = dateBorrowedBuf;
-    newBorrow.dateReturned = "";  // Not returned yet
+    newBorrow.gameName = selectedGame.name;
+    newBorrow.dateBorrowed = getCurrentDateTime();
+    newBorrow.dateReturned = "N/A";  // Not returned yet
     borrows.append(newBorrow);
 
     // Mark game as borrowed
-    borrowedGames.insert(std::to_string(selectedGame.id), selectedGame.id);
+    borrowedGames.insert(intToString(selectedGame.id), selectedGame.id);
 
     printf("Game '%s' borrowed successfully.\n", selectedGame.name.c_str());
+    
+    // Save changes to CSV
+    saveBorrowsToCSV(borrows, "borrows.csv");
 }
 
 // Function for a member to return a borrowed game
@@ -197,7 +309,7 @@ void memberReturnGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
     for (int i = 0; i < borrows.getSize(); i++)
     {
         Borrow borrow = borrows.get(i);
-        if (borrow.memberId == memberId && borrow.dateReturned == "")
+        if (borrow.memberId == memberId && (borrow.dateReturned == "N/A" || borrow.dateReturned.empty()))
         {
             memberBorrows.append(borrow);
             borrowIndices.append(i);
@@ -215,9 +327,8 @@ void memberReturnGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
     for (int i = 0; i < memberBorrows.getSize(); i++)
     {
         Borrow borrow = memberBorrows.get(i);
-        Game game = games.get(borrow.gameId);
         printf("  %d. Game: %s (ID: %d), Borrowed: %s\n",
-               i, game.name.c_str(), game.id, borrow.dateBorrowed.c_str());
+               i, borrow.gameName.c_str(), borrow.gameId, borrow.dateBorrowed.c_str());
     }
 
     // Prompt to select a game to return
@@ -232,22 +343,18 @@ void memberReturnGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
         return;
     }
 
-    // Prompt for return date
-    char dateReturnedBuf[20];
-    printf("Enter date returned (YYYY-MM-DD): ");
-    fgets(dateReturnedBuf, sizeof(dateReturnedBuf), stdin);
-    dateReturnedBuf[strcspn(dateReturnedBuf, "\n")] = 0;
-
     // Update borrow record
     Borrow& selectedBorrow = borrows[borrowIndices.get(selection)];
-    selectedBorrow.dateReturned = dateReturnedBuf;
+    selectedBorrow.dateReturned = getCurrentDateTime();
 
     // Remove from borrowed games
     Borrow borrowToReturn = memberBorrows.get(selection);
-    borrowedGames.remove(std::to_string(borrowToReturn.gameId));
+    borrowedGames.remove(intToString(borrowToReturn.gameId));
 
-    Game returnedGame = games.get(borrowToReturn.gameId);
-    printf("Game '%s' returned successfully.\n", returnedGame.name.c_str());
+    printf("Game '%s' returned successfully.\n", borrowToReturn.gameName.c_str());
+    
+    // Save changes to CSV
+    saveBorrowsToCSV(borrows, "borrows.csv");
 }
 
 // Function to display member's borrow summary
@@ -297,9 +404,8 @@ void memberDisplayBorrowSummary(int memberId, Vector<Game>& games, Vector<Borrow
     for (int i = 0; i < memberBorrows.getSize(); i++)
     {
         Borrow borrow = memberBorrows.get(i);
-        Game game = games.get(borrow.gameId);
         printf("%-30s %-20s %-20s\n",
-               game.name.c_str(),
+               borrow.gameName.c_str(),
                borrow.dateBorrowed.c_str(),
                borrow.dateReturned.empty() ? "Not Returned" : borrow.dateReturned.c_str());
     }

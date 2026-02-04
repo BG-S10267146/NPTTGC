@@ -1,0 +1,4 @@
+id,username,password,isAdmin
+1,admin,admin123,1
+2,john,pass123,0
+3,alice,pass456,0
