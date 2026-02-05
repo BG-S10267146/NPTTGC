@@ -20,7 +20,6 @@ struct Borrow
     int borrowId;
     int memberId;
     int gameId;
-    std::string gameName;
     std::string dateBorrowed;
     std::string dateReturned;
 };
@@ -70,15 +69,15 @@ void loadBorrowsFromCSV(Vector<Borrow>& borrows, Set<GameID>& borrowedGames, con
         if (line.empty()) continue;
 
         Vector<std::string> fields = splitCSVLine(line);
-        if (fields.getSize() >= 6)
+        if (fields.getSize() >= 5)
         {
             Borrow borrow;
             borrow.borrowId = atoi(fields.get(0).c_str());
             borrow.memberId = atoi(fields.get(1).c_str());
             borrow.gameId = atoi(fields.get(2).c_str());
-            borrow.gameName = trim(fields.get(3));
-            borrow.dateBorrowed = trim(fields.get(4));
-            borrow.dateReturned = trim(fields.get(5));
+            int offset = (fields.getSize() >= 6) ? 1 : 0; // skip gameName if present
+            borrow.dateBorrowed = trim(fields.get(3 + offset));
+            borrow.dateReturned = trim(fields.get(4 + offset));
             
             borrows.append(borrow);
             
@@ -105,7 +104,7 @@ void saveBorrowsToCSV(Vector<Borrow>& borrows, const std::string& filename)
     }
 
     // Write header
-    file << "borrowId,memberId,gameId,gameName,dateBorrowed,dateReturned\n";
+    file << "borrowId,memberId,gameId,dateBorrowed,dateReturned\n";
 
     // Write borrows
     for (int i = 0; i < borrows.getSize(); i++)
@@ -114,7 +113,6 @@ void saveBorrowsToCSV(Vector<Borrow>& borrows, const std::string& filename)
         file << borrow.borrowId << ","
              << borrow.memberId << ","
              << borrow.gameId << ","
-             << escapeCSVField(borrow.gameName) << ","
              << escapeCSVField(borrow.dateBorrowed) << ","
              << escapeCSVField(borrow.dateReturned) << "\n";
     }
@@ -159,6 +157,20 @@ int compareBorrows(const Borrow& b1, const Borrow& b2)
     return compareDates(b1.dateReturned, b2.dateReturned);
 }
 
+// Helper function to get game name by ID
+std::string getGameNameById(const Vector<Game>& games, int gameId)
+{
+    for (int i = 0; i < games.getSize(); i++)
+    {
+        Game game = games.get(i);
+        if (game.id == gameId)
+        {
+            return game.name;
+        }
+    }
+    return "Unknown Game";
+}
+
 // Function to sort borrows vector by datetime borrowed and datetime returned
 void sortBorrows(Vector<Borrow>& borrows)
 {
@@ -183,8 +195,22 @@ void sortBorrows(Vector<Borrow>& borrows)
     }
 }
 
-// Function to display a summary of games borrowed/returned
-void displayBorrowsSummary(Vector<Borrow>& borrows)
+// Helper function to get member name by ID
+std::string getMemberNameById(const Vector<Member>& members, int memberId)
+{
+    for (int i = 0; i < members.getSize(); i++)
+    {
+        Member member = members.get(i);
+        if (member.id == memberId)
+        {
+            return member.username;
+        }
+    }
+    return "Unknown Member";
+}
+
+// Function to display a summary of games borrowed/returned with pagination
+void displayBorrowsSummary(Vector<Borrow>& borrows, Vector<Game>& games, Vector<Member>& members)
 {
     if (borrows.isEmpty())
     {
@@ -196,20 +222,98 @@ void displayBorrowsSummary(Vector<Borrow>& borrows)
     Vector<Borrow> sortedBorrows = borrows;
     sortBorrows(sortedBorrows);
 
-    printf("\n=== Borrow Summary (Sorted) ===\n\n");
-    printf("%-12s %-10s %-20s %-20s\n", "Member ID", "Game ID", "Date Borrowed", "Date Returned");
-    printf("%-12s %-10s %-20s %-20s\n", "-----------", "---------", "-------------------", "-------------------");
+    // Pagination setup
+    int totalBorrows = sortedBorrows.getSize();
+    int borrowsPerPage = 10;
+    int totalPages = (totalBorrows + borrowsPerPage - 1) / borrowsPerPage;
+    int currentPage = 0;
 
-    for (int i = 0; i < sortedBorrows.getSize(); i++)
+    while (true)
     {
-        Borrow borrow = sortedBorrows.get(i);
-        printf("%-12d %-10d %-20s %-20s\n",
-               borrow.memberId,
-               borrow.gameId,
-               borrow.dateBorrowed.c_str(),
-               borrow.dateReturned.c_str());
+        // Calculate range for current page
+        int startIdx = currentPage * borrowsPerPage;
+        int endIdx = startIdx + borrowsPerPage;
+        if (endIdx > totalBorrows)
+            endIdx = totalBorrows;
+
+        // Display current page
+        printf("\n=============================================================================\n");
+        printf("Borrow Summary (Sorted by Date)\n");
+        printf("Page %d of %d (Showing %d-%d of %d records)\n",
+               currentPage + 1, totalPages, startIdx + 1, endIdx, totalBorrows);
+        printf("=============================================================================\n\n");
+        printf("%-20s %-30s %-30s %-20s %-20s\n", 
+               "Member", "Game", "Date Borrowed", "Date Returned", "Status");
+        printf("%-20s %-30s %-30s %-20s %-20s\n",
+               "--------------------", "------------------------------", "------------------------------",
+               "--------------------", "--------------------");
+
+        for (int i = startIdx; i < endIdx; i++)
+        {
+            Borrow borrow = sortedBorrows.get(i);
+            std::string status = (borrow.dateReturned == "N/A" || borrow.dateReturned.empty()) ? "Borrowed" : "Returned";
+            printf("%-20s %-30s %-30s %-20s %-20s\n",
+                   getMemberNameById(members, borrow.memberId).c_str(),
+                   getGameNameById(games, borrow.gameId).c_str(),
+                   borrow.dateBorrowed.c_str(),
+                   borrow.dateReturned.c_str(),
+                   status.c_str());
+        }
+        printf("=============================================================================\n");
+
+        // Navigation options
+        printf("\nNavigation Options:\n");
+        if (currentPage > 0)
+            printf("  [P] Previous page\n");
+        if (currentPage < totalPages - 1)
+            printf("  [N] Next page\n");
+        printf("  [G] Go to specific page\n");
+        printf("  [Q] Quit/Return to menu\n");
+        printf("Enter your choice: ");
+
+        char choice;
+        scanf("%c", &choice);
+        getchar();
+
+        if (choice == 'N' || choice == 'n')
+        {
+            if (currentPage < totalPages - 1)
+                currentPage++;
+            else
+                printf("Already at the last page.\n");
+        }
+        else if (choice == 'P' || choice == 'p')
+        {
+            if (currentPage > 0)
+                currentPage--;
+            else
+                printf("Already at the first page.\n");
+        }
+        else if (choice == 'G' || choice == 'g')
+        {
+            printf("Enter page number (1-%d): ", totalPages);
+            int pageNum;
+            scanf("%d", &pageNum);
+            getchar();
+
+            if (pageNum >= 1 && pageNum <= totalPages)
+            {
+                currentPage = pageNum - 1;
+            }
+            else
+            {
+                printf("Invalid page number. Please enter a number between 1 and %d.\n", totalPages);
+            }
+        }
+        else if (choice == 'Q' || choice == 'q')
+        {
+            break;
+        }
+        else
+        {
+            printf("Invalid choice. Please try again.\n");
+        }
     }
-    printf("\n");
 }
 
 // Forward declaration for Game
@@ -241,7 +345,7 @@ void memberBorrowGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
         int gameIdx = matchingGameIndices.get(i);
         Game game = games.get(gameIdx);
         
-        if (!borrowedGames.exists(intToString(game.id)))
+        if (!game.isDeleted && !borrowedGames.exists(intToString(game.id)))
         {
             availableIndices.append(gameIdx);
         }
@@ -282,7 +386,6 @@ void memberBorrowGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
     newBorrow.borrowId = getNextBorrowId(borrows);
     newBorrow.memberId = memberId;
     newBorrow.gameId = selectedGame.id;
-    newBorrow.gameName = selectedGame.name;
     newBorrow.dateBorrowed = getCurrentDateTime();
     newBorrow.dateReturned = "N/A";  // Not returned yet
     borrows.append(newBorrow);
@@ -328,7 +431,7 @@ void memberReturnGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
     {
         Borrow borrow = memberBorrows.get(i);
         printf("  %d. Game: %s (ID: %d), Borrowed: %s\n",
-               i, borrow.gameName.c_str(), borrow.gameId, borrow.dateBorrowed.c_str());
+               i, getGameNameById(games, borrow.gameId).c_str(), borrow.gameId, borrow.dateBorrowed.c_str());
     }
 
     // Prompt to select a game to return
@@ -351,7 +454,7 @@ void memberReturnGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
     Borrow borrowToReturn = memberBorrows.get(selection);
     borrowedGames.remove(intToString(borrowToReturn.gameId));
 
-    printf("Game '%s' returned successfully.\n", borrowToReturn.gameName.c_str());
+    printf("Game '%s' returned successfully.\n", getGameNameById(games, borrowToReturn.gameId).c_str());
     
     // Save changes to CSV
     saveBorrowsToCSV(borrows, "borrows.csv");
@@ -405,7 +508,7 @@ void memberDisplayBorrowSummary(int memberId, Vector<Game>& games, Vector<Borrow
     {
         Borrow borrow = memberBorrows.get(i);
         printf("%-30s %-20s %-20s\n",
-               borrow.gameName.c_str(),
+               getGameNameById(games, borrow.gameId).c_str(),
                borrow.dateBorrowed.c_str(),
                borrow.dateReturned.empty() ? "Not Returned" : borrow.dateReturned.c_str());
     }
