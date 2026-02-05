@@ -19,7 +19,9 @@ void displayAdminMenu()
     printf("2. Remove a board game\n");
     printf("3. Add a new member\n");
     printf("4. Display borrow summary\n");
-    printf("5. Logout\n");
+    printf("5. Display games by player count\n");
+    printf("6. View game reviews\n");
+    printf("7. Logout\n");
     printf("================================\n");
     printf("Enter your choice: ");
 }
@@ -33,7 +35,8 @@ void displayMemberMenu()
     printf("3. Display my borrow summary\n");
     printf("4. Write a review\n");
     printf("5. View game reviews\n");
-    printf("6. Logout\n");
+    printf("6. Display games by player count\n");
+    printf("7. Logout\n");
     printf("=================================\n");
     printf("Enter your choice: ");
 }
@@ -62,8 +65,9 @@ void handleAddGame(Vector<Game>& games, SuffixArray& gameNames)
     printf("Enter maximum playtime (minutes): ");
     scanf("%d", &maxPlaytime);
     
-    printf("Enter year published: ");
-    scanf("%d", &yearPublished);
+    // Automatically set year published to current year (2026)
+    yearPublished = 2026;
+    printf("Year published: %d (set to current year)\n", yearPublished);
     getchar();
     
     // Create game
@@ -75,6 +79,7 @@ void handleAddGame(Vector<Game>& games, SuffixArray& gameNames)
     newGame.minPlaytime = minPlaytime;
     newGame.maxPlaytime = maxPlaytime;
     newGame.yearPublished = yearPublished;
+    newGame.isDeleted = false;
     
     addGame(games, gameNames, newGame);
 }
@@ -262,15 +267,21 @@ int main()
                         handleAddGame(games, gameNames);
                         break;
                     case 2:
-                        removeGame(games, gameNames);
+                        removeGame(games, gameNames, borrowedGames);
                         break;
                     case 3:
                         handleAddMember(members, membersByUsername);
                         break;
                     case 4:
-                        displayBorrowsSummary(borrows);
+                        displayBorrowsSummary(borrows, games, members);
                         break;
                     case 5:
+                        displayGamesByPlayerCount(games);
+                        break;
+                    case 6:
+                        handleViewReviews(games, gameNames, reviews, reviewsByGame);
+                        break;
+                    case 7:
                         printf("\nLogging out...\n");
                         loggedIn = false;
                         break;
@@ -304,6 +315,9 @@ int main()
                         handleViewReviews(games, gameNames, reviews, reviewsByGame);
                         break;
                     case 6:
+                        displayGamesByPlayerCount(games);
+                        break;
+                    case 7:
                         printf("\nLogging out...\n");
                         loggedIn = false;
                         break;
