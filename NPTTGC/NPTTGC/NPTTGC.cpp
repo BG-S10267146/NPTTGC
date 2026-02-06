@@ -6,6 +6,7 @@
 #include <string>
 #include <cstdlib>
 #include <cctype>
+#include <ctime>
 #include "Member.h"
 #include "Game.h"
 #include "Borrow.h"
@@ -23,6 +24,22 @@ bool readInteger(int& value)
     // Check if the input is a valid integer
     char* endPtr;
     value = strtol(buffer, &endPtr, 10);
+    
+    // Check if conversion was successful and the rest is whitespace
+    while (*endPtr && isspace(*endPtr))
+        endPtr++;
+    
+    return (*endPtr == '\0');
+}
+
+// Function to safely read an integer from a string (not stdin)
+bool readIntegerFromString(const char* str, int& value)
+{
+    if (str == nullptr || str[0] == '\0')
+        return false;
+    
+    char* endPtr;
+    value = strtol(str, &endPtr, 10);
     
     // Check if conversion was successful and the rest is whitespace
     while (*endPtr && isspace(*endPtr))
@@ -73,48 +90,75 @@ void handleAddGame(Vector<Game>& games, SuffixArray& gameNames)
     fgets(nameBuf, sizeof(nameBuf), stdin);
     nameBuf[strcspn(nameBuf, "\n")] = 0;
     
+    if (strlen(nameBuf) == 0)
+    {
+        printf("Error: Game name cannot be empty.\n");
+        return;
+    }
+    
     int minPlayers, maxPlayers, minPlaytime, maxPlaytime, yearPublished;
     
     printf("Enter minimum players: ");
-    if (!readInteger(minPlayers))
+    if (!readInteger(minPlayers) || minPlayers <= 0)
     {
-        printf("Invalid input. Please enter a number.\n");
+        printf("Error: Minimum players must be a positive number.\n");
         return;
     }
     
     printf("Enter maximum players: ");
-    if (!readInteger(maxPlayers))
+    if (!readInteger(maxPlayers) || maxPlayers <= 0)
     {
-        printf("Invalid input. Please enter a number.\n");
+        printf("Error: Maximum players must be a positive number.\n");
+        return;
+    }
+    
+    if (maxPlayers < minPlayers)
+    {
+        printf("Error: Maximum players cannot be less than minimum players.\n");
         return;
     }
     
     printf("Enter minimum playtime (minutes): ");
-    if (!readInteger(minPlaytime))
+    if (!readInteger(minPlaytime) || minPlaytime <= 0)
     {
-        printf("Invalid input. Please enter a number.\n");
+        printf("Error: Minimum playtime must be a positive number.\n");
         return;
     }
     
     printf("Enter maximum playtime (minutes): ");
-    if (!readInteger(maxPlaytime))
+    if (!readInteger(maxPlaytime) || maxPlaytime <= 0)
     {
-        printf("Invalid input. Please enter a number.\n");
+        printf("Error: Maximum playtime must be a positive number.\n");
         return;
     }
     
-    printf("Enter year published (or press Enter for current year 2026): ");
+    if (maxPlaytime < minPlaytime)
+    {
+        printf("Error: Maximum playtime cannot be less than minimum playtime.\n");
+        return;
+    }
+    
+    // Get current year
+    time_t now = time(nullptr);
+    struct tm* timeInfo = localtime(&now);
+    int currentYear = timeInfo->tm_year + 1900;
+    
+    printf("Enter year published (or press Enter for current year %d): ", currentYear);
     char yearBuf[10];
     fgets(yearBuf, sizeof(yearBuf), stdin);
     yearBuf[strcspn(yearBuf, "\n")] = 0;
     
     if (strlen(yearBuf) == 0)
     {
-        yearPublished = 2026;
+        yearPublished = currentYear;
     }
     else
     {
-        yearPublished = atoi(yearBuf);
+        if (!readIntegerFromString(yearBuf, yearPublished) || yearPublished < 1990 || yearPublished > currentYear)
+        {
+            printf("Error: Year published must be a valid number between 1990 and %d.\n", currentYear);
+            return;
+        }
     }
     printf("Year published: %d\n", yearPublished);
     
