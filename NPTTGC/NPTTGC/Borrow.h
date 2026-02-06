@@ -4,6 +4,8 @@
 #include <string>
 #include <cstdio>
 #include <cstring>
+#include <cstdlib>
+#include <cctype>
 #include <fstream>
 #include <sstream>
 #include <ctime>
@@ -27,6 +29,22 @@ struct Borrow
 // Global data structures
 Vector<Borrow> borrows;
 Set<GameID> borrowedGames;
+
+// Helper function to safely read an integer from input
+inline bool readIntegerBorrow(int& value)
+{
+    char buffer[100];
+    if (fgets(buffer, sizeof(buffer), stdin) == nullptr)
+        return false;
+    
+    char* endPtr;
+    value = strtol(buffer, &endPtr, 10);
+    
+    while (*endPtr && isspace(*endPtr))
+        endPtr++;
+    
+    return (*endPtr == '\0');
+}
 
 // Helper function to convert int to string (cross-platform compatible)
 std::string intToString(int value) {
@@ -267,45 +285,35 @@ void displayBorrowsSummary(Vector<Borrow>& borrows, Vector<Game>& games, Vector<
             printf("  [P] Previous page\n");
         if (currentPage < totalPages - 1)
             printf("  [N] Next page\n");
-        printf("  [G] Go to specific page\n");
+        printf("  [1-%d] Go to page number\n", totalPages);
         printf("  [Q] Quit/Return to menu\n");
         printf("Enter your choice: ");
 
-        char choice;
-        scanf("%c", &choice);
-        getchar();
+        char choice[10];
+        fgets(choice, sizeof(choice), stdin);
+        choice[strcspn(choice, "\n")] = 0;
 
-        if (choice == 'N' || choice == 'n')
+        // Check if input is a number
+        int pageNum = atoi(choice);
+        if (pageNum > 0 && pageNum <= totalPages)
+        {
+            currentPage = pageNum - 1;
+        }
+        else if (choice[0] == 'N' || choice[0] == 'n')
         {
             if (currentPage < totalPages - 1)
                 currentPage++;
             else
                 printf("Already at the last page.\n");
         }
-        else if (choice == 'P' || choice == 'p')
+        else if (choice[0] == 'P' || choice[0] == 'p')
         {
             if (currentPage > 0)
                 currentPage--;
             else
                 printf("Already at the first page.\n");
         }
-        else if (choice == 'G' || choice == 'g')
-        {
-            printf("Enter page number (1-%d): ", totalPages);
-            int pageNum;
-            scanf("%d", &pageNum);
-            getchar();
-
-            if (pageNum >= 1 && pageNum <= totalPages)
-            {
-                currentPage = pageNum - 1;
-            }
-            else
-            {
-                printf("Invalid page number. Please enter a number between 1 and %d.\n", totalPages);
-            }
-        }
-        else if (choice == 'Q' || choice == 'q')
+        else if (choice[0] == 'Q' || choice[0] == 'q')
         {
             break;
         }
@@ -370,8 +378,11 @@ void memberBorrowGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
     // Prompt to select a game
     printf("\nEnter the number of the game to borrow (0-%d): ", availableIndices.getSize() - 1);
     int selection;
-    scanf("%d", &selection);
-    getchar();
+    if (!readIntegerBorrow(selection))
+    {
+        printf("Invalid input. Please enter a number.\n");
+        return;
+    }
 
     if (selection < 0 || selection >= availableIndices.getSize())
     {
@@ -437,8 +448,11 @@ void memberReturnGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
     // Prompt to select a game to return
     printf("\nEnter the number of the game to return (0-%d): ", memberBorrows.getSize() - 1);
     int selection;
-    scanf("%d", &selection);
-    getchar();
+    if (!readIntegerBorrow(selection))
+    {
+        printf("Invalid input. Please enter a number.\n");
+        return;
+    }
 
     if (selection < 0 || selection >= memberBorrows.getSize())
     {

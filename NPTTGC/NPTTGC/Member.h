@@ -16,7 +16,6 @@ struct Member
 {
     MemberID id;
     std::string username;
-    std::string password;
     bool isAdmin;
 };
 
@@ -36,7 +35,6 @@ void loadMembersFromCSV(Vector<Member>& members, Dictionary<std::string, MemberI
         Member admin;
         admin.id = 1;
         admin.username = "admin";
-        admin.password = "admin123";
         admin.isAdmin = true;
         members.append(admin);
         membersByUsername.insert(admin.username, admin.id);
@@ -52,13 +50,12 @@ void loadMembersFromCSV(Vector<Member>& members, Dictionary<std::string, MemberI
         if (line.empty()) continue;
 
         Vector<std::string> fields = splitCSVLine(line);
-        if (fields.getSize() >= 4)
+        if (fields.getSize() >= 3)
         {
             Member member;
             member.id = atoi(fields.get(0).c_str());
             member.username = trim(fields.get(1));
-            member.password = trim(fields.get(2));
-            member.isAdmin = (atoi(fields.get(3).c_str()) == 1);
+            member.isAdmin = (atoi(fields.get(2).c_str()) == 1);
             members.append(member);
             membersByUsername.insert(member.username, member.id);
         }
@@ -79,7 +76,7 @@ void saveMembersToCSV(Vector<Member>& members, const std::string& filename)
     }
 
     // Write header
-    file << "id,username,password,isAdmin\n";
+    file << "id,username,isAdmin\n";
 
     // Write members
     for (int i = 0; i < members.getSize(); i++)
@@ -87,7 +84,6 @@ void saveMembersToCSV(Vector<Member>& members, const std::string& filename)
         Member member = members.get(i);
         file << member.id << ","
              << escapeCSVField(member.username) << ","
-             << escapeCSVField(member.password) << ","
              << (member.isAdmin ? 1 : 0) << "\n";
     }
 
@@ -109,7 +105,7 @@ int getNextMemberId(Vector<Member>& members)
 }
 
 // Function to add a new member
-void addMember(Vector<Member>& members, Dictionary<std::string, MemberID>& membersByUsername, const std::string& username, const std::string& password, bool isAdmin = false)
+void addMember(Vector<Member>& members, Dictionary<std::string, MemberID>& membersByUsername, const std::string& username, bool isAdmin = false)
 {
     // Check if username already exists
     if (membersByUsername.exists(username))
@@ -123,7 +119,6 @@ void addMember(Vector<Member>& members, Dictionary<std::string, MemberID>& membe
     Member newMember;
     newMember.id = memberId;
     newMember.username = username;
-    newMember.password = password;
     newMember.isAdmin = isAdmin;
 
     // Add to members vector
@@ -139,7 +134,7 @@ void addMember(Vector<Member>& members, Dictionary<std::string, MemberID>& membe
 }
 
 // Function to authenticate a member
-Member* authenticateMember(Vector<Member>& members, Dictionary<std::string, MemberID>& membersByUsername, const std::string& username, const std::string& password)
+Member* authenticateMember(Vector<Member>& members, Dictionary<std::string, MemberID>& membersByUsername, const std::string& username)
 {
     if (!membersByUsername.exists(username))
     {
@@ -153,11 +148,7 @@ Member* authenticateMember(Vector<Member>& members, Dictionary<std::string, Memb
     {
         if (members[i].id == memberId)
         {
-            if (members[i].password == password)
-            {
-                return &members[i];
-            }
-            return nullptr;
+            return &members[i];
         }
     }
     

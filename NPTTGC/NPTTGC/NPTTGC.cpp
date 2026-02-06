@@ -4,10 +4,32 @@
 #include <cstdio>
 #include <cstring>
 #include <string>
+#include <cstdlib>
+#include <cctype>
 #include "Member.h"
 #include "Game.h"
 #include "Borrow.h"
 #include "Review.h"
+
+// ============ Helper Functions ============
+
+// Function to safely read an integer from input
+bool readInteger(int& value)
+{
+    char buffer[100];
+    if (fgets(buffer, sizeof(buffer), stdin) == nullptr)
+        return false;
+    
+    // Check if the input is a valid integer
+    char* endPtr;
+    value = strtol(buffer, &endPtr, 10);
+    
+    // Check if conversion was successful and the rest is whitespace
+    while (*endPtr && isspace(*endPtr))
+        endPtr++;
+    
+    return (*endPtr == '\0');
+}
 
 // ============ Menu Functions ============
 
@@ -54,21 +76,47 @@ void handleAddGame(Vector<Game>& games, SuffixArray& gameNames)
     int minPlayers, maxPlayers, minPlaytime, maxPlaytime, yearPublished;
     
     printf("Enter minimum players: ");
-    scanf("%d", &minPlayers);
+    if (!readInteger(minPlayers))
+    {
+        printf("Invalid input. Please enter a number.\n");
+        return;
+    }
     
     printf("Enter maximum players: ");
-    scanf("%d", &maxPlayers);
+    if (!readInteger(maxPlayers))
+    {
+        printf("Invalid input. Please enter a number.\n");
+        return;
+    }
     
     printf("Enter minimum playtime (minutes): ");
-    scanf("%d", &minPlaytime);
+    if (!readInteger(minPlaytime))
+    {
+        printf("Invalid input. Please enter a number.\n");
+        return;
+    }
     
     printf("Enter maximum playtime (minutes): ");
-    scanf("%d", &maxPlaytime);
+    if (!readInteger(maxPlaytime))
+    {
+        printf("Invalid input. Please enter a number.\n");
+        return;
+    }
     
-    // Automatically set year published to current year (2026)
-    yearPublished = 2026;
-    printf("Year published: %d (set to current year)\n", yearPublished);
-    getchar();
+    printf("Enter year published (or press Enter for current year 2026): ");
+    char yearBuf[10];
+    fgets(yearBuf, sizeof(yearBuf), stdin);
+    yearBuf[strcspn(yearBuf, "\n")] = 0;
+    
+    if (strlen(yearBuf) == 0)
+    {
+        yearPublished = 2026;
+    }
+    else
+    {
+        yearPublished = atoi(yearBuf);
+    }
+    printf("Year published: %d\n", yearPublished);
     
     // Create game
     Game newGame;
@@ -90,15 +138,10 @@ void handleAddMember(Vector<Member>& members, Dictionary<std::string, MemberID>&
     printf("\n=== Add New Member ===\n");
     
     char usernameBuf[100];
-    char passwordBuf[100];
     
     printf("Enter username: ");
     fgets(usernameBuf, sizeof(usernameBuf), stdin);
     usernameBuf[strcspn(usernameBuf, "\n")] = 0;
-    
-    printf("Enter password: ");
-    fgets(passwordBuf, sizeof(passwordBuf), stdin);
-    passwordBuf[strcspn(passwordBuf, "\n")] = 0;
     
     printf("Is this an admin account? (y/n): ");
     char isAdminChoice;
@@ -107,7 +150,7 @@ void handleAddMember(Vector<Member>& members, Dictionary<std::string, MemberID>&
     
     bool isAdmin = (isAdminChoice == 'y' || isAdminChoice == 'Y');
     
-    addMember(members, membersByUsername, std::string(usernameBuf), std::string(passwordBuf), isAdmin);
+    addMember(members, membersByUsername, std::string(usernameBuf), isAdmin);
 }
 
 // Function to handle member writing a review
@@ -130,27 +173,42 @@ void handleWriteReview(int memberId, Vector<Game>& games, SuffixArray& gameNames
         return;
     }
     
+    // Filter out deleted games
+    Vector<int> availableGameIndices;
     printf("\nMatching games:\n");
     for (int i = 0; i < matchingGameIndices.getSize(); i++)
     {
         int gameIdx = matchingGameIndices.get(i);
         Game game = games.get(gameIdx);
-        printf("  %d. ID: %d, Name: %s, Players: %d-%d\n",
-               i, game.id, game.name.c_str(), game.minPlayers, game.maxPlayers);
+        if (!game.isDeleted)
+        {
+            printf("  %d. ID: %d, Name: %s, Players: %d-%d\n",
+                   availableGameIndices.getSize(), game.id, game.name.c_str(), game.minPlayers, game.maxPlayers);
+            availableGameIndices.append(gameIdx);
+        }
     }
     
-    printf("\nEnter the number of the game to review (0-%d): ", matchingGameIndices.getSize() - 1);
-    int selection;
-    scanf("%d", &selection);
-    getchar();
+    if (availableGameIndices.isEmpty())
+    {
+        printf("No active games found matching your search.\n");
+        return;
+    }
     
-    if (selection < 0 || selection >= matchingGameIndices.getSize())
+    printf("\nEnter the number of the game to review (0-%d): ", availableGameIndices.getSize() - 1);
+    int selection;
+    if (!readInteger(selection))
+    {
+        printf("Invalid input. Please enter a number.\n");
+        return;
+    }
+    
+    if (selection < 0 || selection >= availableGameIndices.getSize())
     {
         printf("Invalid selection.\n");
         return;
     }
     
-    Game selectedGame = games.get(matchingGameIndices.get(selection));
+    Game selectedGame = games.get(availableGameIndices.get(selection));
     addReview(memberId, selectedGame.id, reviews, reviewsByGame);
 }
 
@@ -174,26 +232,41 @@ void handleViewReviews(Vector<Game>& games, SuffixArray& gameNames, Vector<Revie
         return;
     }
     
+    // Filter out deleted games
+    Vector<int> availableGameIndices;
     printf("\nMatching games:\n");
     for (int i = 0; i < matchingGameIndices.getSize(); i++)
     {
         int gameIdx = matchingGameIndices.get(i);
         Game game = games.get(gameIdx);
-        printf("  %d. ID: %d, Name: %s\n", i, game.id, game.name.c_str());
+        if (!game.isDeleted)
+        {
+            printf("  %d. ID: %d, Name: %s\n", availableGameIndices.getSize(), game.id, game.name.c_str());
+            availableGameIndices.append(gameIdx);
+        }
     }
     
-    printf("\nEnter the number of the game to view reviews (0-%d): ", matchingGameIndices.getSize() - 1);
-    int selection;
-    scanf("%d", &selection);
-    getchar();
+    if (availableGameIndices.isEmpty())
+    {
+        printf("No active games found matching your search.\n");
+        return;
+    }
     
-    if (selection < 0 || selection >= matchingGameIndices.getSize())
+    printf("\nEnter the number of the game to view reviews (0-%d): ", availableGameIndices.getSize() - 1);
+    int selection;
+    if (!readInteger(selection))
+    {
+        printf("Invalid input. Please enter a number.\n");
+        return;
+    }
+    
+    if (selection < 0 || selection >= availableGameIndices.getSize())
     {
         printf("Invalid selection.\n");
         return;
     }
     
-    Game selectedGame = games.get(matchingGameIndices.get(selection));
+    Game selectedGame = games.get(availableGameIndices.get(selection));
     displayGameReviews(selectedGame.id, reviews, reviewsByGame);
     displayGameAverageRating(selectedGame.id, reviews, reviewsByGame);
 }
@@ -220,7 +293,6 @@ int main()
         printf("====================================\n");
         
         char usernameBuf[100];
-        char passwordBuf[100];
         
         printf("Username (or 'quit' to exit): ");
         fgets(usernameBuf, sizeof(usernameBuf), stdin);
@@ -232,18 +304,13 @@ int main()
             break;
         }
         
-        printf("Password: ");
-        fgets(passwordBuf, sizeof(passwordBuf), stdin);
-        passwordBuf[strcspn(passwordBuf, "\n")] = 0;
-        
         // Authenticate user
         Member* currentUser = authenticateMember(members, membersByUsername, 
-                                                 std::string(usernameBuf), 
-                                                 std::string(passwordBuf));
+                                                 std::string(usernameBuf));
         
         if (currentUser == nullptr)
         {
-            printf("\nInvalid username or password. Please try again.\n");
+            printf("\nInvalid username. Please try again.\n");
             continue;
         }
         
@@ -258,8 +325,11 @@ int main()
                 // Admin menu
                 displayAdminMenu();
                 int choice;
-                scanf("%d", &choice);
-                getchar();
+                if (!readInteger(choice))
+                {
+                    printf("Invalid selection. Please enter a number.\n");
+                    continue;
+                }
                 
                 switch (choice)
                 {
@@ -294,8 +364,11 @@ int main()
                 // Member menu
                 displayMemberMenu();
                 int choice;
-                scanf("%d", &choice);
-                getchar();
+                if (!readInteger(choice))
+                {
+                    printf("Invalid selection. Please enter a number.\n");
+                    continue;
+                }
                 
                 switch (choice)
                 {

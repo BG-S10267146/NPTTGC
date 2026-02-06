@@ -1,5 +1,6 @@
-id,username,password,isAdmin
-1,admin,admin123,1
-2,john,pass123,0
-3,alice,pass456,0
-4,josh,josh123,0
+id,username,isAdmin
+1,admin,1
+2,john,0
+3,alice,0
+4,josh,0
+5,boy,0

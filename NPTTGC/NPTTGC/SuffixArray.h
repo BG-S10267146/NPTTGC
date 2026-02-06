@@ -64,18 +64,42 @@ private:
     // Bubble sort for suffix array
     void sortSuffixes()
     {
-        for (int i = 0; i < size; i++)
+        quickSort(0, size - 1);
+    }
+
+    // QuickSort for suffix array (much faster than bubble sort)
+    void quickSort(int left, int right)
+    {
+        if (left >= right)
+            return;
+
+        // Partition
+        int pivot = left + (right - left) / 2;
+        int i = left, j = right;
+        SuffixEntry pivotEntry = suffixArray[pivot];
+
+        while (i <= j)
         {
-            for (int j = 0; j < size - i - 1; j++)
+            while (compareSuffixes(suffixArray[i].i, pivotEntry.i) < 0)
+                i++;
+            while (compareSuffixes(suffixArray[j].i, pivotEntry.i) > 0)
+                j--;
+
+            if (i <= j)
             {
-                if (compareSuffixes(suffixArray[j].i, suffixArray[j + 1].i) > 0)
-                {
-                    SuffixEntry temp = suffixArray[j];
-                    suffixArray[j] = suffixArray[j + 1];
-                    suffixArray[j + 1] = temp;
-                }
+                SuffixEntry temp = suffixArray[i];
+                suffixArray[i] = suffixArray[j];
+                suffixArray[j] = temp;
+                i++;
+                j--;
             }
         }
+
+        // Recursively sort
+        if (left < j)
+            quickSort(left, j);
+        if (i < right)
+            quickSort(i, right);
     }
 
     // Binary search for lower bound (first suffix >= query)
@@ -156,10 +180,13 @@ public:
             delete[] suffixArray;
         }
 
-        // Build combined string with \x1F separator
+        // Build combined string with \x1F separator and track positions
         text = "";
+        Vector<int> itemStartPositions;
+        
         for (int i = 0; i < items.getSize(); i++)
         {
+            itemStartPositions.append(text.length());
             if (i > 0)
                 text += '\x1F';  // Unit separator
             text += toLowerCase(items.get(i).name);
@@ -171,22 +198,20 @@ public:
         suffixArray = new SuffixEntry[size];
 
         // Initialize suffix entries with i (position) and j (item index)
+        // Use pre-calculated positions to avoid nested loop
         for (int i = 0; i < size; i++)
         {
             suffixArray[i].i = i;
 
-            // Calculate which item this position belongs to
+            // Binary search to find which item this position belongs to
             int itemIndex = 0;
-            int currentPos = 0;
-            for (int j = 0; j < items.getSize(); j++)
+            for (int j = items.getSize() - 1; j >= 0; j--)
             {
-                int itemLength = toLowerCase(items.get(j).name).length();
-                if (i >= currentPos && i < currentPos + itemLength)
+                if (i >= itemStartPositions.get(j))
                 {
                     itemIndex = j;
                     break;
                 }
-                currentPos += itemLength + 1;  // +1 for separator
             }
             suffixArray[i].j = itemIndex;
         }

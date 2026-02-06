@@ -4,6 +4,8 @@
 #include <string>
 #include <cstdio>
 #include <cstring>
+#include <cstdlib>
+#include <cctype>
 #include <fstream>
 #include <sstream>
 #include "Vector.h"
@@ -23,6 +25,22 @@ struct Review
 // Global data structures
 Vector<Review> reviews;
 Dictionary<int, int> reviewsByGame;  // Mapping from gameId to first reviewId for that game
+
+// Helper function to safely read an integer from input
+inline bool readIntegerReview(int& value)
+{
+    char buffer[100];
+    if (fgets(buffer, sizeof(buffer), stdin) == nullptr)
+        return false;
+    
+    char* endPtr;
+    value = strtol(buffer, &endPtr, 10);
+    
+    while (*endPtr && isspace(*endPtr))
+        endPtr++;
+    
+    return (*endPtr == '\0');
+}
 
 // Function to load reviews from CSV
 void loadReviewsFromCSV(Vector<Review>& reviews, Dictionary<int, int>& reviewsByGame, const std::string& filename)
@@ -113,8 +131,11 @@ void addReview(int userId, int gameId, Vector<Review>& reviews, Dictionary<int, 
     // Prompt for rating
     printf("Enter rating (1-5): ");
     int rating;
-    scanf("%d", &rating);
-    getchar();
+    if (!readIntegerReview(rating))
+    {
+        printf("Invalid input. Please enter a number.\n");
+        return;
+    }
 
     if (rating < 1 || rating > 5)
     {
@@ -153,13 +174,6 @@ void addReview(int userId, int gameId, Vector<Review>& reviews, Dictionary<int, 
 void displayGameReviews(int gameId, Vector<Review>& reviews, Dictionary<int, int>& reviewsByGame)
 {
     printf("\n=== Reviews for Game ID %d ===\n\n", gameId);
-
-    // Check if game has reviews
-    if (!reviewsByGame.exists(gameId))
-    {
-        printf("No reviews found for this game.\n");
-        return;
-    }
 
     // Collect all reviews for this game by scanning the reviews vector
     Vector<Review> gameReviewsList;
@@ -202,12 +216,6 @@ void displayGameReviews(int gameId, Vector<Review>& reviews, Dictionary<int, int
 // Function to display average rating for a game
 void displayGameAverageRating(int gameId, Vector<Review>& reviews, Dictionary<int, int>& reviewsByGame)
 {
-    if (!reviewsByGame.exists(gameId))
-    {
-        printf("No reviews found for this game.\n");
-        return;
-    }
-
     // Collect all reviews for this game
     Vector<Review> gameReviewsList;
     for (int i = 0; i < reviews.getSize(); i++)
@@ -221,7 +229,6 @@ void displayGameAverageRating(int gameId, Vector<Review>& reviews, Dictionary<in
 
     if (gameReviewsList.isEmpty())
     {
-        printf("No reviews found for this game.\n");
         return;
     }
 
