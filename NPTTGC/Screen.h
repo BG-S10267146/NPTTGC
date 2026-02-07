@@ -8,6 +8,10 @@ class Screen
 {
 private:
     AppState& appState;
+    
+    // Helper function to validate pagination input
+    // Returns: 0-9 if digit selected, 'N' for next, 'P' for previous, 'G' for goto, 'Q' for quit, 'I' for invalid
+    char validatePaginationInput(const char* input);
 
 public:
     Screen(AppState& state);
