@@ -10,24 +10,25 @@
 #include "Search.h"
 #include "Sort.h"
 
-// Structure to store suffix information
 struct SuffixEntry
 {
-    int i; // Position in combined string
-    int j; // Item index (which game this suffix belongs to)
+    // Position in combined string
+    int i;
+    // Item index (which item this suffix belongs to)
+    int j;
 
     SuffixEntry() : i(0), j(0) {}
     SuffixEntry(int i, int j) : i(i), j(j) {}
 };
 
+/// Suffix array data structure for efficient substring searching across multiple strings.
 class SuffixArray
 {
 private:
-    std::string text;             // Lowercase concatenated strings
-    Vector<SuffixEntry> suffixes; // Array of suffix entries
-    size_t size;                  // Number of suffixes
+    std::string text;
+    Vector<SuffixEntry> suffixes;
+    size_t size;
 
-    // Convert string to lowercase
     std::string toLowerCase(const std::string &str) const
     {
         std::string result = "";
@@ -39,12 +40,11 @@ private:
     }
 
 public:
-    //  Constructor
     SuffixArray() : text(""), size(0)
     {
     }
 
-    // Build suffix array from a vector of strings
+    /// Builds a suffix array from multiple strings for efficient substring searching.
     static SuffixArray build(int itemCount, std::function<std::string(int)> getItem)
     {
         SuffixArray sa;
@@ -53,7 +53,7 @@ public:
         {
             if (i > 0)
             {
-                sa.text += '\x1F'; // Unit separator
+                sa.text += '\x1F';
                 sa.suffixes.append(SuffixEntry(k, i - 1));
                 k++;
             }
@@ -68,11 +68,9 @@ public:
 
         sa.size = sa.text.length();
 
-        // Sort suffixes using the Sort library
         std::function<int(const SuffixEntry &, const SuffixEntry &)> compareFunc =
             [&sa](const SuffixEntry &a, const SuffixEntry &b) -> int
         {
-            // Compare two suffixes lexicographically
             int pos1 = a.i;
             int pos2 = b.i;
 
@@ -97,7 +95,7 @@ public:
         return sa;
     }
 
-    // Search for query string and return matching item indices
+    /// Searches for a query string and returns indices of all items containing it as a substring.
     Vector<int> search(const std::string &query)
     {
         Vector<int> results;
@@ -109,13 +107,11 @@ public:
 
         std::string lowerQuery = toLowerCase(query);
 
-        // Find lower bound
         int lower = binarySearch(size, [&](int mid)
                                  {
             std::string suffix = text.substr(suffixes[mid].i);
             return suffix < lowerQuery ? -1 : 1; }, false);
 
-        // Find upper bound
         int upper = binarySearch(size, [&](int mid)
                                  {
             std::string suffix = text.substr(suffixes[mid].i);
@@ -123,7 +119,6 @@ public:
                                         suffix.substr(0, lowerQuery.length()) == lowerQuery;
             return suffixStartsWithQuery || suffix < lowerQuery  ? -1 : 1; }, false);
 
-        // Collect matching item indices into results without duplicates
         Set<int> found;
         for (int i = lower; i < upper; i++)
         {
@@ -138,7 +133,6 @@ public:
         return results;
     }
 
-    // Get size
     int getSize() const
     {
         return size;

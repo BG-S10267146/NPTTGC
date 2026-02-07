@@ -5,6 +5,7 @@
 #include <fstream>
 #include "Vector.h"
 
+/// Splits a CSV line into fields, handling quoted values and escaped quotes.
 inline Vector<std::string> splitCSVLine(const std::string &line)
 {
 	Vector<std::string> fields;
@@ -41,6 +42,7 @@ inline Vector<std::string> splitCSVLine(const std::string &line)
 	return fields;
 }
 
+/// Removes leading and trailing whitespace from a string.
 inline std::string trim(const std::string &str)
 {
 	size_t first = str.find_first_not_of(" \t\n\r");
@@ -50,6 +52,7 @@ inline std::string trim(const std::string &str)
 	return str.substr(first, (last - first + 1));
 }
 
+/// Escapes a field for CSV output by quoting if necessary and doubling internal quotes.
 inline std::string escapeCSVField(const std::string &field)
 {
 	bool needsQuotes = false;
@@ -77,6 +80,7 @@ inline std::string escapeCSVField(const std::string &field)
 	return escaped;
 }
 
+/// Loads objects from a CSV file using a builder function to construct each object from CSV fields.
 template <typename T>
 Vector<T> buildFromFile(const std::string &filepath, T (*builder)(const Vector<std::string> &))
 {
@@ -103,6 +107,7 @@ Vector<T> buildFromFile(const std::string &filepath, T (*builder)(const Vector<s
 	return result;
 }
 
+/// Saves objects to a CSV file using a rowBuilder function to convert each object to CSV fields.
 template <typename T>
 void saveToFile(const std::string &filepath, const std::string &header, const Vector<T> &data, Vector<std::string> (*rowBuilder)(const T &))
 {

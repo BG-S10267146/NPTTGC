@@ -5,7 +5,6 @@
 #include <stdexcept>
 #include "Hash.h"
 
-// Generic SetNode for storing values only (no keys)
 template <typename T>
 class SetNode
 {
@@ -13,15 +12,13 @@ public:
     T value;
     SetNode<T> *next;
 
-    // Constructor
     SetNode(const T &val)
         : value(val), next(nullptr)
     {
     }
 };
 
-// Set implementation using hash table
-// Stores unique values using generic type hashing
+/// Hash table implementation of a set storing unique values with separate chaining.
 template <typename T>
 class Set
 {
@@ -36,13 +33,11 @@ private:
         return ((hashValue % capacity) + capacity) % capacity;
     }
 
-    // Helper function to resize hash table
     void resize()
     {
         int oldCapacity = capacity;
         SetNode<T> **oldItems = items;
 
-        // Create new hash table with doubled capacity
         capacity = capacity * 2;
         items = new SetNode<T> *[capacity];
         for (int i = 0; i < capacity; i++)
@@ -52,7 +47,6 @@ private:
 
         size = 0;
 
-        // Rehash all existing entries into the new table
         for (int i = 0; i < oldCapacity; i++)
         {
             SetNode<T> *current = oldItems[i];
@@ -63,7 +57,6 @@ private:
             }
         }
 
-        // Delete old hash table
         for (int i = 0; i < oldCapacity; i++)
         {
             SetNode<T> *current = oldItems[i];
@@ -78,7 +71,6 @@ private:
     }
 
 public:
-    // Constructor
     Set(int initialCapacity = 10)
         : capacity(initialCapacity), size(0)
     {
@@ -89,7 +81,6 @@ public:
         }
     }
 
-    // Destructor
     ~Set()
     {
         for (int i = 0; i < capacity; i++)
@@ -105,7 +96,6 @@ public:
         delete[] items;
     }
 
-    // Copy constructor
     Set(const Set &other)
         : capacity(other.capacity), size(other.size)
     {
@@ -126,7 +116,6 @@ public:
         }
     }
 
-    // Assignment operator
     Set &operator=(const Set &other)
     {
         if (this != &other)
@@ -164,7 +153,7 @@ public:
         return *this;
     }
 
-    // Insert value into set (returns true if inserted, false if already exists)
+    /// Inserts a value into the set. Returns true if inserted, false if already exists.
     bool insert(const T &value)
     {
         if (size >= capacity / 2)
@@ -175,17 +164,15 @@ public:
         int index = getIndex(value);
         SetNode<T> *current = items[index];
 
-        // Check if value already exists
         while (current != nullptr)
         {
             if (current->value == value)
             {
-                return false; // Value already exists, don't insert duplicate
+                return false;
             }
             current = current->next;
         }
 
-        // Value doesn't exist, insert at the beginning
         SetNode<T> *newNode = new SetNode<T>(value);
         newNode->next = items[index];
         items[index] = newNode;
@@ -193,7 +180,7 @@ public:
         return true;
     }
 
-    // Remove value from set
+    /// Removes a value from the set. Returns true if removed, false if not found.
     bool remove(const T &value)
     {
         int index = getIndex(value);
@@ -223,7 +210,7 @@ public:
         return false;
     }
 
-    // Check if value exists in set
+    /// Checks if a value exists in the set.
     bool exists(const T &value) const
     {
         int index = getIndex(value);
@@ -241,25 +228,21 @@ public:
         return false;
     }
 
-    // Get size
     int getSize() const
     {
         return size;
     }
 
-    // Get capacity
     int getCapacity() const
     {
         return capacity;
     }
 
-    // Check if empty
     bool isEmpty() const
     {
         return size == 0;
     }
 
-    // Clear all entries
     void clear()
     {
         for (int i = 0; i < capacity; i++)

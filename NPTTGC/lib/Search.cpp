@@ -1,6 +1,7 @@
+#include "Search.h"
 #include <functional>
 
-int binarySearch(int size, std::function<int(int)> compare, bool returnNotFound = true)
+int binarySearch(int size, std::function<int(int)> compare, bool returnNotFound)
 {
     int left = 0, right = size;
 
