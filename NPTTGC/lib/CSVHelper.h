@@ -3,102 +3,126 @@
 
 #include <string>
 #include <fstream>
-#include <sstream>
 #include "Vector.h"
 
-// Helper function to split a CSV line into fields
-inline Vector<std::string> splitCSVLine(const std::string& line) {
+inline Vector<std::string> splitCSVLine(const std::string &line)
+{
 	Vector<std::string> fields;
 	std::string field;
 	bool inQuotes = false;
-    
-	for (size_t i = 0; i < line.length(); i++) {
+
+	for (size_t i = 0; i < line.length(); i++)
+	{
 		char c = line[i];
-        
-		if (c == '"') {
-			inQuotes = !inQuotes;
-		} else if (c == ',' && !inQuotes) {
+
+		if (c == '"' && (field.empty() || inQuotes))
+		{
+			if (inQuotes && i + 1 < line.length() && line[i + 1] == '"')
+			{
+				field += '"';
+				i++;
+			}
+			else
+			{
+				inQuotes = field.empty();
+			}
+		}
+		else if (c == ',' && !inQuotes)
+		{
 			fields.append(field);
 			field.clear();
-		} else {
+		}
+		else
+		{
 			field += c;
 		}
 	}
-	fields.append(field); // Add the last field
+	fields.append(field);
 	return fields;
 }
 
-// Helper function to trim whitespace from strings
-inline std::string trim(const std::string& str) {
+inline std::string trim(const std::string &str)
+{
 	size_t first = str.find_first_not_of(" \t\n\r");
-	if (first == std::string::npos) return "";
+	if (first == std::string::npos)
+		return "";
 	size_t last = str.find_last_not_of(" \t\n\r");
 	return str.substr(first, (last - first + 1));
 }
 
-// Helper function to escape CSV fields (add quotes if needed)
-inline std::string escapeCSVField(const std::string& field) {
+inline std::string escapeCSVField(const std::string &field)
+{
 	bool needsQuotes = false;
-	for (char c : field) {
-		if (c == ',' || c == '"' || c == '\n') {
+	for (char c : field)
+	{
+		if (c == ',' || c == '"' || c == '\n')
+		{
 			needsQuotes = true;
 			break;
 		}
 	}
 
-	if (!needsQuotes) return field;
+	if (!needsQuotes)
+		return field;
 
 	std::string escaped = "\"";
-	for (char c : field) {
-		if (c == '"') escaped += "\"\""; // Escape quotes by doubling
-		else escaped += c;
+	for (char c : field)
+	{
+		if (c == '"')
+			escaped += "\"\"";
+		else
+			escaped += c;
 	}
 	escaped += "\"";
 	return escaped;
 }
 
-// Generic CSV file reader using a builder function
-template<typename T>
-Vector<T> buildFromFile(const std::string& filepath, T (*builder)(const Vector<std::string>&)) {
+template <typename T>
+Vector<T> buildFromFile(const std::string &filepath, T (*builder)(const Vector<std::string> &))
+{
 	Vector<T> result;
 	std::ifstream file(filepath.c_str());
 
-	if (!file.is_open()) {
+	if (!file.is_open())
+	{
 		printf("Warning: Could not open %s. Starting with empty list.\n", filepath.c_str());
 		return result;
 	}
 
 	std::string line;
-	std::getline(file, line); // Skip header
+	std::getline(file, line);
 
-	while (std::getline(file, line)) {
-		if (line.empty()) continue;
-		Vector<std::string> fields = splitCSVLine(line);
-		if (!fields.isEmpty()) {
-			result.append(builder(fields));
-		}
+	while (std::getline(file, line))
+	{
+		if (line.empty())
+			continue;
+		result.append(builder(splitCSVLine(line)));
 	}
 
 	file.close();
 	return result;
 }
 
-// Generic CSV file writer using a row builder function
-template<typename T>
-void saveToFile(const std::string& filepath, const std::string& header, const Vector<T>& data, Vector<std::string> (*rowBuilder)(const T&)) {
+template <typename T>
+void saveToFile(const std::string &filepath, const std::string &header, const Vector<T> &data, Vector<std::string> (*rowBuilder)(const T &))
+{
 	std::ofstream file(filepath.c_str());
 
-	if (!file.is_open()) {
+	if (!file.is_open())
+	{
 		printf("Error: Could not open %s for writing.\n", filepath.c_str());
 		return;
 	}
 
 	file << header << "\n";
 
-	for (int i = 0; i < data.getSize(); i++) {
+	for (int i = 0; i < data.getSize(); i++)
+	{
 		Vector<std::string> fields = rowBuilder(data.get(i));
-		for (int j = 0; j < fields.getSize(); j++) {
-			if (j > 0) file << ",";
+		for (int j = 0; j < fields.getSize(); j++)
+		{
+			if (j > 0)
+				file << ",";
 			file << escapeCSVField(fields.get(j));
 		}
 		file << "\n";
