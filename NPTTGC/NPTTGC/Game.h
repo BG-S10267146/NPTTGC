@@ -23,6 +23,36 @@ struct Game
     int maxPlaytime;
     int yearPublished;
     bool isDeleted;
+
+    static std::string csvHeader() {
+        return "name,minplayers,maxplayers,maxplaytime,minplaytime,yearpublished,isdeleted";
+    }
+
+    static Game fromCSVRow(const Vector<std::string>& row) {
+        static int nextId = 1;
+        Game game;
+        game.id = nextId++;
+        game.name = trim(row.get(0));
+        game.minPlayers = atoi(row.get(1).c_str());
+        game.maxPlayers = atoi(row.get(2).c_str());
+        game.maxPlaytime = atoi(row.get(3).c_str());
+        game.minPlaytime = atoi(row.get(4).c_str());
+        game.yearPublished = atoi(row.get(5).c_str());
+        game.isDeleted = (row.getSize() >= 7) ? (atoi(row.get(6).c_str()) != 0) : false;
+        return game;
+    }
+
+    static Vector<std::string> toCSVRow(const Game& game) {
+        Vector<std::string> row;
+        row.append(game.name);
+        row.append(std::to_string(game.minPlayers));
+        row.append(std::to_string(game.maxPlayers));
+        row.append(std::to_string(game.maxPlaytime));
+        row.append(std::to_string(game.minPlaytime));
+        row.append(std::to_string(game.yearPublished));
+        row.append(std::to_string(game.isDeleted ? 1 : 0));
+        return row;
+    }
 };
 
 
@@ -49,79 +79,15 @@ inline bool readIntegerGame(int& value)
 // Function to load games from CSV
 void loadGamesFromCSV(Vector<Game>& games, SuffixArray& gameNames, const std::string& filename)
 {
-    std::ifstream file(filename.c_str());
-    if (!file.is_open())
-    {
-        printf("Warning: Could not open %s. Starting with empty games list.\n", filename.c_str());
-        return;
-    }
-
-    std::string line;
-    // Skip header line
-    std::getline(file, line);
-
-    int gameId = 1;
-    while (std::getline(file, line))
-    {
-        if (line.empty()) continue;
-
-        Vector<std::string> fields = splitCSVLine(line);
-        if (fields.getSize() >= 6)
-        {
-            Game game;
-            game.id = gameId++;
-            game.name = trim(fields.get(0));
-            game.minPlayers = atoi(fields.get(1).c_str());
-            game.maxPlayers = atoi(fields.get(2).c_str());
-            game.maxPlaytime = atoi(fields.get(3).c_str());
-            game.minPlaytime = atoi(fields.get(4).c_str());
-            game.yearPublished = atoi(fields.get(5).c_str());
-            if (fields.getSize() >= 7)
-            {
-                game.isDeleted = atoi(fields.get(6).c_str()) != 0;
-            }
-            else
-            {
-                game.isDeleted = false;
-            }
-            games.append(game);
-        }
-    }
-    file.close();
-
+    games = buildFromFile<Game>(filename, Game::fromCSVRow);
     printf("Loaded %d games from %s\n", games.getSize(), filename.c_str());
-
-    // Build suffix array at the end (only once)
     gameNames.rebuild(games);
 }
 
 // Function to save games to CSV
 void saveGamesToCSV(Vector<Game>& games, const std::string& filename)
 {
-    std::ofstream file(filename.c_str());
-    if (!file.is_open())
-    {
-        printf("Error: Could not open %s for writing.\n", filename.c_str());
-        return;
-    }
-
-    // Write header
-    file << "name,minplayers,maxplayers,maxplaytime,minplaytime,yearpublished,isdeleted\n";
-
-    // Write games
-    for (int i = 0; i < games.getSize(); i++)
-    {
-        Game game = games.get(i);
-        file << escapeCSVField(game.name) << ","
-             << game.minPlayers << ","
-             << game.maxPlayers << ","
-             << game.maxPlaytime << ","
-             << game.minPlaytime << ","
-               << game.yearPublished << ","
-               << (game.isDeleted ? 1 : 0) << "\n";
-    }
-
-    file.close();
+    saveToFile<Game>(filename, Game::csvHeader(), games, Game::toCSVRow);
 }
 
 // Function to add a new board game

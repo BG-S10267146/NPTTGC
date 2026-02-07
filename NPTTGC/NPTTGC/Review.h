@@ -20,6 +20,30 @@ struct Review
     int gameId;
     int rating;
     std::string content;
+
+    static std::string csvHeader() {
+        return "reviewId,userId,gameId,rating,content";
+    }
+
+    static Review fromCSVRow(const Vector<std::string>& row) {
+        Review review;
+        review.reviewId = atoi(row.get(0).c_str());
+        review.userId = atoi(row.get(1).c_str());
+        review.gameId = atoi(row.get(2).c_str());
+        review.rating = atoi(row.get(3).c_str());
+        review.content = trim(row.get(4));
+        return review;
+    }
+
+    static Vector<std::string> toCSVRow(const Review& review) {
+        Vector<std::string> row;
+        row.append(std::to_string(review.reviewId));
+        row.append(std::to_string(review.userId));
+        row.append(std::to_string(review.gameId));
+        row.append(std::to_string(review.rating));
+        row.append(escapeCSVField(review.content));
+        return row;
+    }
 };
 
 // Global data structures
@@ -45,36 +69,12 @@ inline bool readIntegerReview(int& value)
 // Function to load reviews from CSV
 void loadReviewsFromCSV(Vector<Review>& reviews, Dictionary<int, int>& reviewsByGame, const std::string& filename)
 {
-    std::ifstream file(filename.c_str());
-    if (!file.is_open())
-    {
-        printf("Warning: Could not open %s. Starting with empty reviews list.\n", filename.c_str());
-        return;
+    reviews = buildFromFile<Review>(filename, Review::fromCSVRow);
+
+    for (int i = 0; i < reviews.getSize(); i++) {
+        Review review = reviews.get(i);
+        reviewsByGame.insert(review.gameId, review.reviewId);
     }
-
-    std::string line;
-    // Skip header line
-    std::getline(file, line);
-
-    while (std::getline(file, line))
-    {
-        if (line.empty()) continue;
-
-        Vector<std::string> fields = splitCSVLine(line);
-        if (fields.getSize() >= 5)
-        {
-            Review review;
-            review.reviewId = atoi(fields.get(0).c_str());
-            review.userId = atoi(fields.get(1).c_str());
-            review.gameId = atoi(fields.get(2).c_str());
-            review.rating = atoi(fields.get(3).c_str());
-            review.content = trim(fields.get(4));
-            
-            reviews.append(review);
-            reviewsByGame.insert(review.gameId, review.reviewId);
-        }
-    }
-    file.close();
 
     printf("Loaded %d reviews from %s\n", reviews.getSize(), filename.c_str());
 }
@@ -82,28 +82,7 @@ void loadReviewsFromCSV(Vector<Review>& reviews, Dictionary<int, int>& reviewsBy
 // Function to save reviews to CSV
 void saveReviewsToCSV(Vector<Review>& reviews, const std::string& filename)
 {
-    std::ofstream file(filename.c_str());
-    if (!file.is_open())
-    {
-        printf("Error: Could not open %s for writing.\n", filename.c_str());
-        return;
-    }
-
-    // Write header
-    file << "reviewId,userId,gameId,rating,content\n";
-
-    // Write reviews
-    for (int i = 0; i < reviews.getSize(); i++)
-    {
-        Review review = reviews.get(i);
-        file << review.reviewId << ","
-             << review.userId << ","
-             << review.gameId << ","
-             << review.rating << ","
-             << escapeCSVField(review.content) << "\n";
-    }
-
-    file.close();
+    saveToFile<Review>(filename, Review::csvHeader(), reviews, Review::toCSVRow);
 }
 
 // Function to get next review ID

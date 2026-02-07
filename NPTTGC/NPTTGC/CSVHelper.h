@@ -45,9 +45,9 @@ inline std::string escapeCSVField(const std::string& field) {
 			break;
 		}
 	}
-    
+
 	if (!needsQuotes) return field;
-    
+
 	std::string escaped = "\"";
 	for (char c : field) {
 		if (c == '"') escaped += "\"\""; // Escape quotes by doubling
@@ -55,6 +55,56 @@ inline std::string escapeCSVField(const std::string& field) {
 	}
 	escaped += "\"";
 	return escaped;
+}
+
+// Generic CSV file reader using a builder function
+template<typename T>
+Vector<T> buildFromFile(const std::string& filepath, T (*builder)(const Vector<std::string>&)) {
+	Vector<T> result;
+	std::ifstream file(filepath.c_str());
+
+	if (!file.is_open()) {
+		printf("Warning: Could not open %s. Starting with empty list.\n", filepath.c_str());
+		return result;
+	}
+
+	std::string line;
+	std::getline(file, line); // Skip header
+
+	while (std::getline(file, line)) {
+		if (line.empty()) continue;
+		Vector<std::string> fields = splitCSVLine(line);
+		if (!fields.isEmpty()) {
+			result.append(builder(fields));
+		}
+	}
+
+	file.close();
+	return result;
+}
+
+// Generic CSV file writer using a row builder function
+template<typename T>
+void saveToFile(const std::string& filepath, const std::string& header, const Vector<T>& data, Vector<std::string> (*rowBuilder)(const T&)) {
+	std::ofstream file(filepath.c_str());
+
+	if (!file.is_open()) {
+		printf("Error: Could not open %s for writing.\n", filepath.c_str());
+		return;
+	}
+
+	file << header << "\n";
+
+	for (int i = 0; i < data.getSize(); i++) {
+		Vector<std::string> fields = rowBuilder(data.get(i));
+		for (int j = 0; j < fields.getSize(); j++) {
+			if (j > 0) file << ",";
+			file << escapeCSVField(fields.get(j));
+		}
+		file << "\n";
+	}
+
+	file.close();
 }
 
 #endif

@@ -24,6 +24,31 @@ struct Borrow
     int gameId;
     std::string dateBorrowed;
     std::string dateReturned;
+
+    static std::string csvHeader() {
+        return "borrowId,memberId,gameId,dateBorrowed,dateReturned";
+    }
+
+    static Borrow fromCSVRow(const Vector<std::string>& row) {
+        Borrow borrow;
+        borrow.borrowId = atoi(row.get(0).c_str());
+        borrow.memberId = atoi(row.get(1).c_str());
+        borrow.gameId = atoi(row.get(2).c_str());
+        int offset = (row.getSize() >= 6) ? 1 : 0; // Skip gameName if present
+        borrow.dateBorrowed = trim(row.get(3 + offset));
+        borrow.dateReturned = trim(row.get(4 + offset));
+        return borrow;
+    }
+
+    static Vector<std::string> toCSVRow(const Borrow& borrow) {
+        Vector<std::string> row;
+        row.append(std::to_string(borrow.borrowId));
+        row.append(std::to_string(borrow.memberId));
+        row.append(std::to_string(borrow.gameId));
+        row.append(borrow.dateBorrowed);
+        row.append(borrow.dateReturned);
+        return row;
+    }
 };
 
 // Global data structures
@@ -71,42 +96,14 @@ std::string getCurrentDateTime()
 // Function to load borrows from CSV
 void loadBorrowsFromCSV(Vector<Borrow>& borrows, Set<GameID>& borrowedGames, const std::string& filename)
 {
-    std::ifstream file(filename.c_str());
-    if (!file.is_open())
-    {
-        printf("Warning: Could not open %s. Starting with empty borrows list.\n", filename.c_str());
-        return;
-    }
+    borrows = buildFromFile<Borrow>(filename, Borrow::fromCSVRow);
 
-    std::string line;
-    // Skip header line
-    std::getline(file, line);
-
-    while (std::getline(file, line))
-    {
-        if (line.empty()) continue;
-
-        Vector<std::string> fields = splitCSVLine(line);
-        if (fields.getSize() >= 5)
-        {
-            Borrow borrow;
-            borrow.borrowId = atoi(fields.get(0).c_str());
-            borrow.memberId = atoi(fields.get(1).c_str());
-            borrow.gameId = atoi(fields.get(2).c_str());
-            int offset = (fields.getSize() >= 6) ? 1 : 0; // skip gameName if present
-            borrow.dateBorrowed = trim(fields.get(3 + offset));
-            borrow.dateReturned = trim(fields.get(4 + offset));
-            
-            borrows.append(borrow);
-            
-            // If not yet returned, mark as borrowed
-            if (borrow.dateReturned.empty() || borrow.dateReturned == "N/A")
-            {
-                borrowedGames.insert(intToString(borrow.gameId), borrow.gameId);
-            }
+    for (int i = 0; i < borrows.getSize(); i++) {
+        Borrow borrow = borrows.get(i);
+        if (borrow.dateReturned.empty() || borrow.dateReturned == "N/A") {
+            borrowedGames.insert(intToString(borrow.gameId), borrow.gameId);
         }
     }
-    file.close();
 
     printf("Loaded %d borrow records from %s\n", borrows.getSize(), filename.c_str());
 }
@@ -114,28 +111,7 @@ void loadBorrowsFromCSV(Vector<Borrow>& borrows, Set<GameID>& borrowedGames, con
 // Function to save borrows to CSV
 void saveBorrowsToCSV(Vector<Borrow>& borrows, const std::string& filename)
 {
-    std::ofstream file(filename.c_str());
-    if (!file.is_open())
-    {
-        printf("Error: Could not open %s for writing.\n", filename.c_str());
-        return;
-    }
-
-    // Write header
-    file << "borrowId,memberId,gameId,dateBorrowed,dateReturned\n";
-
-    // Write borrows
-    for (int i = 0; i < borrows.getSize(); i++)
-    {
-        Borrow borrow = borrows.get(i);
-        file << borrow.borrowId << ","
-             << borrow.memberId << ","
-             << borrow.gameId << ","
-             << escapeCSVField(borrow.dateBorrowed) << ","
-             << escapeCSVField(borrow.dateReturned) << "\n";
-    }
-
-    file.close();
+    saveToFile<Borrow>(filename, Borrow::csvHeader(), borrows, Borrow::toCSVRow);
 }
 
 // Function to get next borrow ID
