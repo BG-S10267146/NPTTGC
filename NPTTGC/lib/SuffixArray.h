@@ -4,21 +4,28 @@
 #include <string>
 #include <stdexcept>
 #include <cctype>
+#include <functional>
 #include "Vector.h"
+#include "Set.h"
+#include "Search.h"
+#include "Sort.h"
 
 // Structure to store suffix information
 struct SuffixEntry
 {
-    int i;  // Position in combined string
-    int j;  // Item index (which game this suffix belongs to)
+    int i; // Position in combined string
+    int j; // Item index (which game this suffix belongs to)
+
+    SuffixEntry() : i(0), j(0) {}
+    SuffixEntry(int i, int j) : i(i), j(j) {}
 };
 
 class SuffixArray
 {
 private:
-    std::string text;              // Lowercase concatenated strings
-    SuffixEntry* suffixArray;      // Array of suffix entries
-    int size;                      // Number of suffixes
+    std::string text;             // Lowercase concatenated strings
+    Vector<SuffixEntry> suffixes; // Array of suffix entries
+    size_t size;                  // Number of suffixes
 
     // Convert character to lowercase
     char toLower(char c) const
@@ -27,7 +34,7 @@ private:
     }
 
     // Convert string to lowercase
-    std::string toLowerCase(const std::string& str) const
+    std::string toLowerCase(const std::string &str) const
     {
         std::string result = "";
         for (size_t i = 0; i < str.length(); i++)
@@ -61,174 +68,67 @@ private:
         return 1;
     }
 
-    // Bubble sort for suffix array
-    void sortSuffixes()
-    {
-        quickSort(0, size - 1);
-    }
-
-    // QuickSort for suffix array (much faster than bubble sort)
-    void quickSort(int left, int right)
-    {
-        if (left >= right)
-            return;
-
-        // Partition
-        int pivot = left + (right - left) / 2;
-        int i = left, j = right;
-        SuffixEntry pivotEntry = suffixArray[pivot];
-
-        while (i <= j)
-        {
-            while (compareSuffixes(suffixArray[i].i, pivotEntry.i) < 0)
-                i++;
-            while (compareSuffixes(suffixArray[j].i, pivotEntry.i) > 0)
-                j--;
-
-            if (i <= j)
-            {
-                SuffixEntry temp = suffixArray[i];
-                suffixArray[i] = suffixArray[j];
-                suffixArray[j] = temp;
-                i++;
-                j--;
-            }
-        }
-
-        // Recursively sort
-        if (left < j)
-            quickSort(left, j);
-        if (i < right)
-            quickSort(i, right);
-    }
-
-    // Binary search for lower bound (first suffix >= query)
-    int lowerBound(const std::string& query) const
-    {
-        int left = 0, right = size;
-
-        while (left < right)
-        {
-            int mid = left + (right - left) / 2;
-            std::string suffix = text.substr(suffixArray[mid].i);
-
-            if (suffix < query)
-            {
-                left = mid + 1;
-            }
-            else
-            {
-                right = mid;
-            }
-        }
-
-        return left;
-    }
-
-    // Binary search for upper bound (first suffix > query)
-    int upperBound(const std::string& query) const
-    {
-        int left = 0, right = size;
-
-        while (left < right)
-        {
-            int mid = left + (right - left) / 2;
-            std::string suffix = text.substr(suffixArray[mid].i);
-
-            // Check if suffix starts with query
-            bool startsWith = false;
-            if (suffix.length() >= query.length())
-            {
-                startsWith = (suffix.substr(0, query.length()) == query);
-            }
-
-            if (startsWith || suffix < query)
-            {
-                left = mid + 1;
-            }
-            else
-            {
-                right = mid;
-            }
-        }
-
-        return left;
-    }
-
 public:
-    // Constructor
-    SuffixArray() : text(""), suffixArray(nullptr), size(0)
+    //  Constructor
+    SuffixArray() : text(""), size(0)
     {
-    }
-
-    // Destructor
-    ~SuffixArray()
-    {
-        if (suffixArray != nullptr)
-        {
-            delete[] suffixArray;
-        }
     }
 
     // Build suffix array from a vector of strings
-    template <typename T>
-    void build(const Vector<T>& items)
+    static SuffixArray build(int itemCount, std::function<std::string(int)> getItem)
     {
-        // Clean up old suffix array
-        if (suffixArray != nullptr)
-        {
-            delete[] suffixArray;
-        }
+        SuffixArray sa;
 
-        // Build combined string with \x1F separator and track positions
-        text = "";
-        Vector<int> itemStartPositions;
-        
-        for (int i = 0; i < items.getSize(); i++)
+        for (int i = 0, k = 0; i < itemCount; i++)
         {
-            itemStartPositions.append(text.length());
             if (i > 0)
-                text += '\x1F';  // Unit separator
-            text += toLowerCase(items.get(i).name);
-        }
-
-        size = text.length();
-
-        // Create suffix array entries
-        suffixArray = new SuffixEntry[size];
-
-        // Initialize suffix entries with i (position) and j (item index)
-        // Use pre-calculated positions to avoid nested loop
-        for (int i = 0; i < size; i++)
-        {
-            suffixArray[i].i = i;
-
-            // Binary search to find which item this position belongs to
-            int itemIndex = 0;
-            for (int j = items.getSize() - 1; j >= 0; j--)
             {
-                if (i >= itemStartPositions.get(j))
-                {
-                    itemIndex = j;
-                    break;
-                }
+                sa.text += '\x1F'; // Unit separator
+                sa.suffixes.append(SuffixEntry(k, i - 1));
+                k++;
             }
-            suffixArray[i].j = itemIndex;
+
+            sa.text += sa.toLowerCase(getItem(i));
+
+            for (int j = 0; j < getItem(i).length(); j++, k++)
+            {
+                sa.suffixes.append(SuffixEntry(k, i));
+            }
         }
 
-        // Sort suffixes
-        sortSuffixes();
-    }
+        sa.size = sa.text.length();
 
-    // Rebuild suffix array from items
-    template <typename T>
-    void rebuild(const Vector<T>& items)
-    {
-        build(items);
+        // Sort suffixes using the Sort library
+        std::function<int(const SuffixEntry &, const SuffixEntry &)> compareFunc =
+            [&sa](const SuffixEntry &a, const SuffixEntry &b) -> int
+        {
+            // Compare two suffixes lexicographically
+            int pos1 = a.i;
+            int pos2 = b.i;
+
+            if (pos1 == pos2)
+                return 0;
+
+            while (pos1 < (int)sa.text.length() && pos2 < (int)sa.text.length())
+            {
+                if (sa.text[pos1] != sa.text[pos2])
+                {
+                    return sa.text[pos1] - sa.text[pos2];
+                }
+                pos1++;
+                pos2++;
+            }
+
+            return (pos1 == (int)sa.text.length()) ? -1 : 1;
+        };
+
+        Sort::quicksort<SuffixEntry>(sa.suffixes, compareFunc);
+
+        return sa;
     }
 
     // Search for query string and return matching item indices
-    Vector<int> search(const std::string& query)
+    Vector<int> search(const std::string &query)
     {
         Vector<int> results;
 
@@ -240,65 +140,28 @@ public:
         std::string lowerQuery = toLowerCase(query);
 
         // Find lower bound
-        int lower = 0;
-        int left = 0, right = size;
-        while (left < right)
-        {
-            int mid = left + (right - left) / 2;
-            std::string suffix = text.substr(suffixArray[mid].i);
-            if (suffix < lowerQuery)
-            {
-                left = mid + 1;
-            }
-            else
-            {
-                right = mid;
-            }
-        }
-        lower = left;
+        int lower = binarySearch(size, [&](int mid)
+                                 {
+            std::string suffix = text.substr(suffixes[mid].i);
+            return suffix < lowerQuery ? -1 : 1; }, false);
 
         // Find upper bound
-        int upper = size;
-        left = 0;
-        right = size;
-        while (left < right)
-        {
-            int mid = left + (right - left) / 2;
-            std::string suffix = text.substr(suffixArray[mid].i);
+        int upper = binarySearch(size, [&](int mid)
+                                 {
+            std::string suffix = text.substr(suffixes[mid].i);
+            bool suffixStartsWithQuery = suffix.length() >= lowerQuery.length() &&
+                                        suffix.substr(0, lowerQuery.length()) == lowerQuery;
+            return suffixStartsWithQuery || suffix < lowerQuery  ? -1 : 1; }, false);
 
-            // Check if suffix starts with query
-            bool startsWith = false;
-            if (suffix.length() >= lowerQuery.length())
-            {
-                startsWith = (suffix.substr(0, lowerQuery.length()) == lowerQuery);
-            }
-
-            if (startsWith || suffix < lowerQuery)
-            {
-                left = mid + 1;
-            }
-            else
-            {
-                right = mid;
-            }
-        }
-        upper = left;
-
-        // Collect matching item indices, removing duplicates
-        Vector<bool> found;
-        // Dynamically size the found vector - accommodate all 629+ games
-        for (int i = 0; i < 1000; i++)
-        {
-            found.append(false);
-        }
-        
+        // Collect matching item indices into results without duplicates
+        Set<int> found;
         for (int i = lower; i < upper; i++)
         {
-            int itemIndex = suffixArray[i].j;
-            if (itemIndex < 1000 && !found[itemIndex])
+            int itemIndex = suffixes[i].j;
+            if (!found.exists(itemIndex))
             {
                 results.append(itemIndex);
-                found[itemIndex] = true;
+                found.insert(itemIndex);
             }
         }
 
@@ -309,18 +172,6 @@ public:
     int getSize() const
     {
         return size;
-    }
-
-    // Clear
-    void clear()
-    {
-        text = "";
-        if (suffixArray != nullptr)
-        {
-            delete[] suffixArray;
-            suffixArray = nullptr;
-        }
-        size = 0;
     }
 };
 
