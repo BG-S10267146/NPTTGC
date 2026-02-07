@@ -167,7 +167,7 @@ void removeGame(Vector<Game>& games, SuffixArray& gameNames, Set<int>& borrowedG
         return;
     }
 
-    if (borrowedGames.exists(std::to_string(gameToRemove.id)))
+    if (borrowedGames.exists(gameToRemove.id))
     {
         printf("Cannot remove game '%s' (ID: %d) because it is currently borrowed and not returned.\n",
                gameToRemove.name.c_str(), gameToRemove.id);

@@ -101,7 +101,7 @@ void loadBorrowsFromCSV(Vector<Borrow>& borrows, Set<GameID>& borrowedGames, con
     for (int i = 0; i < borrows.getSize(); i++) {
         Borrow borrow = borrows.get(i);
         if (borrow.dateReturned.empty() || borrow.dateReturned == "N/A") {
-            borrowedGames.insert(intToString(borrow.gameId), borrow.gameId);
+            borrowedGames.insert(borrow.gameId);
         }
     }
 
@@ -328,8 +328,8 @@ void memberBorrowGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
     {
         int gameIdx = matchingGameIndices.get(i);
         Game game = games.get(gameIdx);
-        
-        if (!game.isDeleted && !borrowedGames.exists(intToString(game.id)))
+
+        if (!game.isDeleted && !borrowedGames.exists(game.id))
         {
             availableIndices.append(gameIdx);
         }
@@ -378,7 +378,7 @@ void memberBorrowGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
     borrows.append(newBorrow);
 
     // Mark game as borrowed
-    borrowedGames.insert(intToString(selectedGame.id), selectedGame.id);
+    borrowedGames.insert(selectedGame.id);
 
     printf("Game '%s' borrowed successfully.\n", selectedGame.name.c_str());
     
@@ -442,7 +442,7 @@ void memberReturnGame(int memberId, Vector<Game>& games, Vector<Borrow>& borrows
 
     // Remove from borrowed games
     Borrow borrowToReturn = memberBorrows.get(selection);
-    borrowedGames.remove(intToString(borrowToReturn.gameId));
+    borrowedGames.remove(borrowToReturn.gameId);
 
     printf("Game '%s' returned successfully.\n", getGameNameById(games, borrowToReturn.gameId).c_str());
     

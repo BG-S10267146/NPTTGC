@@ -4,24 +4,23 @@
 #include <string>
 #include <stdexcept>
 
-// Generic SetNode for storing values
+// Generic SetNode for storing values only (no keys)
 template <typename T>
 class SetNode
 {
 public:
-    std::string key;
     T value;
     SetNode<T>* next;
 
     // Constructor
-    SetNode(const std::string& k, const T& val)
-        : key(k), value(val), next(nullptr)
+    SetNode(const T& val)
+        : value(val), next(nullptr)
     {
     }
 };
 
 // Set implementation using hash table
-// Stores unique values indexed by string keys
+// Stores unique values using generic type hashing
 template <typename T>
 class Set
 {
@@ -30,13 +29,27 @@ private:
     int size;
     int capacity;
 
-    // Hash function for string keys
-    int hash(const std::string& key) const
+    // Hash function for std::string - hashes character content
+    int hash(const std::string& value) const
     {
         int hashValue = 0;
-        for (size_t i = 0; i < key.length(); i++)
+        for (size_t i = 0; i < value.length(); i++)
         {
-            hashValue = (hashValue * 31 + key[i]) % capacity;
+            hashValue = (hashValue * 31 + value[i]) % capacity;
+        }
+        return (hashValue + capacity) % capacity;
+    }
+
+    // Hash function for generic types - hashes raw bytes
+    template <typename U>
+    int hash(const U& value) const
+    {
+        const unsigned char* bytes = reinterpret_cast<const unsigned char*>(&value);
+        int hashValue = 0;
+
+        for (size_t i = 0; i < sizeof(U); i++)
+        {
+            hashValue = (hashValue * 31 + bytes[i]) % capacity;
         }
         return (hashValue + capacity) % capacity;
     }
@@ -63,7 +76,7 @@ private:
             SetNode<T>* current = oldItems[i];
             while (current != nullptr)
             {
-                insert(current->key, current->value);
+                insert(current->value);
                 current = current->next;
             }
         }
@@ -125,7 +138,7 @@ public:
             SetNode<T>* otherCurrent = other.items[i];
             while (otherCurrent != nullptr)
             {
-                insert(otherCurrent->key, otherCurrent->value);
+                insert(otherCurrent->value);
                 otherCurrent = otherCurrent->next;
             }
         }
@@ -161,7 +174,7 @@ public:
                 SetNode<T>* otherCurrent = other.items[i];
                 while (otherCurrent != nullptr)
                 {
-                    insert(otherCurrent->key, otherCurrent->value);
+                    insert(otherCurrent->value);
                     otherCurrent = otherCurrent->next;
                 }
             }
@@ -169,45 +182,45 @@ public:
         return *this;
     }
 
-    // Insert value with key
-    void insert(const std::string& key, const T& value)
+    // Insert value into set (returns true if inserted, false if already exists)
+    bool insert(const T& value)
     {
         if (size >= capacity / 2)
         {
             resize();
         }
 
-        int index = hash(key);
+        int index = hash(value);
         SetNode<T>* current = items[index];
 
-        // Check if key already exists
+        // Check if value already exists
         while (current != nullptr)
         {
-            if (current->key == key)
+            if (current->value == value)
             {
-                current->value = value;
-                return;
+                return false;  // Value already exists, don't insert duplicate
             }
             current = current->next;
         }
 
-        // Key doesn't exist, insert at the beginning
-        SetNode<T>* newNode = new SetNode<T>(key, value);
+        // Value doesn't exist, insert at the beginning
+        SetNode<T>* newNode = new SetNode<T>(value);
         newNode->next = items[index];
         items[index] = newNode;
         size++;
+        return true;
     }
 
-    // Remove value by key
-    bool remove(const std::string& key)
+    // Remove value from set
+    bool remove(const T& value)
     {
-        int index = hash(key);
+        int index = hash(value);
         SetNode<T>* current = items[index];
         SetNode<T>* prev = nullptr;
 
         while (current != nullptr)
         {
-            if (current->key == key)
+            if (current->value == value)
             {
                 if (prev == nullptr)
                 {
@@ -228,33 +241,15 @@ public:
         return false;
     }
 
-    // Get value by key
-    T get(const std::string& key) const
+    // Check if value exists in set
+    bool exists(const T& value) const
     {
-        int index = hash(key);
+        int index = hash(value);
         SetNode<T>* current = items[index];
 
         while (current != nullptr)
         {
-            if (current->key == key)
-            {
-                return current->value;
-            }
-            current = current->next;
-        }
-
-        throw std::runtime_error("Key not found in set");
-    }
-
-    // Check if key exists
-    bool exists(const std::string& key) const
-    {
-        int index = hash(key);
-        SetNode<T>* current = items[index];
-
-        while (current != nullptr)
-        {
-            if (current->key == key)
+            if (current->value == value)
             {
                 return true;
             }
