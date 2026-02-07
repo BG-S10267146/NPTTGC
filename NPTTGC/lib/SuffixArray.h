@@ -27,45 +27,15 @@ private:
     Vector<SuffixEntry> suffixes; // Array of suffix entries
     size_t size;                  // Number of suffixes
 
-    // Convert character to lowercase
-    char toLower(char c) const
-    {
-        return std::tolower((unsigned char)c);
-    }
-
     // Convert string to lowercase
     std::string toLowerCase(const std::string &str) const
     {
         std::string result = "";
         for (size_t i = 0; i < str.length(); i++)
         {
-            result += toLower(str[i]);
+            result += std::tolower((unsigned char)str[i]);
         }
         return result;
-    }
-
-    // Compare two suffixes lexicographically
-    int compareSuffixes(int idx1, int idx2) const
-    {
-        int pos1 = idx1;
-        int pos2 = idx2;
-
-        while (pos1 < (int)text.length() && pos2 < (int)text.length())
-        {
-            if (text[pos1] != text[pos2])
-            {
-                return text[pos1] - text[pos2];
-            }
-            pos1++;
-            pos2++;
-        }
-
-        // If one suffix is a prefix of the other
-        if (pos1 == (int)text.length() && pos2 == (int)text.length())
-            return 0;
-        if (pos1 == (int)text.length())
-            return -1;
-        return 1;
     }
 
 public:
