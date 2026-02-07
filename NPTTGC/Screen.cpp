@@ -6,6 +6,30 @@
 
 Screen::Screen(AppState &state) : appState(state) {}
 
+// Helper function to validate pagination input
+// Returns: '0'-'9' if digit selected, 'N' for next, 'P' for previous, 'G' for goto, 'Q' for quit, 'I' for invalid
+char Screen::validatePaginationInput(const char* input)
+{
+    if (!input || strlen(input) == 0)
+        return 'I';
+    
+    // Single digit (0-9)
+    if (strlen(input) == 1 && input[0] >= '0' && input[0] <= '9')
+        return input[0];
+    
+    // Single character commands (case-insensitive)
+    if (strlen(input) == 1)
+    {
+        char cmd = input[0];
+        if (cmd == 'N' || cmd == 'n') return 'N';
+        if (cmd == 'P' || cmd == 'p') return 'P';
+        if (cmd == 'G' || cmd == 'g') return 'G';
+        if (cmd == 'Q' || cmd == 'q') return 'Q';
+    }
+    
+    return 'I';  // Invalid
+}
+
 void Screen::startup()
 {
     printf("====================================\n");
@@ -287,7 +311,6 @@ void Screen::removeGame()
         return;
     }
 
-    printf("\nMatching games:\n");
     Vector<Game> activeGames;
     const Vector<Game> &allGames = appState.getGames();
 
@@ -297,8 +320,6 @@ void Screen::removeGame()
         Game game = allGames.get(gameIdx);
         if (!game.isDeleted)
         {
-            printf("  %d. ID: %d, Name: %s, Players: %d-%d\n",
-                   activeGames.getSize(), game.id, game.name.c_str(), game.minPlayers, game.maxPlayers);
             activeGames.append(game);
         }
     }
@@ -309,33 +330,133 @@ void Screen::removeGame()
         return;
     }
 
-    printf("\nEnter the number of the game to remove (0-%d): ", activeGames.getSize() - 1);
-    int selection;
-    scanf_s("%d", &selection);
-    getchar();
+    int totalGames = activeGames.getSize();
+    int gamesPerPage = 10;
+    int totalPages = (totalGames + gamesPerPage - 1) / gamesPerPage;
+    int currentPage = 0;
+    int selectedGame = -1;
 
-    if (selection < 0 || selection >= activeGames.getSize())
+    while (true)
     {
-        printf("Invalid selection.\n");
-        return;
+        int startIdx = currentPage * gamesPerPage;
+        int endIdx = startIdx + gamesPerPage;
+        if (endIdx > totalGames)
+            endIdx = totalGames;
+
+        printf("\n=================================================================\n");
+        printf("Matching games for '%s'\n", searchTerm.c_str());
+        printf("Page %d of %d (Showing %d-%d of %d games)\n",
+               currentPage + 1, totalPages, startIdx + 1, endIdx, totalGames);
+        printf("=================================================================\n");
+
+        for (int i = startIdx; i < endIdx; i++)
+        {
+            Game game = activeGames.get(i);
+            int pageLocalIdx = i - startIdx;
+            printf("%d. Name: %s, Players: %d-%d\n",
+                   pageLocalIdx, game.name.c_str(), game.minPlayers, game.maxPlayers);
+        }
+        printf("=================================================================\n");
+
+        printf("\nNavigation Options:\n");
+        printf("  [0-9] Select game on this page\n");
+        if (currentPage > 0)
+            printf("  [P] Previous page\n");
+        if (currentPage < totalPages - 1)
+            printf("  [N] Next page\n");
+        if (totalPages > 1)
+            printf("  [G] Go to page number\n");
+        printf("  [Q] Quit/Return to menu\n");
+        printf("Enter your choice: ");
+
+        char choice[10];
+        fgets(choice, sizeof(choice), stdin);
+        choice[strcspn(choice, "\n")] = 0;
+
+        char validatedInput = validatePaginationInput(choice);
+
+        if (validatedInput >= '0' && validatedInput <= '9')
+        {
+            int pageLocalIdx = validatedInput - '0';
+            int globalIdx = startIdx + pageLocalIdx;
+
+            if (globalIdx < endIdx)
+            {
+                selectedGame = globalIdx;
+                break;
+            }
+            else
+            {
+                printf("Game not available on this page.\n");
+            }
+        }
+        else if (validatedInput == 'N')
+        {
+            if (currentPage < totalPages - 1)
+                currentPage++;
+            else
+                printf("Already at the last page.\n");
+        }
+        else if (validatedInput == 'P')
+        {
+            if (currentPage > 0)
+                currentPage--;
+            else
+                printf("Already at the first page.\n");
+        }
+        else if (validatedInput == 'G')
+        {
+            if (totalPages == 1)
+            {
+                printf("Only one page available.\n");
+            }
+            else
+            {
+                printf("Enter page number (1-%d): ", totalPages);
+                char pageBuf[10];
+                fgets(pageBuf, sizeof(pageBuf), stdin);
+                pageBuf[strcspn(pageBuf, "\n")] = 0;
+
+                int pageNum = atoi(pageBuf);
+                if (pageNum > 0 && pageNum <= totalPages)
+                {
+                    currentPage = pageNum - 1;
+                }
+                else
+                {
+                    printf("Invalid page number.\n");
+                }
+            }
+        }
+        else if (validatedInput == 'Q')
+        {
+            return;
+        }
+        else
+        {
+            printf("Invalid choice. Please try again.\n");
+        }
     }
 
-    Game gameToRemove = activeGames.get(selection);
+    if (selectedGame >= 0)
+    {
+        Game gameToRemove = activeGames.get(selectedGame);
 
-    if (appState.isGameBorrowed(gameToRemove.id))
-    {
-        printf("Cannot remove game '%s' (ID: %d) because it is currently borrowed and not returned.\n",
-               gameToRemove.name.c_str(), gameToRemove.id);
-        return;
-    }
+        if (appState.isGameBorrowed(gameToRemove.id))
+        {
+            printf("Cannot remove game '%s' because it is currently borrowed and not returned.\n",
+                   gameToRemove.name.c_str());
+            return;
+        }
 
-    if (appState.removeGame(gameToRemove.id))
-    {
-        printf("Game '%s' (ID: %d) removed successfully.\n", gameToRemove.name.c_str(), gameToRemove.id);
-    }
-    else
-    {
-        printf("Failed to remove game.\n");
+        if (appState.removeGame(gameToRemove.id))
+        {
+            printf("Game '%s' removed successfully.\n", gameToRemove.name.c_str());
+        }
+        else
+        {
+            printf("Failed to remove game.\n");
+        }
     }
 }
 
@@ -351,7 +472,7 @@ void Screen::addMember()
 
     printf("Is this an admin account? (y/n): ");
     char isAdminChoice;
-    scanf_s("%c", &isAdminChoice);
+    scanf_s("%c", &isAdminChoice, 1);
     getchar();
 
     bool isAdmin = (isAdminChoice == 'y' || isAdminChoice == 'Y');
@@ -417,7 +538,8 @@ void Screen::borrowsSummary()
             printf("  [P] Previous page\n");
         if (currentPage < totalPages - 1)
             printf("  [N] Next page\n");
-        printf("  [1-%d] Go to page number\n", totalPages);
+        if (totalPages > 1)
+            printf("  [G] Go to page number\n");
         printf("  [Q] Quit/Return to menu\n");
         printf("Enter your choice: ");
 
@@ -425,26 +547,47 @@ void Screen::borrowsSummary()
         fgets(choice, sizeof(choice), stdin);
         choice[strcspn(choice, "\n")] = 0;
 
-        int pageNum = atoi(choice);
-        if (pageNum > 0 && pageNum <= totalPages)
-        {
-            currentPage = pageNum - 1;
-        }
-        else if (choice[0] == 'N' || choice[0] == 'n')
+        char validatedInput = validatePaginationInput(choice);
+
+        if (validatedInput == 'N')
         {
             if (currentPage < totalPages - 1)
                 currentPage++;
             else
                 printf("Already at the last page.\n");
         }
-        else if (choice[0] == 'P' || choice[0] == 'p')
+        else if (validatedInput == 'P')
         {
             if (currentPage > 0)
                 currentPage--;
             else
                 printf("Already at the first page.\n");
         }
-        else if (choice[0] == 'Q' || choice[0] == 'q')
+        else if (validatedInput == 'G')
+        {
+            if (totalPages == 1)
+            {
+                printf("Only one page available.\n");
+            }
+            else
+            {
+                printf("Enter page number (1-%d): ", totalPages);
+                char pageBuf[10];
+                fgets(pageBuf, sizeof(pageBuf), stdin);
+                pageBuf[strcspn(pageBuf, "\n")] = 0;
+
+                int pageNum = atoi(pageBuf);
+                if (pageNum > 0 && pageNum <= totalPages)
+                {
+                    currentPage = pageNum - 1;
+                }
+                else
+                {
+                    printf("Invalid page number.\n");
+                }
+            }
+        }
+        else if (validatedInput == 'Q')
         {
             break;
         }
@@ -515,7 +658,8 @@ void Screen::gamesByPlayerCount()
             printf("  [P] Previous page\n");
         if (currentPage < totalPages - 1)
             printf("  [N] Next page\n");
-        printf("  [1-%d] Go to page number\n", totalPages);
+        if (totalPages > 1)
+            printf("  [G] Go to page number\n");
         printf("  [Q] Quit/Return to menu\n");
         printf("Enter your choice: ");
 
@@ -523,26 +667,47 @@ void Screen::gamesByPlayerCount()
         fgets(choice, sizeof(choice), stdin);
         choice[strcspn(choice, "\n")] = 0;
 
-        int pageNum = atoi(choice);
-        if (pageNum > 0 && pageNum <= totalPages)
-        {
-            currentPage = pageNum - 1;
-        }
-        else if (choice[0] == 'N' || choice[0] == 'n')
+        char validatedInput = validatePaginationInput(choice);
+
+        if (validatedInput == 'N')
         {
             if (currentPage < totalPages - 1)
                 currentPage++;
             else
                 printf("Already at the last page.\n");
         }
-        else if (choice[0] == 'P' || choice[0] == 'p')
+        else if (validatedInput == 'P')
         {
             if (currentPage > 0)
                 currentPage--;
             else
                 printf("Already at the first page.\n");
         }
-        else if (choice[0] == 'Q' || choice[0] == 'q')
+        else if (validatedInput == 'G')
+        {
+            if (totalPages == 1)
+            {
+                printf("Only one page available.\n");
+            }
+            else
+            {
+                printf("Enter page number (1-%d): ", totalPages);
+                char pageBuf[10];
+                fgets(pageBuf, sizeof(pageBuf), stdin);
+                pageBuf[strcspn(pageBuf, "\n")] = 0;
+
+                int pageNum = atoi(pageBuf);
+                if (pageNum > 0 && pageNum <= totalPages)
+                {
+                    currentPage = pageNum - 1;
+                }
+                else
+                {
+                    printf("Invalid page number.\n");
+                }
+            }
+        }
+        else if (validatedInput == 'Q')
         {
             break;
         }
@@ -571,7 +736,6 @@ void Screen::viewReviews()
         return;
     }
 
-    printf("\nMatching games:\n");
     Vector<Game> activeGames;
     const Vector<Game> &allGames = appState.getGames();
 
@@ -581,7 +745,6 @@ void Screen::viewReviews()
         Game game = allGames.get(gameIdx);
         if (!game.isDeleted)
         {
-            printf("  %d. ID: %d, Name: %s\n", activeGames.getSize(), game.id, game.name.c_str());
             activeGames.append(game);
         }
     }
@@ -592,45 +755,141 @@ void Screen::viewReviews()
         return;
     }
 
-    printf("\nEnter the number of the game to view reviews (0-%d): ", activeGames.getSize() - 1);
-    int selection;
-    if (!readInteger(selection))
+    int totalGames = activeGames.getSize();
+    int gamesPerPage = 10;
+    int totalPages = (totalGames + gamesPerPage - 1) / gamesPerPage;
+    int currentPage = 0;
+    int selectedGame = -1;
+
+    while (true)
     {
-        printf("Invalid input. Please enter a number.\n");
-        return;
+        int startIdx = currentPage * gamesPerPage;
+        int endIdx = startIdx + gamesPerPage;
+        if (endIdx > totalGames)
+            endIdx = totalGames;
+
+        printf("\n=================================================================\n");
+        printf("Matching games for '%s'\n", searchTerm.c_str());
+        printf("Page %d of %d (Showing %d-%d of %d games)\n",
+               currentPage + 1, totalPages, startIdx + 1, endIdx, totalGames);
+        printf("=================================================================\n");
+
+        for (int i = startIdx; i < endIdx; i++)
+        {
+            Game game = activeGames.get(i);
+            int pageLocalIdx = i - startIdx;
+            printf("%d. Name: %s\n", pageLocalIdx, game.name.c_str());
+        }
+        printf("=================================================================\n");
+
+        printf("\nNavigation Options:\n");
+        printf("  [0-9] Select game on this page\n");
+        if (currentPage > 0)
+            printf("  [P] Previous page\n");
+        if (currentPage < totalPages - 1)
+            printf("  [N] Next page\n");
+        if (totalPages > 1)
+            printf("  [G] Go to page number\n");
+        printf("  [Q] Quit/Return to menu\n");
+        printf("Enter your choice: ");
+
+        char choice[10];
+        fgets(choice, sizeof(choice), stdin);
+        choice[strcspn(choice, "\n")] = 0;
+
+        char validatedInput = validatePaginationInput(choice);
+
+        if (validatedInput >= '0' && validatedInput <= '9')
+        {
+            int pageLocalIdx = validatedInput - '0';
+            int globalIdx = startIdx + pageLocalIdx;
+
+            if (globalIdx < endIdx)
+            {
+                selectedGame = globalIdx;
+                break;
+            }
+            else
+            {
+                printf("Game not available on this page.\n");
+            }
+        }
+        else if (validatedInput == 'N')
+        {
+            if (currentPage < totalPages - 1)
+                currentPage++;
+            else
+                printf("Already at the last page.\n");
+        }
+        else if (validatedInput == 'P')
+        {
+            if (currentPage > 0)
+                currentPage--;
+            else
+                printf("Already at the first page.\n");
+        }
+        else if (validatedInput == 'G')
+        {
+            if (totalPages == 1)
+            {
+                printf("Only one page available.\n");
+            }
+            else
+            {
+                printf("Enter page number (1-%d): ", totalPages);
+                char pageBuf[10];
+                fgets(pageBuf, sizeof(pageBuf), stdin);
+                pageBuf[strcspn(pageBuf, "\n")] = 0;
+
+                int pageNum = atoi(pageBuf);
+                if (pageNum > 0 && pageNum <= totalPages)
+                {
+                    currentPage = pageNum - 1;
+                }
+                else
+                {
+                    printf("Invalid page number.\n");
+                }
+            }
+        }
+        else if (validatedInput == 'Q')
+        {
+            return;
+        }
+        else
+        {
+            printf("Invalid choice. Please try again.\n");
+        }
     }
 
-    if (selection < 0 || selection >= activeGames.getSize())
+    if (selectedGame >= 0)
     {
-        printf("Invalid selection.\n");
-        return;
+        Game selectedGameObj = activeGames.get(selectedGame);
+        Vector<Review> gameReviews = appState.getReviewsForGame(selectedGameObj.id);
+
+        printf("\n=== Reviews for Game: %s ===\n\n", selectedGameObj.name.c_str());
+
+        if (gameReviews.isEmpty())
+        {
+            printf("No reviews found for this game.\n");
+            return;
+        }
+
+        printf("%-15s %-8s %-40s\n", "Username", "Rating", "Content");
+        printf("%-15s %-8s %-40s\n", "--------", "------", "----------------------------------------");
+
+        for (int i = 0; i < gameReviews.getSize(); i++)
+        {
+            Review review = gameReviews.get(i);
+            std::string username = appState.getMemberNameById(review.userId);
+            printf("%-15s %-8d %-40s\n", username.c_str(), review.rating, review.content.c_str());
+        }
+        printf("\n");
+
+        float averageRating = appState.getAverageRating(selectedGameObj.id);
+        printf("Average rating for %s: %.2f/5 (%d reviews)\n",
+               selectedGameObj.name.c_str(), averageRating, gameReviews.getSize());
     }
-
-    Game selectedGame = activeGames.get(selection);
-    Vector<Review> gameReviews = appState.getReviewsForGame(selectedGame.id);
-
-    printf("\n=== Reviews for Game ID %d ===\n\n", selectedGame.id);
-
-    if (gameReviews.isEmpty())
-    {
-        printf("No reviews found for this game.\n");
-        return;
-    }
-
-    printf("%-15s %-8s %-40s\n", "Username", "Rating", "Content");
-    printf("%-15s %-8s %-40s\n", "--------", "------", "----------------------------------------");
-
-    for (int i = 0; i < gameReviews.getSize(); i++)
-    {
-        Review review = gameReviews.get(i);
-        std::string username = appState.getMemberNameById(review.userId);
-        printf("%-15s %-8d %-40s\n", username.c_str(), review.rating, review.content.c_str());
-    }
-    printf("\n");
-
-    float averageRating = appState.getAverageRating(selectedGame.id);
-    printf("Average rating for Game ID %d: %.2f/5 (%d reviews)\n",
-           selectedGame.id, averageRating, gameReviews.getSize());
 }
 
 void Screen::borrowGame()
@@ -645,7 +904,6 @@ void Screen::borrowGame()
 
     Vector<int> matchingGameIndices = appState.searchGames(searchTerm);
 
-    printf("\nAvailable games matching '%s':\n", searchTerm.c_str());
     Vector<Game> availableGames;
     const Vector<Game> &allGames = appState.getGames();
 
@@ -656,9 +914,6 @@ void Screen::borrowGame()
 
         if (!game.isDeleted && !appState.isGameBorrowed(game.id))
         {
-            printf("  %d. ID: %d, Name: %s, Players: %d-%d\n",
-                   availableGames.getSize(), game.id, game.name.c_str(),
-                   game.minPlayers, game.maxPlayers);
             availableGames.append(game);
         }
     }
@@ -669,29 +924,126 @@ void Screen::borrowGame()
         return;
     }
 
-    printf("\nEnter the number of the game to borrow (0-%d): ", availableGames.getSize() - 1);
-    int selection;
-    if (!readInteger(selection))
+    int totalGames = availableGames.getSize();
+    int gamesPerPage = 10;
+    int totalPages = (totalGames + gamesPerPage - 1) / gamesPerPage;
+    int currentPage = 0;
+    int selectedGame = -1;
+
+    while (true)
     {
-        printf("Invalid input. Please enter a number.\n");
-        return;
+        int startIdx = currentPage * gamesPerPage;
+        int endIdx = startIdx + gamesPerPage;
+        if (endIdx > totalGames)
+            endIdx = totalGames;
+
+        printf("\n=================================================================\n");
+        printf("Available games matching '%s'\n", searchTerm.c_str());
+        printf("Page %d of %d (Showing %d-%d of %d games)\n",
+               currentPage + 1, totalPages, startIdx + 1, endIdx, totalGames);
+        printf("=================================================================\n");
+
+        for (int i = startIdx; i < endIdx; i++)
+        {
+            Game game = availableGames.get(i);
+            int pageLocalIdx = i - startIdx;
+            printf("%d. Name: %s, Players: %d-%d\n",
+                   pageLocalIdx, game.name.c_str(), game.minPlayers, game.maxPlayers);
+        }
+        printf("=================================================================\n");
+
+        printf("\nNavigation Options:\n");
+        printf("  [0-9] Select game on this page\n");
+        if (currentPage > 0)
+            printf("  [P] Previous page\n");
+        if (currentPage < totalPages - 1)
+            printf("  [N] Next page\n");
+        if (totalPages > 1)
+            printf("  [G] Go to page number\n");
+        printf("  [Q] Quit/Return to menu\n");
+        printf("Enter your choice: ");
+
+        char choice[10];
+        fgets(choice, sizeof(choice), stdin);
+        choice[strcspn(choice, "\n")] = 0;
+
+        char validatedInput = validatePaginationInput(choice);
+
+        if (validatedInput >= '0' && validatedInput <= '9')
+        {
+            int pageLocalIdx = validatedInput - '0';
+            int globalIdx = startIdx + pageLocalIdx;
+
+            if (globalIdx < endIdx)
+            {
+                selectedGame = globalIdx;
+                break;
+            }
+            else
+            {
+                printf("Game not available on this page.\n");
+            }
+        }
+        else if (validatedInput == 'N')
+        {
+            if (currentPage < totalPages - 1)
+                currentPage++;
+            else
+                printf("Already at the last page.\n");
+        }
+        else if (validatedInput == 'P')
+        {
+            if (currentPage > 0)
+                currentPage--;
+            else
+                printf("Already at the first page.\n");
+        }
+        else if (validatedInput == 'G')
+        {
+            if (totalPages == 1)
+            {
+                printf("Only one page available.\n");
+            }
+            else
+            {
+                printf("Enter page number (1-%d): ", totalPages);
+                char pageBuf[10];
+                fgets(pageBuf, sizeof(pageBuf), stdin);
+                pageBuf[strcspn(pageBuf, "\n")] = 0;
+
+                int pageNum = atoi(pageBuf);
+                if (pageNum > 0 && pageNum <= totalPages)
+                {
+                    currentPage = pageNum - 1;
+                }
+                else
+                {
+                    printf("Invalid page number.\n");
+                }
+            }
+        }
+        else if (validatedInput == 'Q')
+        {
+            return;
+        }
+        else
+        {
+            printf("Invalid choice. Please try again.\n");
+        }
     }
 
-    if (selection < 0 || selection >= availableGames.getSize())
+    if (selectedGame >= 0)
     {
-        printf("Invalid selection.\n");
-        return;
-    }
+        Game selectedGameObj = availableGames.get(selectedGame);
 
-    Game selectedGame = availableGames.get(selection);
-
-    if (appState.borrowGame(selectedGame.id))
-    {
-        printf("Game '%s' borrowed successfully.\n", selectedGame.name.c_str());
-    }
-    else
-    {
-        printf("Failed to borrow game.\n");
+        if (appState.borrowGame(selectedGameObj.id))
+        {
+            printf("Game '%s' borrowed successfully.\n", selectedGameObj.name.c_str());
+        }
+        else
+        {
+            printf("Failed to borrow game.\n");
+        }
     }
 }
 
@@ -717,37 +1069,126 @@ void Screen::returnGame()
         return;
     }
 
-    printf("\nYour borrowed games:\n");
-    for (int i = 0; i < activeBorrows.getSize(); i++)
+    int totalBorrows = activeBorrows.getSize();
+    int borrowsPerPage = 10;
+    int totalPages = (totalBorrows + borrowsPerPage - 1) / borrowsPerPage;
+    int currentPage = 0;
+    int selectedBorrow = -1;
+
+    while (true)
     {
-        Borrow borrow = activeBorrows.get(i);
-        printf("  %d. Game: %s (ID: %d), Borrowed: %s\n",
-               i, appState.getGameNameById(borrow.gameId).c_str(), borrow.gameId, borrow.dateBorrowed.c_str());
+        int startIdx = currentPage * borrowsPerPage;
+        int endIdx = startIdx + borrowsPerPage;
+        if (endIdx > totalBorrows)
+            endIdx = totalBorrows;
+
+        printf("\n=================================================================\n");
+        printf("Your borrowed games\n");
+        printf("Page %d of %d (Showing %d-%d of %d games)\n",
+               currentPage + 1, totalPages, startIdx + 1, endIdx, totalBorrows);
+        printf("=================================================================\n");
+
+        for (int i = startIdx; i < endIdx; i++)
+        {
+            Borrow borrow = activeBorrows.get(i);
+            int pageLocalIdx = i - startIdx;
+            printf("%d. Game: %s, Borrowed: %s\n",
+                   pageLocalIdx, appState.getGameNameById(borrow.gameId).c_str(), borrow.dateBorrowed.c_str());
+        }
+        printf("=================================================================\n");
+
+        printf("\nNavigation Options:\n");
+        printf("  [0-9] Select game on this page\n");
+        if (currentPage > 0)
+            printf("  [P] Previous page\n");
+        if (currentPage < totalPages - 1)
+            printf("  [N] Next page\n");
+        if (totalPages > 1)
+            printf("  [G] Go to page number\n");
+        printf("  [Q] Quit/Return to menu\n");
+        printf("Enter your choice: ");
+
+        char choice[10];
+        fgets(choice, sizeof(choice), stdin);
+        choice[strcspn(choice, "\n")] = 0;
+
+        char validatedInput = validatePaginationInput(choice);
+
+        if (validatedInput >= '0' && validatedInput <= '9')
+        {
+            int pageLocalIdx = validatedInput - '0';
+            int globalIdx = startIdx + pageLocalIdx;
+
+            if (globalIdx < endIdx)
+            {
+                selectedBorrow = globalIdx;
+                break;
+            }
+            else
+            {
+                printf("Game not available on this page.\n");
+            }
+        }
+        else if (validatedInput == 'N')
+        {
+            if (currentPage < totalPages - 1)
+                currentPage++;
+            else
+                printf("Already at the last page.\n");
+        }
+        else if (validatedInput == 'P')
+        {
+            if (currentPage > 0)
+                currentPage--;
+            else
+                printf("Already at the first page.\n");
+        }
+        else if (validatedInput == 'G')
+        {
+            if (totalPages == 1)
+            {
+                printf("Only one page available.\n");
+            }
+            else
+            {
+                printf("Enter page number (1-%d): ", totalPages);
+                char pageBuf[10];
+                fgets(pageBuf, sizeof(pageBuf), stdin);
+                pageBuf[strcspn(pageBuf, "\n")] = 0;
+
+                int pageNum = atoi(pageBuf);
+                if (pageNum > 0 && pageNum <= totalPages)
+                {
+                    currentPage = pageNum - 1;
+                }
+                else
+                {
+                    printf("Invalid page number.\n");
+                }
+            }
+        }
+        else if (validatedInput == 'Q')
+        {
+            return;
+        }
+        else
+        {
+            printf("Invalid choice. Please try again.\n");
+        }
     }
 
-    printf("\nEnter the number of the game to return (0-%d): ", activeBorrows.getSize() - 1);
-    int selection;
-    if (!readInteger(selection))
+    if (selectedBorrow >= 0)
     {
-        printf("Invalid input. Please enter a number.\n");
-        return;
-    }
+        Borrow borrowToReturn = activeBorrows.get(selectedBorrow);
 
-    if (selection < 0 || selection >= activeBorrows.getSize())
-    {
-        printf("Invalid selection.\n");
-        return;
-    }
-
-    Borrow borrowToReturn = activeBorrows.get(selection);
-
-    if (appState.returnGame(borrowToReturn.borrowId))
-    {
-        printf("Game '%s' returned successfully.\n", appState.getGameNameById(borrowToReturn.gameId).c_str());
-    }
-    else
-    {
-        printf("Failed to return game.\n");
+        if (appState.returnGame(borrowToReturn.borrowId))
+        {
+            printf("Game '%s' returned successfully.\n", appState.getGameNameById(borrowToReturn.gameId).c_str());
+        }
+        else
+        {
+            printf("Failed to return game.\n");
+        }
     }
 }
 
@@ -763,18 +1204,99 @@ void Screen::myBorrowSummary()
         return;
     }
 
-    printf("\n%-30s %-20s %-20s\n", "Game Name", "Date Borrowed", "Date Returned");
-    printf("%-30s %-20s %-20s\n", "-----------------------------", "-------------------", "-------------------");
+    int totalBorrows = memberBorrows.getSize();
+    int borrowsPerPage = 10;
+    int totalPages = (totalBorrows + borrowsPerPage - 1) / borrowsPerPage;
+    int currentPage = 0;
 
-    for (int i = 0; i < memberBorrows.getSize(); i++)
+    while (true)
     {
-        Borrow borrow = memberBorrows.get(i);
-        printf("%-30s %-20s %-20s\n",
-               appState.getGameNameById(borrow.gameId).c_str(),
-               borrow.dateBorrowed.c_str(),
-               borrow.dateReturned.empty() ? "Not Returned" : borrow.dateReturned.c_str());
+        int startIdx = currentPage * borrowsPerPage;
+        int endIdx = startIdx + borrowsPerPage;
+        if (endIdx > totalBorrows)
+            endIdx = totalBorrows;
+
+        printf("\n=================================================================\n");
+        printf("Your Borrow Summary\n");
+        printf("Page %d of %d (Showing %d-%d of %d records)\n",
+               currentPage + 1, totalPages, startIdx + 1, endIdx, totalBorrows);
+        printf("=================================================================\n\n");
+        printf("%-30s %-20s %-20s\n", "Game Name", "Date Borrowed", "Date Returned");
+        printf("%-30s %-20s %-20s\n", "-----------------------------", "-------------------", "-------------------");
+
+        for (int i = startIdx; i < endIdx; i++)
+        {
+            Borrow borrow = memberBorrows.get(i);
+            printf("%-30s %-20s %-20s\n",
+                   appState.getGameNameById(borrow.gameId).c_str(),
+                   borrow.dateBorrowed.c_str(),
+                   borrow.dateReturned.empty() ? "Not Returned" : borrow.dateReturned.c_str());
+        }
+        printf("=================================================================\n");
+
+        printf("\nNavigation Options:\n");
+        if (currentPage > 0)
+            printf("  [P] Previous page\n");
+        if (currentPage < totalPages - 1)
+            printf("  [N] Next page\n");
+        if (totalPages > 1)
+            printf("  [G] Go to page number\n");
+        printf("  [Q] Quit/Return to menu\n");
+        printf("Enter your choice: ");
+
+        char choice[10];
+        fgets(choice, sizeof(choice), stdin);
+        choice[strcspn(choice, "\n")] = 0;
+
+        char validatedInput = validatePaginationInput(choice);
+
+        if (validatedInput == 'N')
+        {
+            if (currentPage < totalPages - 1)
+                currentPage++;
+            else
+                printf("Already at the last page.\n");
+        }
+        else if (validatedInput == 'P')
+        {
+            if (currentPage > 0)
+                currentPage--;
+            else
+                printf("Already at the first page.\n");
+        }
+        else if (validatedInput == 'G')
+        {
+            if (totalPages == 1)
+            {
+                printf("Only one page available.\n");
+            }
+            else
+            {
+                printf("Enter page number (1-%d): ", totalPages);
+                char pageBuf[10];
+                fgets(pageBuf, sizeof(pageBuf), stdin);
+                pageBuf[strcspn(pageBuf, "\n")] = 0;
+
+                int pageNum = atoi(pageBuf);
+                if (pageNum > 0 && pageNum <= totalPages)
+                {
+                    currentPage = pageNum - 1;
+                }
+                else
+                {
+                    printf("Invalid page number.\n");
+                }
+            }
+        }
+        else if (validatedInput == 'Q')
+        {
+            break;
+        }
+        else
+        {
+            printf("Invalid choice. Please try again.\n");
+        }
     }
-    printf("\n");
 }
 
 void Screen::writeReview()
@@ -795,7 +1317,6 @@ void Screen::writeReview()
         return;
     }
 
-    printf("\nMatching games:\n");
     Vector<Game> activeGames;
     const Vector<Game> &allGames = appState.getGames();
 
@@ -805,8 +1326,6 @@ void Screen::writeReview()
         Game game = allGames.get(gameIdx);
         if (!game.isDeleted)
         {
-            printf("  %d. ID: %d, Name: %s, Players: %d-%d\n",
-                   activeGames.getSize(), game.id, game.name.c_str(), game.minPlayers, game.maxPlayers);
             activeGames.append(game);
         }
     }
@@ -817,49 +1336,146 @@ void Screen::writeReview()
         return;
     }
 
-    printf("\nEnter the number of the game to review (0-%d): ", activeGames.getSize() - 1);
-    int selection;
-    if (!readInteger(selection))
+    int totalGames = activeGames.getSize();
+    int gamesPerPage = 10;
+    int totalPages = (totalGames + gamesPerPage - 1) / gamesPerPage;
+    int currentPage = 0;
+    int selectedGame = -1;
+
+    while (true)
     {
-        printf("Invalid input. Please enter a number.\n");
-        return;
+        int startIdx = currentPage * gamesPerPage;
+        int endIdx = startIdx + gamesPerPage;
+        if (endIdx > totalGames)
+            endIdx = totalGames;
+
+        printf("\n=================================================================\n");
+        printf("Matching games for '%s'\n", searchTerm.c_str());
+        printf("Page %d of %d (Showing %d-%d of %d games)\n",
+               currentPage + 1, totalPages, startIdx + 1, endIdx, totalGames);
+        printf("=================================================================\n");
+
+        for (int i = startIdx; i < endIdx; i++)
+        {
+            Game game = activeGames.get(i);
+            int pageLocalIdx = i - startIdx;
+            printf("%d. Name: %s, Players: %d-%d\n",
+                   pageLocalIdx, game.name.c_str(), game.minPlayers, game.maxPlayers);
+        }
+        printf("=================================================================\n");
+
+        printf("\nNavigation Options:\n");
+        printf("  [0-9] Select game on this page\n");
+        if (currentPage > 0)
+            printf("  [P] Previous page\n");
+        if (currentPage < totalPages - 1)
+            printf("  [N] Next page\n");
+        if (totalPages > 1)
+            printf("  [G] Go to page number\n");
+        printf("  [Q] Quit/Return to menu\n");
+        printf("Enter your choice: ");
+
+        char choice[10];
+        fgets(choice, sizeof(choice), stdin);
+        choice[strcspn(choice, "\n")] = 0;
+
+        char validatedInput = validatePaginationInput(choice);
+
+        if (validatedInput >= '0' && validatedInput <= '9')
+        {
+            int pageLocalIdx = validatedInput - '0';
+            int globalIdx = startIdx + pageLocalIdx;
+
+            if (globalIdx < endIdx)
+            {
+                selectedGame = globalIdx;
+                break;
+            }
+            else
+            {
+                printf("Game not available on this page.\n");
+            }
+        }
+        else if (validatedInput == 'N')
+        {
+            if (currentPage < totalPages - 1)
+                currentPage++;
+            else
+                printf("Already at the last page.\n");
+        }
+        else if (validatedInput == 'P')
+        {
+            if (currentPage > 0)
+                currentPage--;
+            else
+                printf("Already at the first page.\n");
+        }
+        else if (validatedInput == 'G')
+        {
+            if (totalPages == 1)
+            {
+                printf("Only one page available.\n");
+            }
+            else
+            {
+                printf("Enter page number (1-%d): ", totalPages);
+                char pageBuf[10];
+                fgets(pageBuf, sizeof(pageBuf), stdin);
+                pageBuf[strcspn(pageBuf, "\n")] = 0;
+
+                int pageNum = atoi(pageBuf);
+                if (pageNum > 0 && pageNum <= totalPages)
+                {
+                    currentPage = pageNum - 1;
+                }
+                else
+                {
+                    printf("Invalid page number.\n");
+                }
+            }
+        }
+        else if (validatedInput == 'Q')
+        {
+            return;
+        }
+        else
+        {
+            printf("Invalid choice. Please try again.\n");
+        }
     }
 
-    if (selection < 0 || selection >= activeGames.getSize())
+    if (selectedGame >= 0)
     {
-        printf("Invalid selection.\n");
-        return;
-    }
+        Game selectedGameObj = activeGames.get(selectedGame);
 
-    Game selectedGame = activeGames.get(selection);
+        printf("\n=== Write Review ===\n");
 
-    printf("\n=== Write Review ===\n");
+        printf("Enter rating (1-5): ");
+        int rating;
+        if (!readInteger(rating))
+        {
+            printf("Invalid input. Please enter a number.\n");
+            return;
+        }
 
-    printf("Enter rating (1-5): ");
-    int rating;
-    if (!readInteger(rating))
-    {
-        printf("Invalid input. Please enter a number.\n");
-        return;
-    }
+        if (rating < 1 || rating > 5)
+        {
+            printf("Invalid rating. Please enter a value between 1 and 5.\n");
+            return;
+        }
 
-    if (rating < 1 || rating > 5)
-    {
-        printf("Invalid rating. Please enter a value between 1 and 5.\n");
-        return;
-    }
+        char contentBuf[500];
+        printf("Enter review content: ");
+        fgets(contentBuf, sizeof(contentBuf), stdin);
+        contentBuf[strcspn(contentBuf, "\n")] = 0;
 
-    char contentBuf[500];
-    printf("Enter review content: ");
-    fgets(contentBuf, sizeof(contentBuf), stdin);
-    contentBuf[strcspn(contentBuf, "\n")] = 0;
-
-    if (appState.addReview(selectedGame.id, rating, std::string(contentBuf)))
-    {
-        printf("Review submitted successfully!\n");
-    }
-    else
-    {
-        printf("Failed to submit review.\n");
+        if (appState.addReview(selectedGameObj.id, rating, std::string(contentBuf)))
+        {
+            printf("Review submitted successfully!\n");
+        }
+        else
+        {
+            printf("Failed to submit review.\n");
+        }
     }
 }
