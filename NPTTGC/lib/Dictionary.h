@@ -5,7 +5,6 @@
 #include <stdexcept>
 #include "Hash.h"
 
-// Generic DictionaryNode for any key type
 template <typename K, typename V>
 class DictionaryNode
 {
@@ -14,13 +13,13 @@ public:
     V item;
     DictionaryNode<K, V> *next;
 
-    // Constructor
     DictionaryNode(const K &k, const V &value)
         : key(k), item(value), next(nullptr)
     {
     }
 };
 
+/// Hash table implementation of a dictionary (key-value map) with separate chaining.
 template <typename K, typename V>
 class Dictionary
 {
@@ -35,7 +34,6 @@ private:
         return hashValue % capacity;
     }
 
-    // Helper function to resize hash table
     void resize()
     {
         int oldCapacity = capacity;
@@ -51,7 +49,8 @@ private:
 
         size = 0;
 
-        // Rehash all existing entries into the new table
+        // Rehash all entries from old table into new table
+        // Keys may map to different buckets due to new capacity
         for (int i = 0; i < oldCapacity; i++)
         {
             DictionaryNode<K, V> *current = oldItems[i];
@@ -62,7 +61,7 @@ private:
             }
         }
 
-        // Delete old hash table
+        // Delete all nodes and the old table array
         for (int i = 0; i < oldCapacity; i++)
         {
             DictionaryNode<K, V> *current = oldItems[i];
@@ -77,7 +76,6 @@ private:
     }
 
 public:
-    // Constructor
     Dictionary(int initialCapacity = 10)
         : capacity(initialCapacity), size(0)
     {
@@ -88,10 +86,8 @@ public:
         }
     }
 
-    // Destructor
     ~Dictionary()
     {
-        // Clean up all nodes
         for (int i = 0; i < capacity; i++)
         {
             DictionaryNode<K, V> *current = items[i];
@@ -105,7 +101,6 @@ public:
         delete[] items;
     }
 
-    // Copy constructor
     Dictionary(const Dictionary &other)
         : capacity(other.capacity), size(other.size)
     {
@@ -115,7 +110,7 @@ public:
             items[i] = nullptr;
         }
 
-        // Deep copy all nodes
+        // Deep copy all entries from other dictionary
         for (int i = 0; i < other.capacity; i++)
         {
             DictionaryNode<K, V> *otherCurrent = other.items[i];
@@ -127,12 +122,11 @@ public:
         }
     }
 
-    // Assignment operator
     Dictionary &operator=(const Dictionary &other)
     {
         if (this != &other)
         {
-            // Clean up current data
+            // Clean up existing data
             for (int i = 0; i < capacity; i++)
             {
                 DictionaryNode<K, V> *current = items[i];
@@ -145,7 +139,7 @@ public:
             }
             delete[] items;
 
-            // Copy from other
+            // Allocate new hash table matching other's capacity
             capacity = other.capacity;
             size = 0;
             items = new DictionaryNode<K, V> *[capacity];
@@ -154,6 +148,7 @@ public:
                 items[i] = nullptr;
             }
 
+            // Deep copy all entries from other dictionary
             for (int i = 0; i < other.capacity; i++)
             {
                 DictionaryNode<K, V> *otherCurrent = other.items[i];
@@ -167,9 +162,10 @@ public:
         return *this;
     }
 
-    // Insert or update key-value pair
+    /// Inserts or updates a key-value pair. If the key exists, its value is updated.
     void insert(const K &key, const V &item)
     {
+        // Maintain load factor below 0.5 for good performance
         if (size >= capacity / 2)
         {
             resize();
@@ -178,7 +174,6 @@ public:
         int index = getIndex(key);
         DictionaryNode<K, V> *current = items[index];
 
-        // Check if key already exists and update it
         while (current != nullptr)
         {
             if (current->key == key)
@@ -195,7 +190,7 @@ public:
         size++;
     }
 
-    // Remove key-value pair by key
+    /// Removes a key-value pair by key. Returns true if removed, false if not found.
     bool remove(const K &key)
     {
         int index = getIndex(key);
@@ -225,7 +220,7 @@ public:
         return false;
     }
 
-    // Get value by key
+    /// Gets the value associated with a key. Throws runtime_error if key not found.
     V get(const K &key) const
     {
         int index = getIndex(key);
@@ -243,7 +238,7 @@ public:
         throw std::runtime_error("Key not found in dictionary");
     }
 
-    // Check if key exists
+    /// Checks if a key exists in the dictionary.
     bool exists(const K &key) const
     {
         int index = getIndex(key);
@@ -261,25 +256,21 @@ public:
         return false;
     }
 
-    // Get current size
     int getSize() const
     {
         return size;
     }
 
-    // Get current capacity
     int getCapacity() const
     {
         return capacity;
     }
 
-    // Check if empty
     bool isEmpty() const
     {
         return size == 0;
     }
 
-    // Clear all entries
     void clear()
     {
         for (int i = 0; i < capacity; i++)

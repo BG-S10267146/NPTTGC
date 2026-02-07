@@ -3,11 +3,7 @@
 
 #include <string>
 
-/**
- * Computes a hash value for any type by hashing raw bytes.
- * For std::string, hashes character content using polynomial rolling hash.
- * For all other types, hashes the object's memory representation byte-by-byte.
- */
+/// Computes a hash value for generic types by hashing their memory representation.
 template <typename T>
 int hash(const T &value)
 {
@@ -21,10 +17,16 @@ int hash(const T &value)
     return hashValue;
 }
 
+/// Computes a polynomial rolling hash for std::string.
 template <>
 inline int hash<std::string>(const std::string &value)
 {
-    return hash(value.c_str());
+    int hashValue = 0;
+    for (size_t i = 0; i < value.length(); i++)
+    {
+        hashValue = hashValue * 31 + value[i];
+    }
+    return hashValue;
 }
 
 #endif
