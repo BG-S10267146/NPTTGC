@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include "Vector.h"
+#include "Dictionary.h"
 
 /// Splits a CSV line into fields, handling quoted values and escaped quotes.
 inline Vector<std::string> splitCSVLine(const std::string &line)
@@ -101,6 +102,34 @@ Vector<T> buildFromFile(const std::string &filepath, T (*builder)(const Vector<s
 		if (line.empty())
 			continue;
 		result.append(builder(splitCSVLine(line)));
+	}
+
+	file.close();
+	return result;
+}
+
+/// Loads objects from a CSV file and builds a Dictionary using a key extraction function.
+template <typename K, typename T>
+Dictionary<K, T> buildDictFromFile(const std::string &filepath, T (*builder)(const Vector<std::string> &), K (*keyFunc)(const T &))
+{
+	Dictionary<K, T> result;
+	std::ifstream file(filepath.c_str());
+
+	if (!file.is_open())
+	{
+		printf("Warning: Could not open %s. Starting with empty dictionary.\n", filepath.c_str());
+		return result;
+	}
+
+	std::string line;
+	std::getline(file, line);
+
+	while (std::getline(file, line))
+	{
+		if (line.empty())
+			continue;
+		T item = builder(splitCSVLine(line));
+		result.insert(keyFunc(item), item);
 	}
 
 	file.close();

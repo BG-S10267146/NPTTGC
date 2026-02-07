@@ -4,27 +4,27 @@
 
 std::string Game::csvHeader()
 {
-    return "name,minplayers,maxplayers,maxplaytime,minplaytime,yearpublished,isdeleted";
+    return "id,name,minplayers,maxplayers,maxplaytime,minplaytime,yearpublished,isdeleted";
 }
 
-Game Game::fromCSVRow(const Vector<std::string>& row)
+Game Game::fromCSVRow(const Vector<std::string> &row)
 {
-    static int nextId = 1;
     Game game;
-    game.id = nextId++;
-    game.name = trim(row.get(0));
-    game.minPlayers = atoi(row.get(1).c_str());
-    game.maxPlayers = atoi(row.get(2).c_str());
-    game.maxPlaytime = atoi(row.get(3).c_str());
-    game.minPlaytime = atoi(row.get(4).c_str());
-    game.yearPublished = atoi(row.get(5).c_str());
-    game.isDeleted = (row.getSize() >= 7) ? (atoi(row.get(6).c_str()) != 0) : false;
+    game.id = atoi(row.get(0).c_str());
+    game.name = trim(row.get(1));
+    game.minPlayers = atoi(row.get(2).c_str());
+    game.maxPlayers = atoi(row.get(3).c_str());
+    game.maxPlaytime = atoi(row.get(4).c_str());
+    game.minPlaytime = atoi(row.get(5).c_str());
+    game.yearPublished = atoi(row.get(6).c_str());
+    game.isDeleted = atoi(row.get(7).c_str()) != 0;
     return game;
 }
 
-Vector<std::string> Game::toCSVRow(const Game& game)
+Vector<std::string> Game::toCSVRow(const Game &game)
 {
     Vector<std::string> row;
+    row.append(std::to_string(game.id));
     row.append(game.name);
     row.append(std::to_string(game.minPlayers));
     row.append(std::to_string(game.maxPlayers));

@@ -16,15 +16,15 @@ void AppState::loadData()
 
 void AppState::saveData()
 {
-    saveToFile<Member>("members.csv", Member::csvHeader(), members, Member::toCSVRow);
-    saveToFile<Game>("games.csv", Game::csvHeader(), games, Game::toCSVRow);
-    saveToFile<Borrow>("borrows.csv", Borrow::csvHeader(), borrows, Borrow::toCSVRow);
-    saveToFile<Review>("reviews.csv", Review::csvHeader(), reviews, Review::toCSVRow);
+    saveToFile<Member>("members.csv", Member::csvHeader(), members.toVector(), Member::toCSVRow);
+    saveToFile<Game>("games.csv", Game::csvHeader(), games.toVector(), Game::toCSVRow);
+    saveToFile<Borrow>("borrows.csv", Borrow::csvHeader(), borrows.toVector(), Borrow::toCSVRow);
+    saveToFile<Review>("reviews.csv", Review::csvHeader(), reviews.toVector(), Review::toCSVRow);
 }
 
 void AppState::loadMembers(const std::string &filename)
 {
-    members = buildFromFile<Member>(filename, Member::fromCSVRow);
+    members = buildDictFromFile<int, Member>(filename, Member::fromCSVRow, [](const Member &m) { return m.id; });
 
     if (members.isEmpty())
     {
@@ -33,12 +33,14 @@ void AppState::loadMembers(const std::string &filename)
         admin.id = 1;
         admin.username = "admin";
         admin.isAdmin = true;
-        members.append(admin);
+        members.insert(admin.id, admin);
     }
 
-    for (int i = 0; i < members.getSize(); i++)
+    // Build username index
+    Vector<Member> memberList = members.toVector();
+    for (int i = 0; i < memberList.getSize(); i++)
     {
-        Member member = members.get(i);
+        Member member = memberList.get(i);
         membersByUsername.insert(member.username, member.id);
     }
 
@@ -47,20 +49,23 @@ void AppState::loadMembers(const std::string &filename)
 
 void AppState::loadGames(const std::string &filename)
 {
-    games = buildFromFile<Game>(filename, Game::fromCSVRow);
-    gameNames = SuffixArray::build(games.getSize(), [&](int i)
-                                   { return games[i].name; });
+    games = buildDictFromFile<int, Game>(filename, Game::fromCSVRow, [](const Game &g) { return g.id; });
+    
+    Vector<Game> gameList = games.toVector();
+    gameNames = SuffixArray::build(gameList.getSize(), [&](int i)
+                                   { return gameList[i].name; });
 
     printf("Loaded %d games from %s\n", games.getSize(), filename.c_str());
 }
 
 void AppState::loadBorrows(const std::string &filename)
 {
-    borrows = buildFromFile<Borrow>(filename, Borrow::fromCSVRow);
+    borrows = buildDictFromFile<int, Borrow>(filename, Borrow::fromCSVRow, [](const Borrow &b) { return b.borrowId; });
 
-    for (int i = 0; i < borrows.getSize(); i++)
+    Vector<Borrow> borrowList = borrows.toVector();
+    for (int i = 0; i < borrowList.getSize(); i++)
     {
-        Borrow borrow = borrows.get(i);
+        Borrow borrow = borrowList.get(i);
         if (borrow.dateReturned.empty() || borrow.dateReturned == "N/A")
         {
             borrowedGames.insert(borrow.gameId);
@@ -72,11 +77,12 @@ void AppState::loadBorrows(const std::string &filename)
 
 void AppState::loadReviews(const std::string &filename)
 {
-    reviews = buildFromFile<Review>(filename, Review::fromCSVRow);
+    reviews = buildDictFromFile<int, Review>(filename, Review::fromCSVRow, [](const Review &r) { return r.reviewId; });
 
-    for (int i = 0; i < reviews.getSize(); i++)
+    Vector<Review> reviewList = reviews.toVector();
+    for (int i = 0; i < reviewList.getSize(); i++)
     {
-        Review review = reviews.get(i);
+        Review review = reviewList.get(i);
         reviewsByGame.insert(review.gameId, review.reviewId);
     }
 
@@ -92,13 +98,10 @@ std::optional<Member> AppState::authenticateMember(const std::string &username)
 
     MemberID memberId = membersByUsername.get(username);
 
-    for (int i = 0; i < members.getSize(); i++)
+    if (members.exists(memberId))
     {
-        if (members[i].id == memberId)
-        {
-            currentUserId = memberId;
-            return members[i];
-        }
+        currentUserId = memberId;
+        return members.get(memberId);
     }
 
     return std::nullopt;
@@ -117,10 +120,10 @@ bool AppState::addMember(const std::string &username, bool isAdmin)
     newMember.username = username;
     newMember.isAdmin = isAdmin;
 
-    members.append(newMember);
+    members.insert(memberId, newMember);
     membersByUsername.insert(username, memberId);
 
-    saveToFile<Member>("members.csv", Member::csvHeader(), members, Member::toCSVRow);
+    saveToFile<Member>("members.csv", Member::csvHeader(), members.toVector(), Member::toCSVRow);
     return true;
 }
 
@@ -134,14 +137,12 @@ Member *AppState::getCurrentUser()
     if (currentUserId == -1)
         return nullptr;
 
-    for (int i = 0; i < members.getSize(); i++)
-    {
-        if (members[i].id == currentUserId)
-        {
-            return &members[i];
-        }
-    }
-    return nullptr;
+    if (!members.exists(currentUserId))
+        return nullptr;
+
+    static Member currentMember;
+    currentMember = members.get(currentUserId);
+    return &currentMember;
 }
 
 int AppState::getCurrentUserId()
@@ -151,10 +152,11 @@ int AppState::getCurrentUserId()
 
 bool AppState::addGame(const Game &game)
 {
-    games.append(game);
-    gameNames = SuffixArray::build(games.getSize(), [&](int i)
-                                   { return games[i].name; });
-    saveToFile<Game>("games.csv", Game::csvHeader(), games, Game::toCSVRow);
+    games.insert(game.id, game);
+    Vector<Game> gameList = games.toVector();
+    gameNames = SuffixArray::build(gameList.getSize(), [&](int i)
+                                   { return gameList[i].name; });
+    saveToFile<Game>("games.csv", Game::csvHeader(), gameList, Game::toCSVRow);
     return true;
 }
 
@@ -165,27 +167,29 @@ bool AppState::removeGame(int gameId)
         return false;
     }
 
-    for (int i = 0; i < games.getSize(); i++)
+    if (!games.exists(gameId))
     {
-        if (games[i].id == gameId)
-        {
-            games[i].isDeleted = true;
-            gameNames = SuffixArray::build(games.getSize(), [&](int i)
-                                           { return games[i].name; });
-            saveToFile<Game>("games.csv", Game::csvHeader(), games, Game::toCSVRow);
-            return true;
-        }
+        return false;
     }
 
-    return false;
+    Game game = games.get(gameId);
+    game.isDeleted = true;
+    games.insert(gameId, game);
+
+    Vector<Game> gameList = games.toVector();
+    gameNames = SuffixArray::build(gameList.getSize(), [&](int i)
+                                   { return gameList[i].name; });
+    saveToFile<Game>("games.csv", Game::csvHeader(), gameList, Game::toCSVRow);
+    return true;
 }
 
 Vector<Game> AppState::getGamesForPlayerCount(int playerCount)
 {
+    Vector<Game> allGames = games.toVector();
     Vector<Game> matchingGames;
-    for (int i = 0; i < games.getSize(); i++)
+    for (int i = 0; i < allGames.getSize(); i++)
     {
-        Game game = games.get(i);
+        Game game = allGames.get(i);
         if (!game.isDeleted && playerCount >= game.minPlayers && playerCount <= game.maxPlayers)
         {
             matchingGames.append(game);
@@ -208,25 +212,19 @@ Vector<int> AppState::searchGames(const std::string &query)
 
 Game *AppState::getGameById(int gameId)
 {
-    for (int i = 0; i < games.getSize(); i++)
-    {
-        if (games[i].id == gameId)
-        {
-            return &games[i];
-        }
-    }
-    return nullptr;
+    if (!games.exists(gameId))
+        return nullptr;
+
+    static Game gameCache;
+    gameCache = games.get(gameId);
+    return &gameCache;
 }
 
 std::string AppState::getGameNameById(int gameId)
 {
-    for (int i = 0; i < games.getSize(); i++)
+    if (games.exists(gameId))
     {
-        Game game = games.get(i);
-        if (game.id == gameId)
-        {
-            return game.name;
-        }
+        return games.get(gameId).name;
     }
     return "Unknown Game";
 }
@@ -245,11 +243,11 @@ bool AppState::borrowGame(int gameId)
     newBorrow.gameId = gameId;
     newBorrow.dateBorrowed = getCurrentDateTime();
     newBorrow.dateReturned = "N/A";
-    borrows.append(newBorrow);
-
+    
+    borrows.insert(newBorrow.borrowId, newBorrow);
     borrowedGames.insert(gameId);
 
-    saveToFile<Borrow>("borrows.csv", Borrow::csvHeader(), borrows, Borrow::toCSVRow);
+    saveToFile<Borrow>("borrows.csv", Borrow::csvHeader(), borrows.toVector(), Borrow::toCSVRow);
     return true;
 }
 
@@ -258,23 +256,24 @@ bool AppState::returnGame(int borrowId)
     if (currentUserId == -1)
         return false;
 
-    for (int i = 0; i < borrows.getSize(); i++)
-    {
-        if (borrows[i].borrowId == borrowId && borrows[i].memberId == currentUserId)
-        {
-            borrows[i].dateReturned = getCurrentDateTime();
-            borrowedGames.remove(borrows[i].gameId);
-            saveToFile<Borrow>("borrows.csv", Borrow::csvHeader(), borrows, Borrow::toCSVRow);
-            return true;
-        }
-    }
+    if (!borrows.exists(borrowId))
+        return false;
 
-    return false;
+    Borrow borrow = borrows.get(borrowId);
+    if (borrow.memberId != currentUserId)
+        return false;
+
+    borrow.dateReturned = getCurrentDateTime();
+    borrows.insert(borrowId, borrow);
+    borrowedGames.remove(borrow.gameId);
+    
+    saveToFile<Borrow>("borrows.csv", Borrow::csvHeader(), borrows.toVector(), Borrow::toCSVRow);
+    return true;
 }
 
 Vector<Borrow> AppState::getAllBorrows()
 {
-    Vector<Borrow> sortedBorrows = borrows;
+    Vector<Borrow> sortedBorrows = borrows.toVector();
     Sort::quicksort(sortedBorrows, [](const Borrow &b1, const Borrow &b2)
                     {
         int borrowCompare = compareDates(b1.dateBorrowed, b2.dateBorrowed);
@@ -289,10 +288,11 @@ Vector<Borrow> AppState::getMemberBorrows()
     if (currentUserId == -1)
         return Vector<Borrow>();
 
+    Vector<Borrow> allBorrows = borrows.toVector();
     Vector<Borrow> memberBorrows;
-    for (int i = 0; i < borrows.getSize(); i++)
+    for (int i = 0; i < allBorrows.getSize(); i++)
     {
-        Borrow borrow = borrows.get(i);
+        Borrow borrow = allBorrows.get(i);
         if (borrow.memberId == currentUserId)
         {
             memberBorrows.append(borrow);
@@ -325,19 +325,20 @@ bool AppState::addReview(int gameId, int rating, const std::string &content)
     newReview.rating = rating;
     newReview.content = content;
 
-    reviews.append(newReview);
+    reviews.insert(newReview.reviewId, newReview);
     reviewsByGame.insert(gameId, newReview.reviewId);
 
-    saveToFile<Review>("reviews.csv", Review::csvHeader(), reviews, Review::toCSVRow);
+    saveToFile<Review>("reviews.csv", Review::csvHeader(), reviews.toVector(), Review::toCSVRow);
     return true;
 }
 
 Vector<Review> AppState::getReviewsForGame(int gameId)
 {
+    Vector<Review> allReviews = reviews.toVector();
     Vector<Review> gameReviews;
-    for (int i = 0; i < reviews.getSize(); i++)
+    for (int i = 0; i < allReviews.getSize(); i++)
     {
-        Review review = reviews.get(i);
+        Review review = allReviews.get(i);
         if (review.gameId == gameId)
         {
             gameReviews.append(review);
@@ -363,35 +364,46 @@ float AppState::getAverageRating(int gameId)
 
 std::string AppState::getMemberNameById(int memberId)
 {
-    for (int i = 0; i < members.getSize(); i++)
+    if (members.exists(memberId))
     {
-        Member member = members.get(i);
-        if (member.id == memberId)
-        {
-            return member.username;
-        }
+        return members.get(memberId).username;
     }
     return "Unknown Member";
 }
 
-const Vector<Game> &AppState::getGames()
+Vector<Game> AppState::getGames()
 {
-    return games;
+    return games.toVector();
 }
 
-const Vector<Member> &AppState::getMembers()
+Vector<Member> AppState::getMembers()
 {
-    return members;
+    return members.toVector();
 }
 
 int AppState::getNextMemberId()
 {
+    Vector<Member> memberList = members.toVector();
     int maxId = 0;
-    for (int i = 0; i < members.getSize(); i++)
+    for (int i = 0; i < memberList.getSize(); i++)
     {
-        if (members.get(i).id > maxId)
+        if (memberList.get(i).id > maxId)
         {
-            maxId = members.get(i).id;
+            maxId = memberList.get(i).id;
+        }
+    }
+    return maxId + 1;
+}
+
+int AppState::getNextGameId()
+{
+    Vector<Game> gameList = games.toVector();
+    int maxId = 0;
+    for (int i = 0; i < gameList.getSize(); i++)
+    {
+        if (gameList.get(i).id > maxId)
+        {
+            maxId = gameList.get(i).id;
         }
     }
     return maxId + 1;
@@ -399,12 +411,13 @@ int AppState::getNextMemberId()
 
 int AppState::getNextBorrowId()
 {
+    Vector<Borrow> borrowList = borrows.toVector();
     int maxId = 0;
-    for (int i = 0; i < borrows.getSize(); i++)
+    for (int i = 0; i < borrowList.getSize(); i++)
     {
-        if (borrows.get(i).borrowId > maxId)
+        if (borrowList.get(i).borrowId > maxId)
         {
-            maxId = borrows.get(i).borrowId;
+            maxId = borrowList.get(i).borrowId;
         }
     }
     return maxId + 1;
@@ -412,12 +425,13 @@ int AppState::getNextBorrowId()
 
 int AppState::getNextReviewId()
 {
+    Vector<Review> reviewList = reviews.toVector();
     int maxId = 0;
-    for (int i = 0; i < reviews.getSize(); i++)
+    for (int i = 0; i < reviewList.getSize(); i++)
     {
-        if (reviews.get(i).reviewId > maxId)
+        if (reviewList.get(i).reviewId > maxId)
         {
-            maxId = reviews.get(i).reviewId;
+            maxId = reviewList.get(i).reviewId;
         }
     }
     return maxId + 1;

@@ -3,7 +3,9 @@
 
 #include <string>
 #include <stdexcept>
+#include <functional>
 #include "Hash.h"
+#include "Vector.h"
 
 template <typename K, typename V>
 class DictionaryNode
@@ -285,6 +287,39 @@ public:
             items[i] = nullptr;
         }
         size = 0;
+    }
+
+    /// Converts all values in the dictionary to a Vector.
+    Vector<V> toVector() const
+    {
+        Vector<V> result;
+        for (int i = 0; i < capacity; i++)
+        {
+            DictionaryNode<K, V> *current = items[i];
+            while (current != nullptr)
+            {
+                result.append(current->item);
+                current = current->next;
+            }
+        }
+        return result;
+    }
+
+    /// Converts all values in the dictionary to a Vector, applying a transform function.
+    template <typename U>
+    Vector<U> toVector(std::function<U(const V &)> transform) const
+    {
+        Vector<U> result;
+        for (int i = 0; i < capacity; i++)
+        {
+            DictionaryNode<K, V> *current = items[i];
+            while (current != nullptr)
+            {
+                result.append(transform(current->item));
+                current = current->next;
+            }
+        }
+        return result;
     }
 };
 

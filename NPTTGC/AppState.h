@@ -16,17 +16,18 @@
 class AppState
 {
 private:
-    Vector<Member> members;
+    Dictionary<int, Member> members;
     Dictionary<std::string, MemberID> membersByUsername;
-    Vector<Game> games;
+    Dictionary<int, Game> games;
     SuffixArray gameNames;
-    Vector<Borrow> borrows;
+    Dictionary<int, Borrow> borrows;
     Set<GameID> borrowedGames;
-    Vector<Review> reviews;
+    Dictionary<int, Review> reviews;
     Dictionary<int, int> reviewsByGame;
     int currentUserId;
 
     int getNextMemberId();
+    int getNextGameId();
     int getNextBorrowId();
     int getNextReviewId();
 
@@ -64,8 +65,8 @@ public:
     float getAverageRating(int gameId);
 
     std::string getMemberNameById(int memberId);
-    const Vector<Game> &getGames();
-    const Vector<Member> &getMembers();
+    Vector<Game> getGames();
+    Vector<Member> getMembers();
 };
 
 #endif
