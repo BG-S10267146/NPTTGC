@@ -41,7 +41,7 @@ struct Review
         row.append(std::to_string(review.userId));
         row.append(std::to_string(review.gameId));
         row.append(std::to_string(review.rating));
-        row.append(escapeCSVField(review.content));
+        row.append(review.content);
         return row;
     }
 };
