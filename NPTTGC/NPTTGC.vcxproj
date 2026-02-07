@@ -123,18 +123,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="NPTTGC.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="AppState.cpp" />
+    <ClCompile Include="Screen.cpp" />
+    <ClCompile Include="models\Member.cpp" />
+    <ClCompile Include="models\Game.cpp" />
+    <ClCompile Include="models\Borrow.cpp" />
+    <ClCompile Include="models\Review.cpp" />
+    <ClCompile Include="utils\Input.cpp" />
+    <ClCompile Include="utils\Date.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Borrow.h" />
-    <ClInclude Include="CSVHelper.h" />
-    <ClInclude Include="Dictionary.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="Member.h" />
-    <ClInclude Include="Review.h" />
-    <ClInclude Include="Set.h" />
-    <ClInclude Include="SuffixArray.h" />
-    <ClInclude Include="Vector.h" />
+    <ClInclude Include="AppState.h" />
+    <ClInclude Include="Screen.h" />
+    <ClInclude Include="models\Member.h" />
+    <ClInclude Include="models\Game.h" />
+    <ClInclude Include="models\Borrow.h" />
+    <ClInclude Include="models\Review.h" />
+    <ClInclude Include="utils\Input.h" />
+    <ClInclude Include="utils\Date.h" />
+    <ClInclude Include="lib\CSVHelper.h" />
+    <ClInclude Include="lib\Dictionary.h" />
+    <ClInclude Include="lib\Set.h" />
+    <ClInclude Include="lib\SuffixArray.h" />
+    <ClInclude Include="lib\Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="borrows.csv" />
