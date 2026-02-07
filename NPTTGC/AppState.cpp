@@ -1,5 +1,6 @@
 #include "AppState.h"
 #include "lib/CSVHelper.h"
+#include "lib/Sort.h"
 #include "utils/Date.h"
 #include <cstdio>
 
@@ -21,7 +22,7 @@ void AppState::saveData()
     saveToFile<Review>("reviews.csv", Review::csvHeader(), reviews, Review::toCSVRow);
 }
 
-void AppState::loadMembers(const std::string& filename)
+void AppState::loadMembers(const std::string &filename)
 {
     members = buildFromFile<Member>(filename, Member::fromCSVRow);
 
@@ -44,14 +45,16 @@ void AppState::loadMembers(const std::string& filename)
     printf("Loaded %d members from %s\n", members.getSize(), filename.c_str());
 }
 
-void AppState::loadGames(const std::string& filename)
+void AppState::loadGames(const std::string &filename)
 {
     games = buildFromFile<Game>(filename, Game::fromCSVRow);
+    gameNames = SuffixArray::build(games.getSize(), [&](int i)
+                                   { return games[i].name; });
+
     printf("Loaded %d games from %s\n", games.getSize(), filename.c_str());
-    gameNames.rebuild(games);
 }
 
-void AppState::loadBorrows(const std::string& filename)
+void AppState::loadBorrows(const std::string &filename)
 {
     borrows = buildFromFile<Borrow>(filename, Borrow::fromCSVRow);
 
@@ -67,7 +70,7 @@ void AppState::loadBorrows(const std::string& filename)
     printf("Loaded %d borrow records from %s\n", borrows.getSize(), filename.c_str());
 }
 
-void AppState::loadReviews(const std::string& filename)
+void AppState::loadReviews(const std::string &filename)
 {
     reviews = buildFromFile<Review>(filename, Review::fromCSVRow);
 
@@ -80,7 +83,7 @@ void AppState::loadReviews(const std::string& filename)
     printf("Loaded %d reviews from %s\n", reviews.getSize(), filename.c_str());
 }
 
-Member* AppState::authenticateMember(const std::string& username)
+Member *AppState::authenticateMember(const std::string &username)
 {
     if (!membersByUsername.exists(username))
     {
@@ -101,7 +104,7 @@ Member* AppState::authenticateMember(const std::string& username)
     return nullptr;
 }
 
-bool AppState::addMember(const std::string& username, bool isAdmin)
+bool AppState::addMember(const std::string &username, bool isAdmin)
 {
     if (membersByUsername.exists(username))
     {
@@ -126,7 +129,7 @@ void AppState::logout()
     currentUserId = -1;
 }
 
-Member* AppState::getCurrentUser()
+Member *AppState::getCurrentUser()
 {
     if (currentUserId == -1)
         return nullptr;
@@ -146,10 +149,11 @@ int AppState::getCurrentUserId()
     return currentUserId;
 }
 
-bool AppState::addGame(const Game& game)
+bool AppState::addGame(const Game &game)
 {
     games.append(game);
-    gameNames.rebuild(games);
+    gameNames = SuffixArray::build(games.getSize(), [&](int i)
+                                   { return games[i].name; });
     saveToFile<Game>("games.csv", Game::csvHeader(), games, Game::toCSVRow);
     return true;
 }
@@ -166,7 +170,8 @@ bool AppState::removeGame(int gameId)
         if (games[i].id == gameId)
         {
             games[i].isDeleted = true;
-            gameNames.rebuild(games);
+            gameNames = SuffixArray::build(games.getSize(), [&](int i)
+                                           { return games[i].name; });
             saveToFile<Game>("games.csv", Game::csvHeader(), games, Game::toCSVRow);
             return true;
         }
@@ -189,18 +194,19 @@ Vector<Game> AppState::getGamesForPlayerCount(int playerCount)
 
     if (matchingGames.getSize() > 0)
     {
-        quickSortGames(matchingGames, 0, matchingGames.getSize() - 1);
+        Sort::quicksort(matchingGames, [](const Game &a, const Game &b)
+                        { return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0); });
     }
 
     return matchingGames;
 }
 
-Vector<int> AppState::searchGames(const std::string& query)
+Vector<int> AppState::searchGames(const std::string &query)
 {
     return gameNames.search(query);
 }
 
-Game* AppState::getGameById(int gameId)
+Game *AppState::getGameById(int gameId)
 {
     for (int i = 0; i < games.getSize(); i++)
     {
@@ -269,7 +275,12 @@ bool AppState::returnGame(int borrowId)
 Vector<Borrow> AppState::getAllBorrows()
 {
     Vector<Borrow> sortedBorrows = borrows;
-    sortBorrows(sortedBorrows);
+    Sort::quicksort(sortedBorrows, [](const Borrow &b1, const Borrow &b2)
+                    {
+        int borrowCompare = compareDates(b1.dateBorrowed, b2.dateBorrowed);
+        if (borrowCompare != 0)
+            return borrowCompare;
+        return compareDates(b1.dateReturned, b2.dateReturned); });
     return sortedBorrows;
 }
 
@@ -288,7 +299,12 @@ Vector<Borrow> AppState::getMemberBorrows()
         }
     }
 
-    sortBorrows(memberBorrows);
+    Sort::quicksort(memberBorrows, [](const Borrow &b1, const Borrow &b2)
+                    {
+        int borrowCompare = compareDates(b1.dateBorrowed, b2.dateBorrowed);
+        if (borrowCompare != 0)
+            return borrowCompare;
+        return compareDates(b1.dateReturned, b2.dateReturned); });
     return memberBorrows;
 }
 
@@ -297,7 +313,7 @@ bool AppState::isGameBorrowed(int gameId)
     return borrowedGames.exists(gameId);
 }
 
-bool AppState::addReview(int gameId, int rating, const std::string& content)
+bool AppState::addReview(int gameId, int rating, const std::string &content)
 {
     if (currentUserId == -1)
         return false;
@@ -358,12 +374,12 @@ std::string AppState::getMemberNameById(int memberId)
     return "Unknown Member";
 }
 
-const Vector<Game>& AppState::getGames()
+const Vector<Game> &AppState::getGames()
 {
     return games;
 }
 
-const Vector<Member>& AppState::getMembers()
+const Vector<Member> &AppState::getMembers()
 {
     return members;
 }
@@ -405,67 +421,4 @@ int AppState::getNextReviewId()
         }
     }
     return maxId + 1;
-}
-
-int AppState::partitionGames(Vector<Game>& gamesList, int low, int high)
-{
-    std::string pivot = gamesList.get(high).name;
-    int i = low - 1;
-
-    for (int j = low; j < high; j++)
-    {
-        if (gamesList.get(j).name < pivot)
-        {
-            i++;
-            Game temp = gamesList.get(i);
-            gamesList[i] = gamesList.get(j);
-            gamesList[j] = temp;
-        }
-    }
-
-    Game temp = gamesList.get(i + 1);
-    gamesList[i + 1] = gamesList.get(high);
-    gamesList[high] = temp;
-
-    return i + 1;
-}
-
-void AppState::quickSortGames(Vector<Game>& gamesList, int low, int high)
-{
-    if (low < high)
-    {
-        int pi = partitionGames(gamesList, low, high);
-        quickSortGames(gamesList, low, pi - 1);
-        quickSortGames(gamesList, pi + 1, high);
-    }
-}
-
-int AppState::compareBorrows(const Borrow& b1, const Borrow& b2)
-{
-    int borrowCompare = compareDates(b1.dateBorrowed, b2.dateBorrowed);
-    if (borrowCompare != 0)
-        return borrowCompare;
-
-    return compareDates(b1.dateReturned, b2.dateReturned);
-}
-
-void AppState::sortBorrows(Vector<Borrow>& borrowList)
-{
-    int size = borrowList.getSize();
-
-    for (int i = 0; i < size; i++)
-    {
-        for (int j = 0; j < size - i - 1; j++)
-        {
-            Borrow b1 = borrowList.get(j);
-            Borrow b2 = borrowList.get(j + 1);
-
-            if (compareBorrows(b1, b2) > 0)
-            {
-                Borrow temp = b1;
-                borrowList[j] = b2;
-                borrowList[j + 1] = temp;
-            }
-        }
-    }
 }

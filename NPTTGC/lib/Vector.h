@@ -7,7 +7,7 @@ template <typename T>
 class Vector
 {
 private:
-    T* items;
+    T *items;
     int size;
     int capacity;
 
@@ -15,7 +15,7 @@ private:
     void resize()
     {
         int newCapacity = capacity * 2;
-        T* newItems = new T[newCapacity];
+        T *newItems = new T[newCapacity];
 
         // Copy existing elements to new array
         for (int i = 0; i < size; i++)
@@ -44,7 +44,7 @@ public:
     }
 
     // Copy constructor
-    Vector(const Vector& other)
+    Vector(const Vector &other)
         : size(other.size), capacity(other.capacity)
     {
         items = new T[capacity];
@@ -55,7 +55,7 @@ public:
     }
 
     // Assignment operator
-    Vector& operator=(const Vector& other)
+    Vector &operator=(const Vector &other)
     {
         if (this != &other)
         {
@@ -82,7 +82,7 @@ public:
     }
 
     // Access operator
-    T& operator[](int index)
+    T &operator[](int index)
     {
         if (index < 0 || index >= size)
         {

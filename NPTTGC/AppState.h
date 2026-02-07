@@ -28,10 +28,6 @@ private:
     int getNextMemberId();
     int getNextBorrowId();
     int getNextReviewId();
-    void quickSortGames(Vector<Game>& gamesList, int low, int high);
-    int partitionGames(Vector<Game>& gamesList, int low, int high);
-    void sortBorrows(Vector<Borrow>& borrowList);
-    int compareBorrows(const Borrow& b1, const Borrow& b2);
 
 public:
     AppState();
