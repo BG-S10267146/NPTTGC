@@ -83,11 +83,11 @@ void AppState::loadReviews(const std::string &filename)
     printf("Loaded %d reviews from %s\n", reviews.getSize(), filename.c_str());
 }
 
-Member *AppState::authenticateMember(const std::string &username)
+std::optional<Member> AppState::authenticateMember(const std::string &username)
 {
     if (!membersByUsername.exists(username))
     {
-        return nullptr;
+        return std::nullopt;
     }
 
     MemberID memberId = membersByUsername.get(username);
@@ -97,11 +97,11 @@ Member *AppState::authenticateMember(const std::string &username)
         if (members[i].id == memberId)
         {
             currentUserId = memberId;
-            return &members[i];
+            return members[i];
         }
     }
 
-    return nullptr;
+    return std::nullopt;
 }
 
 bool AppState::addMember(const std::string &username, bool isAdmin)

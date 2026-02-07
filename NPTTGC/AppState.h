@@ -2,6 +2,7 @@
 #define APPSTATE_H
 
 #include <string>
+#include <optional>
 #include "lib/Vector.h"
 #include "lib/Dictionary.h"
 #include "lib/Set.h"
@@ -34,22 +35,22 @@ public:
 
     void loadData();
     void saveData();
-    void loadMembers(const std::string& filename);
-    void loadGames(const std::string& filename);
-    void loadBorrows(const std::string& filename);
-    void loadReviews(const std::string& filename);
+    void loadMembers(const std::string &filename);
+    void loadGames(const std::string &filename);
+    void loadBorrows(const std::string &filename);
+    void loadReviews(const std::string &filename);
 
-    Member* authenticateMember(const std::string& username);
-    bool addMember(const std::string& username, bool isAdmin);
+    std::optional<Member> authenticateMember(const std::string &username);
+    bool addMember(const std::string &username, bool isAdmin);
     void logout();
-    Member* getCurrentUser();
+    Member *getCurrentUser();
     int getCurrentUserId();
 
-    bool addGame(const Game& game);
+    bool addGame(const Game &game);
     bool removeGame(int gameId);
     Vector<Game> getGamesForPlayerCount(int playerCount);
-    Vector<int> searchGames(const std::string& query);
-    Game* getGameById(int gameId);
+    Vector<int> searchGames(const std::string &query);
+    Game *getGameById(int gameId);
     std::string getGameNameById(int gameId);
 
     bool borrowGame(int gameId);
@@ -58,13 +59,13 @@ public:
     Vector<Borrow> getMemberBorrows();
     bool isGameBorrowed(int gameId);
 
-    bool addReview(int gameId, int rating, const std::string& content);
+    bool addReview(int gameId, int rating, const std::string &content);
     Vector<Review> getReviewsForGame(int gameId);
     float getAverageRating(int gameId);
 
     std::string getMemberNameById(int memberId);
-    const Vector<Game>& getGames();
-    const Vector<Member>& getMembers();
+    const Vector<Game> &getGames();
+    const Vector<Member> &getMembers();
 };
 
 #endif

@@ -4,7 +4,7 @@
 #include <cstring>
 #include <ctime>
 
-Screen::Screen(AppState& state) : appState(state) {}
+Screen::Screen(AppState &state) : appState(state) {}
 
 void Screen::startup()
 {
@@ -39,9 +39,9 @@ void Screen::login()
             return;
         }
 
-        Member* currentUser = appState.authenticateMember(std::string(usernameBuf));
+        std::optional<Member> currentUser = appState.authenticateMember(std::string(usernameBuf));
 
-        if (currentUser == nullptr)
+        if (!currentUser.has_value())
         {
             printf("\nInvalid username. Please try again.\n");
             continue;
@@ -87,30 +87,30 @@ void Screen::adminMenu()
 
         switch (choice)
         {
-            case 1:
-                addGame();
-                break;
-            case 2:
-                removeGame();
-                break;
-            case 3:
-                addMember();
-                break;
-            case 4:
-                borrowsSummary();
-                break;
-            case 5:
-                gamesByPlayerCount();
-                break;
-            case 6:
-                viewReviews();
-                break;
-            case 7:
-                printf("\nLogging out...\n");
-                loggedIn = false;
-                break;
-            default:
-                printf("\nInvalid choice. Please try again.\n");
+        case 1:
+            addGame();
+            break;
+        case 2:
+            removeGame();
+            break;
+        case 3:
+            addMember();
+            break;
+        case 4:
+            borrowsSummary();
+            break;
+        case 5:
+            gamesByPlayerCount();
+            break;
+        case 6:
+            viewReviews();
+            break;
+        case 7:
+            printf("\nLogging out...\n");
+            loggedIn = false;
+            break;
+        default:
+            printf("\nInvalid choice. Please try again.\n");
         }
     }
 }
@@ -140,30 +140,30 @@ void Screen::memberMenu()
 
         switch (choice)
         {
-            case 1:
-                borrowGame();
-                break;
-            case 2:
-                returnGame();
-                break;
-            case 3:
-                myBorrowSummary();
-                break;
-            case 4:
-                writeReview();
-                break;
-            case 5:
-                viewReviews();
-                break;
-            case 6:
-                gamesByPlayerCount();
-                break;
-            case 7:
-                printf("\nLogging out...\n");
-                loggedIn = false;
-                break;
-            default:
-                printf("\nInvalid choice. Please try again.\n");
+        case 1:
+            borrowGame();
+            break;
+        case 2:
+            returnGame();
+            break;
+        case 3:
+            myBorrowSummary();
+            break;
+        case 4:
+            writeReview();
+            break;
+        case 5:
+            viewReviews();
+            break;
+        case 6:
+            gamesByPlayerCount();
+            break;
+        case 7:
+            printf("\nLogging out...\n");
+            loggedIn = false;
+            break;
+        default:
+            printf("\nInvalid choice. Please try again.\n");
         }
     }
 }
@@ -289,7 +289,7 @@ void Screen::removeGame()
 
     printf("\nMatching games:\n");
     Vector<Game> activeGames;
-    const Vector<Game>& allGames = appState.getGames();
+    const Vector<Game> &allGames = appState.getGames();
 
     for (int i = 0; i < matchingGameIndices.getSize(); i++)
     {
@@ -573,7 +573,7 @@ void Screen::viewReviews()
 
     printf("\nMatching games:\n");
     Vector<Game> activeGames;
-    const Vector<Game>& allGames = appState.getGames();
+    const Vector<Game> &allGames = appState.getGames();
 
     for (int i = 0; i < matchingGameIndices.getSize(); i++)
     {
@@ -647,7 +647,7 @@ void Screen::borrowGame()
 
     printf("\nAvailable games matching '%s':\n", searchTerm.c_str());
     Vector<Game> availableGames;
-    const Vector<Game>& allGames = appState.getGames();
+    const Vector<Game> &allGames = appState.getGames();
 
     for (int i = 0; i < matchingGameIndices.getSize(); i++)
     {
@@ -797,7 +797,7 @@ void Screen::writeReview()
 
     printf("\nMatching games:\n");
     Vector<Game> activeGames;
-    const Vector<Game>& allGames = appState.getGames();
+    const Vector<Game> &allGames = appState.getGames();
 
     for (int i = 0; i < matchingGameIndices.getSize(); i++)
     {
