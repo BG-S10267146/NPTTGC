@@ -17,6 +17,26 @@ struct Member
     MemberID id;
     std::string username;
     bool isAdmin;
+
+    static std::string csvHeader() {
+        return "id,username,isAdmin";
+    }
+
+    static Member fromCSVRow(const Vector<std::string>& row) {
+        Member member;
+        member.id = atoi(row.get(0).c_str());
+        member.username = trim(row.get(1));
+        member.isAdmin = (atoi(row.get(2).c_str()) == 1);
+        return member;
+    }
+
+    static Vector<std::string> toCSVRow(const Member& member) {
+        Vector<std::string> row;
+        row.append(std::to_string(member.id));
+        row.append(member.username);
+        row.append(std::to_string(member.isAdmin ? 1 : 0));
+        return row;
+    }
 };
 
 // Global data structures
@@ -26,41 +46,21 @@ Dictionary<std::string, MemberID> membersByUsername;
 // Function to load members from CSV
 void loadMembersFromCSV(Vector<Member>& members, Dictionary<std::string, MemberID>& membersByUsername, const std::string& filename)
 {
-    std::ifstream file(filename.c_str());
-    if (!file.is_open())
-    {
-        printf("Warning: Could not open %s. Starting with default admin account.\n", filename.c_str());
-        
-        // Create default admin account
+    members = buildFromFile<Member>(filename, Member::fromCSVRow);
+
+    if (members.isEmpty()) {
+        printf("Starting with default admin account.\n");
         Member admin;
         admin.id = 1;
         admin.username = "admin";
         admin.isAdmin = true;
         members.append(admin);
-        membersByUsername.insert(admin.username, admin.id);
-        return;
     }
 
-    std::string line;
-    // Skip header line
-    std::getline(file, line);
-
-    while (std::getline(file, line))
-    {
-        if (line.empty()) continue;
-
-        Vector<std::string> fields = splitCSVLine(line);
-        if (fields.getSize() >= 3)
-        {
-            Member member;
-            member.id = atoi(fields.get(0).c_str());
-            member.username = trim(fields.get(1));
-            member.isAdmin = (atoi(fields.get(2).c_str()) == 1);
-            members.append(member);
-            membersByUsername.insert(member.username, member.id);
-        }
+    for (int i = 0; i < members.getSize(); i++) {
+        Member member = members.get(i);
+        membersByUsername.insert(member.username, member.id);
     }
-    file.close();
 
     printf("Loaded %d members from %s\n", members.getSize(), filename.c_str());
 }
@@ -68,26 +68,7 @@ void loadMembersFromCSV(Vector<Member>& members, Dictionary<std::string, MemberI
 // Function to save members to CSV
 void saveMembersToCSV(Vector<Member>& members, const std::string& filename)
 {
-    std::ofstream file(filename.c_str());
-    if (!file.is_open())
-    {
-        printf("Error: Could not open %s for writing.\n", filename.c_str());
-        return;
-    }
-
-    // Write header
-    file << "id,username,isAdmin\n";
-
-    // Write members
-    for (int i = 0; i < members.getSize(); i++)
-    {
-        Member member = members.get(i);
-        file << member.id << ","
-             << escapeCSVField(member.username) << ","
-             << (member.isAdmin ? 1 : 0) << "\n";
-    }
-
-    file.close();
+    saveToFile<Member>(filename, Member::csvHeader(), members, Member::toCSVRow);
 }
 
 // Function to get next member ID
