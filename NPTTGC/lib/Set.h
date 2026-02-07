@@ -3,6 +3,7 @@
 
 #include <string>
 #include <stdexcept>
+#include "Hash.h"
 
 // Generic SetNode for storing values only (no keys)
 template <typename T>
@@ -10,10 +11,10 @@ class SetNode
 {
 public:
     T value;
-    SetNode<T>* next;
+    SetNode<T> *next;
 
     // Constructor
-    SetNode(const T& val)
+    SetNode(const T &val)
         : value(val), next(nullptr)
     {
     }
@@ -25,44 +26,25 @@ template <typename T>
 class Set
 {
 private:
-    SetNode<T>** items;
+    SetNode<T> **items;
     int size;
     int capacity;
 
-    // Hash function for std::string - hashes character content
-    int hash(const std::string& value) const
+    int getIndex(const T &value) const
     {
-        int hashValue = 0;
-        for (size_t i = 0; i < value.length(); i++)
-        {
-            hashValue = (hashValue * 31 + value[i]) % capacity;
-        }
-        return (hashValue + capacity) % capacity;
-    }
-
-    // Hash function for generic types - hashes raw bytes
-    template <typename U>
-    int hash(const U& value) const
-    {
-        const unsigned char* bytes = reinterpret_cast<const unsigned char*>(&value);
-        int hashValue = 0;
-
-        for (size_t i = 0; i < sizeof(U); i++)
-        {
-            hashValue = (hashValue * 31 + bytes[i]) % capacity;
-        }
-        return (hashValue + capacity) % capacity;
+        int hashValue = ::hash(value);
+        return ((hashValue % capacity) + capacity) % capacity;
     }
 
     // Helper function to resize hash table
     void resize()
     {
         int oldCapacity = capacity;
-        SetNode<T>** oldItems = items;
+        SetNode<T> **oldItems = items;
 
         // Create new hash table with doubled capacity
         capacity = capacity * 2;
-        items = new SetNode<T>*[capacity];
+        items = new SetNode<T> *[capacity];
         for (int i = 0; i < capacity; i++)
         {
             items[i] = nullptr;
@@ -73,7 +55,7 @@ private:
         // Rehash all existing entries into the new table
         for (int i = 0; i < oldCapacity; i++)
         {
-            SetNode<T>* current = oldItems[i];
+            SetNode<T> *current = oldItems[i];
             while (current != nullptr)
             {
                 insert(current->value);
@@ -84,10 +66,10 @@ private:
         // Delete old hash table
         for (int i = 0; i < oldCapacity; i++)
         {
-            SetNode<T>* current = oldItems[i];
+            SetNode<T> *current = oldItems[i];
             while (current != nullptr)
             {
-                SetNode<T>* temp = current;
+                SetNode<T> *temp = current;
                 current = current->next;
                 delete temp;
             }
@@ -100,7 +82,7 @@ public:
     Set(int initialCapacity = 10)
         : capacity(initialCapacity), size(0)
     {
-        items = new SetNode<T>*[capacity];
+        items = new SetNode<T> *[capacity];
         for (int i = 0; i < capacity; i++)
         {
             items[i] = nullptr;
@@ -112,10 +94,10 @@ public:
     {
         for (int i = 0; i < capacity; i++)
         {
-            SetNode<T>* current = items[i];
+            SetNode<T> *current = items[i];
             while (current != nullptr)
             {
-                SetNode<T>* temp = current;
+                SetNode<T> *temp = current;
                 current = current->next;
                 delete temp;
             }
@@ -124,10 +106,10 @@ public:
     }
 
     // Copy constructor
-    Set(const Set& other)
+    Set(const Set &other)
         : capacity(other.capacity), size(other.size)
     {
-        items = new SetNode<T>*[capacity];
+        items = new SetNode<T> *[capacity];
         for (int i = 0; i < capacity; i++)
         {
             items[i] = nullptr;
@@ -135,7 +117,7 @@ public:
 
         for (int i = 0; i < other.capacity; i++)
         {
-            SetNode<T>* otherCurrent = other.items[i];
+            SetNode<T> *otherCurrent = other.items[i];
             while (otherCurrent != nullptr)
             {
                 insert(otherCurrent->value);
@@ -145,16 +127,16 @@ public:
     }
 
     // Assignment operator
-    Set& operator=(const Set& other)
+    Set &operator=(const Set &other)
     {
         if (this != &other)
         {
             for (int i = 0; i < capacity; i++)
             {
-                SetNode<T>* current = items[i];
+                SetNode<T> *current = items[i];
                 while (current != nullptr)
                 {
-                    SetNode<T>* temp = current;
+                    SetNode<T> *temp = current;
                     current = current->next;
                     delete temp;
                 }
@@ -163,7 +145,7 @@ public:
 
             capacity = other.capacity;
             size = 0;
-            items = new SetNode<T>*[capacity];
+            items = new SetNode<T> *[capacity];
             for (int i = 0; i < capacity; i++)
             {
                 items[i] = nullptr;
@@ -171,7 +153,7 @@ public:
 
             for (int i = 0; i < other.capacity; i++)
             {
-                SetNode<T>* otherCurrent = other.items[i];
+                SetNode<T> *otherCurrent = other.items[i];
                 while (otherCurrent != nullptr)
                 {
                     insert(otherCurrent->value);
@@ -183,28 +165,28 @@ public:
     }
 
     // Insert value into set (returns true if inserted, false if already exists)
-    bool insert(const T& value)
+    bool insert(const T &value)
     {
         if (size >= capacity / 2)
         {
             resize();
         }
 
-        int index = hash(value);
-        SetNode<T>* current = items[index];
+        int index = getIndex(value);
+        SetNode<T> *current = items[index];
 
         // Check if value already exists
         while (current != nullptr)
         {
             if (current->value == value)
             {
-                return false;  // Value already exists, don't insert duplicate
+                return false; // Value already exists, don't insert duplicate
             }
             current = current->next;
         }
 
         // Value doesn't exist, insert at the beginning
-        SetNode<T>* newNode = new SetNode<T>(value);
+        SetNode<T> *newNode = new SetNode<T>(value);
         newNode->next = items[index];
         items[index] = newNode;
         size++;
@@ -212,11 +194,11 @@ public:
     }
 
     // Remove value from set
-    bool remove(const T& value)
+    bool remove(const T &value)
     {
-        int index = hash(value);
-        SetNode<T>* current = items[index];
-        SetNode<T>* prev = nullptr;
+        int index = getIndex(value);
+        SetNode<T> *current = items[index];
+        SetNode<T> *prev = nullptr;
 
         while (current != nullptr)
         {
@@ -242,10 +224,10 @@ public:
     }
 
     // Check if value exists in set
-    bool exists(const T& value) const
+    bool exists(const T &value) const
     {
-        int index = hash(value);
-        SetNode<T>* current = items[index];
+        int index = getIndex(value);
+        SetNode<T> *current = items[index];
 
         while (current != nullptr)
         {
@@ -282,10 +264,10 @@ public:
     {
         for (int i = 0; i < capacity; i++)
         {
-            SetNode<T>* current = items[i];
+            SetNode<T> *current = items[i];
             while (current != nullptr)
             {
-                SetNode<T>* temp = current;
+                SetNode<T> *temp = current;
                 current = current->next;
                 delete temp;
             }
