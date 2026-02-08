@@ -312,10 +312,10 @@ Vector<Borrow> AppState::getAllBorrows()
     Vector<Borrow> sortedBorrows = borrows.toVector();
     Sort::quicksort(sortedBorrows, [](const Borrow &b1, const Borrow &b2)
                     {
-        int borrowCompare = compareDates(b1.dateBorrowed, b2.dateBorrowed);
+        int borrowCompare = compareDates(b2.dateBorrowed, b1.dateBorrowed);
         if (borrowCompare != 0)
             return borrowCompare;
-        return compareDates(b1.dateReturned, b2.dateReturned); });
+        return compareDates(b2.dateReturned, b1.dateReturned); });
     return sortedBorrows;
 }
 
@@ -337,10 +337,10 @@ Vector<Borrow> AppState::getMemberBorrows()
 
     Sort::quicksort(memberBorrows, [](const Borrow &b1, const Borrow &b2)
                     {
-        int borrowCompare = compareDates(b1.dateBorrowed, b2.dateBorrowed);
+        int borrowCompare = compareDates(b2.dateBorrowed, b1.dateBorrowed);
         if (borrowCompare != 0)
             return borrowCompare;
-        return compareDates(b1.dateReturned, b2.dateReturned); });
+        return compareDates(b2.dateReturned, b1.dateReturned); });
     return memberBorrows;
 }
 

@@ -3,6 +3,7 @@
 #include "utils/StringHelper.h"
 #include "utils/UIHelper.h"
 #include "utils/PaginationHelper.h"
+#include "lib/Sort.h"
 #include <cstdio>
 #include <cstring>
 #include <ctime>
@@ -599,6 +600,9 @@ void Screen::viewReviews()
     {
         Game selectedGameObj = activeGames.get(selectedGame);
         Vector<Review> gameReviews = appState.getReviewsForGameName(selectedGameObj.name);
+
+        Sort::quicksort(gameReviews, [](const Review &a, const Review &b)
+                { return a.reviewId > b.reviewId ? -1 : (a.reviewId < b.reviewId ? 1 : 0); });
 
         printf("\n=== Reviews for Game: %s ===\n\n", selectedGameObj.name.c_str());
 
