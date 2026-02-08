@@ -212,46 +212,47 @@ void Screen::addGame()
     }
 
     // Check if game with this name already exists (non-deleted)
-    Game *existingGame = nullptr;
+    int existingGameIndex = -1;
     Vector<Game> allGames = appState.getGames();
     for (int i = 0; i < allGames.getSize(); i++)
     {
         if (allGames.get(i).name == std::string(nameBuf) && !allGames.get(i).isDeleted)
         {
-            existingGame = &allGames.get(i);
+            existingGameIndex = i;
             break;
         }
     }
 
     int minPlayers, maxPlayers, minPlaytime, maxPlaytime, yearPublished;
 
-    if (existingGame != nullptr)
+    if (existingGameIndex != -1)
     {
-        printf("\nGame '%s' already exists with the following parameters:\n", existingGame->name.c_str());
-        printf("  Min Players: %d\n", existingGame->minPlayers);
-        printf("  Max Players: %d\n", existingGame->maxPlayers);
-        printf("  Min Playtime: %d minutes\n", existingGame->minPlaytime);
-        printf("  Max Playtime: %d minutes\n", existingGame->maxPlaytime);
-        printf("  Year Published: %d\n", existingGame->yearPublished);
+        Game &existingGame = allGames[existingGameIndex];
+        printf("\nGame '%s' already exists with the following parameters:\n", existingGame.name.c_str());
+        printf("  Min Players: %d\n", existingGame.minPlayers);
+        printf("  Max Players: %d\n", existingGame.maxPlayers);
+        printf("  Min Playtime: %d minutes\n", existingGame.minPlaytime);
+        printf("  Max Playtime: %d minutes\n", existingGame.maxPlaytime);
+        printf("  Year Published: %d\n", existingGame.yearPublished);
         printf("\nAll parameters must match the existing game to add a duplicate copy.\n");
         printf("Press Enter to use these values or type 'cancel' to abort.\n");
-        
+
         char confirmBuf[20];
         fgets(confirmBuf, sizeof(confirmBuf), stdin);
         confirmBuf[strcspn(confirmBuf, "\n")] = 0;
-        
+
         if (strcmp(confirmBuf, "cancel") == 0)
         {
             printf("Game creation cancelled.\n");
             return;
         }
-        
+
         // Autofill from existing game
-        minPlayers = existingGame->minPlayers;
-        maxPlayers = existingGame->maxPlayers;
-        minPlaytime = existingGame->minPlaytime;
-        maxPlaytime = existingGame->maxPlaytime;
-        yearPublished = existingGame->yearPublished;
+        minPlayers = existingGame.minPlayers;
+        maxPlayers = existingGame.maxPlayers;
+        minPlaytime = existingGame.minPlaytime;
+        maxPlaytime = existingGame.maxPlaytime;
+        yearPublished = existingGame.yearPublished;
     }
     else
     {
