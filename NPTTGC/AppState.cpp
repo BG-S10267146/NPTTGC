@@ -122,6 +122,18 @@ std::optional<Member> AppState::authenticateMember(const std::string &username)
     return std::nullopt;
 }
 
+/*
+ * Adds a new member to the system.
+ * Checks if the username already exists, generates a new member ID,
+ * creates the member, and saves to members.csv.
+ *
+ * Input parameters:
+ *   username - The unique username for the new member
+ *   isAdmin  - Boolean flag indicating if the member has admin privileges
+ *
+ * Return value:
+ *   true if member was successfully added, false if username already exists
+ */
 bool AppState::addMember(const std::string &username, bool isAdmin)
 {
     if (membersByUsername.exists(username))
@@ -144,6 +156,17 @@ void AppState::logout()
     currentUserId = -1;
 }
 
+/*
+ * Adds a new board game to the system.
+ * Inserts the game into the games dictionary, reconstructs the gameNames suffix array,
+ * and writes the updated games to games.csv.
+ *
+ * Input parameters:
+ *   game - The Game object containing all game details
+ *
+ * Return value:
+ *   true if game was successfully added
+ */
 bool AppState::addGame(const Game &game)
 {
     games.insert(game.id, game);
@@ -152,6 +175,20 @@ bool AppState::addGame(const Game &game)
     return true;
 }
 
+/*
+ * Removes a board game from the system by marking it as deleted.
+ * Ensures the game is not currently borrowed before removal.
+ * Sets the game's isDeleted flag to true, reconstructs the gameNames suffix array,
+ * and writes the updated games to games.csv.
+ * The data of deleted games is still stored for historical borrow records.
+ *
+ * Input parameters:
+ *   gameId - The unique identifier of the game to remove
+ *
+ * Return value:
+ *   true if game was successfully marked as deleted,
+ *   false if game is currently borrowed or doesn't exist
+ */
 bool AppState::removeGame(int gameId)
 {
     if (borrowedGames.exists(gameId))
@@ -259,6 +296,17 @@ bool AppState::returnGame(int borrowId)
     return true;
 }
 
+/*
+ * Retrieves a summary of all games borrowed and returned in the system.
+ * Copies the values of the borrows dictionary into a vector and sorts them
+ * by datetime borrowed (primary) and datetime returned (secondary).
+ *
+ * Input parameters:
+ *   None
+ *
+ * Return value:
+ *   A vector of Borrow objects sorted by borrow and return dates
+ */
 Vector<Borrow> AppState::getAllBorrows()
 {
     Vector<Borrow> sortedBorrows = borrows.toVector();
@@ -301,6 +349,20 @@ bool AppState::isGameBorrowed(int gameId)
     return borrowedGames.exists(gameId);
 }
 
+/*
+ * Allows a member to write a review for a board game.
+ * Creates a new review with the provided rating and content,
+ * adds it to the reviews and reviewsByGame dictionaries,
+ * and writes the updated reviews to reviews.csv.
+ *
+ * Input parameters:
+ *   gameId  - The unique identifier of the game being reviewed
+ *   rating  - The numerical rating given by the member (1-5)
+ *   content - The text content of the review
+ *
+ * Return value:
+ *   true if review was successfully added, false if user is not logged in
+ */
 bool AppState::addReview(int gameId, int rating, const std::string &content)
 {
     if (currentUserId == -1)
@@ -336,6 +398,20 @@ Vector<Review> AppState::getReviewsForGame(int gameId)
     return gameReviews;
 }
 
+/*
+ * Retrieves all reviews for a game by its name.
+ * Aggregates reviews across all instances of a game with the same name,
+ * including deleted copies. Only returns reviews if at least one non-deleted
+ * copy of the game exists.
+ * Used for displaying unified reviews when duplicate game entries exist.
+ *
+ * Input parameters:
+ *   gameName - The name of the game to retrieve reviews for
+ *
+ * Return value:
+ *   A vector of Review objects for all game instances with the given name,
+ *   or an empty vector if no active game with that name exists
+ */
 Vector<Review> AppState::getReviewsForGameName(const std::string &gameName)
 {
     Vector<Review> allReviews;
@@ -371,6 +447,17 @@ Vector<Review> AppState::getReviewsForGameName(const std::string &gameName)
     return allReviews;
 }
 
+/*
+ * Calculates the average rating for a game by its name.
+ * Uses getReviewsForGameName() to aggregate reviews across all instances
+ * of a game with the same name, then computes the average rating.
+ *
+ * Input parameters:
+ *   gameName - The name of the game to calculate average rating for
+ *
+ * Return value:
+ *   The average rating as a float (0.0 if no reviews exist)
+ */
 float AppState::getAverageRatingByGameName(const std::string &gameName)
 {
     Vector<Review> gameReviews = getReviewsForGameName(gameName);
