@@ -2,32 +2,77 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cctype>
+#include <cerrno>
+#include <climits>
 
-bool readInteger(int& value)
+namespace InputHelper
 {
-    char buffer[100];
-    if (fgets(buffer, sizeof(buffer), stdin) == nullptr)
-        return false;
+    bool readInteger(int &value)
+    {
+        char buffer[100];
+        if (fgets(buffer, sizeof(buffer), stdin) == nullptr)
+        {
+            return false;
+        }
 
-    char* endPtr;
-    value = strtol(buffer, &endPtr, 10);
+        // Reset errno before strtol to detect overflow
+        errno = 0;
+        char *endPtr;
+        long result = strtol(buffer, &endPtr, 10);
 
-    while (*endPtr && isspace(*endPtr))
-        endPtr++;
+        // Check for conversion errors
+        if (errno == ERANGE || result > INT_MAX || result < INT_MIN)
+        {
+            return false; // Overflow/underflow
+        }
 
-    return (*endPtr == '\0');
-}
+        // Skip trailing whitespace
+        while (*endPtr && isspace(static_cast<unsigned char>(*endPtr)))
+        {
+            endPtr++;
+        }
 
-bool readIntegerFromString(const char* str, int& value)
-{
-    if (str == nullptr || str[0] == '\0')
-        return false;
+        // Check if entire string was consumed (valid integer)
+        if (*endPtr != '\0')
+        {
+            return false;
+        }
 
-    char* endPtr;
-    value = strtol(str, &endPtr, 10);
+        value = static_cast<int>(result);
+        return true;
+    }
 
-    while (*endPtr && isspace(*endPtr))
-        endPtr++;
+    bool readIntegerFromString(const char *str, int &value)
+    {
+        if (str == nullptr || str[0] == '\0')
+        {
+            return false;
+        }
 
-    return (*endPtr == '\0');
+        // Reset errno before strtol to detect overflow
+        errno = 0;
+        char *endPtr;
+        long result = strtol(str, &endPtr, 10);
+
+        // Check for conversion errors
+        if (errno == ERANGE || result > INT_MAX || result < INT_MIN)
+        {
+            return false; // Overflow/underflow
+        }
+
+        // Skip trailing whitespace
+        while (*endPtr && isspace(static_cast<unsigned char>(*endPtr)))
+        {
+            endPtr++;
+        }
+
+        // Check if entire string was consumed (valid integer)
+        if (*endPtr != '\0')
+        {
+            return false;
+        }
+
+        value = static_cast<int>(result);
+        return true;
+    }
 }
