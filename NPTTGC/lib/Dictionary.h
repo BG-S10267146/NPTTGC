@@ -1,3 +1,8 @@
+/**
+ * Goh Jun Liang Bryan, Group 2, S10267146, P01
+ * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
+ */
+
 #ifndef DICTIONARY_H
 #define DICTIONARY_H
 
@@ -166,7 +171,9 @@ public:
         return *this;
     }
 
-    /// Inserts or updates a key-value pair. If the key exists, its value is updated.
+    /// Stores a key-value pair in the dictionary. If the key already exists, the value is updated.
+    /// Parameters: key - the key to store, item - the value to store
+    /// Returns: nothing
     void insert(const K &key, const V &item)
     {
         // Maintain load factor below 0.5 for good performance
@@ -200,7 +207,9 @@ public:
         }
     }
 
-    /// Removes a key-value pair by key. Returns true if removed, false if not found.
+    /// Removes a key-value pair from the dictionary by its key.
+    /// Parameters: key - the key to remove
+    /// Returns: true if the key was found and removed, false if the key was not found
     bool remove(const K &key)
     {
         int index = getIndex(key);
@@ -248,7 +257,9 @@ public:
         throw std::runtime_error("Key not found in dictionary");
     }
 
-    /// Checks if a key exists in the dictionary.
+    /// Checks whether a key is stored in the dictionary.
+    /// Parameters: key - the key to check for
+    /// Returns: true if the key exists, false otherwise
     bool exists(const K &key) const
     {
         int index = getIndex(key);
@@ -266,21 +277,33 @@ public:
         return false;
     }
 
+    /// Returns the number of key-value pairs stored in the dictionary.
+    /// Parameters: none
+    /// Returns: the count of entries in the dictionary
     int getSize() const
     {
         return size;
     }
 
+    /// Returns the current capacity of the internal hash table.
+    /// Parameters: none
+    /// Returns: the maximum number of entries before resizing occurs
     int getCapacity() const
     {
         return capacity;
     }
 
+    /// Checks whether the dictionary contains any entries.
+    /// Parameters: none
+    /// Returns: true if the dictionary is empty, false otherwise
     bool isEmpty() const
     {
         return size == 0;
     }
 
+    /// Removes all entries from the dictionary, resetting it to empty state.
+    /// Parameters: none
+    /// Returns: nothing
     void clear()
     {
         for (int i = 0; i < capacity; i++)
@@ -298,7 +321,9 @@ public:
         maxKey_ = K();
     }
 
-    /// Converts all values in the dictionary to a Vector.
+    /// Extracts all values from the dictionary and returns them as a Vector.
+    /// Parameters: none
+    /// Returns: a Vector containing all values in the dictionary
     Vector<V> toVector() const
     {
         Vector<V> result;
@@ -314,7 +339,9 @@ public:
         return result;
     }
 
-    /// Converts all values in the dictionary to a Vector, applying a transform function.
+    /// Extracts all values from the dictionary and applies a transformation function, returning results as a Vector.
+    /// Parameters: transform - a function that converts each value from type V to type U
+    /// Returns: a Vector containing the transformed values
     template <typename U>
     Vector<U> toVector(std::function<U(const V &)> transform) const
     {
@@ -331,8 +358,10 @@ public:
         return result;
     }
 
-    /// Applies a function to each key-value pair in the dictionary. If no modifications
-    /// are made to the dictionary, this will always iterate in the same order.
+    /// Calls a function for each key-value pair in the dictionary.
+    /// Parameters: func - a function that takes a key and value and performs an action
+    /// Returns: nothing
+    /// Note: If no modifications are made to the dictionary, iteration order remains consistent
     void forEach(std::function<void(const K &, const V &)> func) const
     {
         for (int i = 0; i < capacity; i++)
@@ -346,7 +375,9 @@ public:
         }
     }
 
-    /// Returns the maximum key in the dictionary. Returns default-constructed K if empty.
+    /// Returns the largest key currently stored in the dictionary.
+    /// Parameters: none
+    /// Returns: the maximum key value, or default-constructed K if dictionary is empty
     K maxKey() const
     {
         return maxKey_;
