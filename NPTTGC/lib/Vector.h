@@ -83,6 +83,15 @@ public:
         return items[index];
     }
 
+    const T &operator[](int index) const
+    {
+        if (index < 0 || index >= size)
+        {
+            throw std::out_of_range("Vector index out of range");
+        }
+        return items[index];
+    }
+
     void remove(int index)
     {
         if (index < 0 || index >= size)
