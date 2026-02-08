@@ -30,18 +30,16 @@ void Screen::login()
         printf("           LOGIN\n");
         printf("====================================\n");
 
-        char usernameBuf[100];
-
         printf("Username (or 'quit' to exit): ");
-        StringHelper::readLine(usernameBuf, sizeof(usernameBuf));
+        std::string username = StringHelper::readLineToString();
 
-        if (strcmp(usernameBuf, "quit") == 0)
+        if (username == "quit")
         {
             printf("\nThank you for using NPTTGC Board Game Club System!\n");
             return;
         }
 
-        std::optional<Member> currentUser = appState.authenticateMember(std::string(usernameBuf));
+        std::optional<Member> currentUser = appState.authenticateMember(username);
 
         if (!currentUser.has_value())
         {
@@ -174,11 +172,10 @@ void Screen::addGame()
 {
     printf("\n=== Add New Board Game ===\n");
 
-    char nameBuf[200];
     printf("Enter game name: ");
-    StringHelper::readLine(nameBuf, sizeof(nameBuf));
+    std::string gameName = StringHelper::readLineToString();
 
-    if (strlen(nameBuf) == 0)
+    if (gameName.empty())
     {
         printf("Error: Game name cannot be empty.\n");
         return;
@@ -189,7 +186,7 @@ void Screen::addGame()
     Vector<Game> allGames = appState.getGames();
     for (int i = 0; i < allGames.getSize(); i++)
     {
-        if (allGames.get(i).name == std::string(nameBuf) && !allGames.get(i).isDeleted)
+        if (allGames.get(i).name == gameName && !allGames.get(i).isDeleted)
         {
             existingGameIndex = i;
             break;
@@ -210,10 +207,9 @@ void Screen::addGame()
         printf("\nAll parameters must match the existing game to add a duplicate copy.\n");
         printf("Press Enter to use these values or type 'cancel' to abort.\n");
 
-        char confirmBuf[20];
-        StringHelper::readLine(confirmBuf, sizeof(confirmBuf));
+        std::string confirmation = StringHelper::readLineToString();
 
-        if (strcmp(confirmBuf, "cancel") == 0)
+        if (confirmation == "cancel")
         {
             printf("Game creation cancelled.\n");
             return;
@@ -275,16 +271,15 @@ void Screen::addGame()
         int currentYear = now.tm_year + 1900;
 
         printf("Enter year published (or press Enter for current year %d): ", currentYear);
-        char yearBuf[10];
-        StringHelper::readLine(yearBuf, sizeof(yearBuf));
+        std::string yearInput = StringHelper::readLineToString();
 
-        if (strlen(yearBuf) == 0)
+        if (yearInput.empty())
         {
             yearPublished = currentYear;
         }
         else
         {
-            if (!readIntegerFromString(yearBuf, yearPublished) || yearPublished < 1990 || yearPublished > currentYear)
+            if (!readIntegerFromString(yearInput.c_str(), yearPublished) || yearPublished < 1990 || yearPublished > currentYear)
             {
                 printf("Error: Year published must be a valid number between 1990 and %d.\n", currentYear);
                 return;
@@ -295,7 +290,7 @@ void Screen::addGame()
 
     Game newGame;
     newGame.id = appState.games.maxKey() + 1;
-    newGame.name = nameBuf;
+    newGame.name = gameName;
     newGame.minPlayers = minPlayers;
     newGame.maxPlayers = maxPlayers;
     newGame.minPlaytime = minPlaytime;
@@ -317,10 +312,8 @@ void Screen::removeGame()
 {
     printf("\n=== Remove Board Game ===\n");
 
-    char searchBuf[100];
     printf("Enter game name to search: ");
-    StringHelper::readLine(searchBuf, sizeof(searchBuf));
-    std::string searchTerm = searchBuf;
+    std::string searchTerm = StringHelper::readLineToString();
 
     Vector<Game> activeGames = appState.searchGames(
         searchTerm,
@@ -397,10 +390,8 @@ void Screen::addMember()
 {
     printf("\n=== Add New Member ===\n");
 
-    char usernameBuf[100];
-
     printf("Enter username: ");
-    StringHelper::readLine(usernameBuf, sizeof(usernameBuf));
+    std::string username = StringHelper::readLineToString();
 
     printf("Is this an admin account? (y/n): ");
     char isAdminChoice;
@@ -409,13 +400,13 @@ void Screen::addMember()
 
     bool isAdmin = (isAdminChoice == 'y' || isAdminChoice == 'Y');
 
-    if (appState.addMember(std::string(usernameBuf), isAdmin))
+    if (appState.addMember(username, isAdmin))
     {
-        printf("Member '%s' added successfully.\n", usernameBuf);
+        printf("Member '%s' added successfully.\n", username.c_str());
     }
     else
     {
-        printf("Error: Username '%s' already exists.\n", usernameBuf);
+        printf("Error: Username '%s' already exists.\n", username.c_str());
     }
 }
 
@@ -537,10 +528,8 @@ void Screen::viewReviews()
 {
     printf("\n=== View Game Reviews ===\n");
 
-    char searchBuf[100];
     printf("Enter game name to search: ");
-    StringHelper::readLine(searchBuf, sizeof(searchBuf));
-    std::string searchTerm = searchBuf;
+    std::string searchTerm = StringHelper::readLineToString();
 
     Set<std::string> seenGameNames;
     Vector<Game> activeGames = appState.searchGames(
@@ -632,10 +621,8 @@ void Screen::borrowGame()
 {
     printf("\n=== Borrow Board Game ===\n");
 
-    char searchBuf[100];
     printf("Enter game name to search: ");
-    StringHelper::readLine(searchBuf, sizeof(searchBuf));
-    std::string searchTerm = searchBuf;
+    std::string searchTerm = StringHelper::readLineToString();
 
     Vector<Game> availableGames = appState.searchGames(
         searchTerm,
@@ -829,10 +816,8 @@ void Screen::writeReview()
 {
     printf("\n=== Write a Review ===\n");
 
-    char searchBuf[100];
     printf("Enter game name to search: ");
-    StringHelper::readLine(searchBuf, sizeof(searchBuf));
-    std::string searchTerm = searchBuf;
+    std::string searchTerm = StringHelper::readLineToString();
 
     Set<std::string> seenGameNames;
     Vector<Game> activeGames = appState.searchGames(
@@ -911,11 +896,10 @@ void Screen::writeReview()
             return;
         }
 
-        char contentBuf[500];
         printf("Enter review content: ");
-        StringHelper::readLine(contentBuf, sizeof(contentBuf));
+        std::string content = StringHelper::readLineToString();
 
-        if (appState.addReview(selectedGameObj.id, rating, std::string(contentBuf)))
+        if (appState.addReview(selectedGameObj.id, rating, content))
         {
             printf("Review submitted successfully!\n");
         }

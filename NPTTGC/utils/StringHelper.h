@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <cstring>
 #include <climits>
+#include <string>
+#include <iostream>
 
 /// Helper functions for string input and manipulation
 namespace StringHelper
@@ -55,6 +57,19 @@ namespace StringHelper
 #else
         return strcasecmp(str1, str2) == 0;
 #endif
+    }
+
+    /// Reads a line from stdin and returns it as a std::string
+    /// Trims the trailing newline character
+    /// @return The input string with newline removed
+    inline std::string readLineToString()
+    {
+        std::string result;
+        if (std::getline(std::cin, result))
+        {
+            return result;
+        }
+        return "";
     }
 }
 
