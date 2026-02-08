@@ -10,11 +10,14 @@
 #include "Search.h"
 #include "Sort.h"
 
+/**
+ * Represents a suffix entry in the suffix array
+ */
 struct SuffixEntry
 {
-    /*Position in combined string*/ 
+    /* Position in combined string */
     int i;
-    /*Item index (which item this suffix belongs to)*/ 
+    /* Item index (which item this suffix belongs to) */
     int j;
 
     SuffixEntry() : i(0), j(0) {}
@@ -24,7 +27,7 @@ struct SuffixEntry
 /*
  * Goh Jun Liang Bryan, Group 2, S10267146, P01
  * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
- * 
+ *
  * Suffix array data structure for efficient substring searching across multiple strings.
  */
 class SuffixArray
@@ -34,6 +37,11 @@ private:
     Vector<SuffixEntry> suffixes;
     size_t size;
 
+    /**
+     * Converts a string to lowercase
+     * @param str The input string to convert
+     * @return A new string with all characters converted to lowercase
+     */
     std::string toLowerCase(const std::string &str) const
     {
         std::string result = "";
@@ -49,7 +57,13 @@ public:
     {
     }
 
-    /*Builds a suffix array from multiple strings for efficient substring searching.*/ 
+    /**
+     * Builds a suffix array from multiple strings for efficient substring searching
+     * @param data Vector of items to build the suffix array from
+     * @param getContent Function to extract string content from each item
+     * @param getId Function to extract unique ID from each item
+     * @return A SuffixArray containing all suffixes sorted lexicographically
+     */
     template <typename T>
     static SuffixArray build(
         const Vector<T> &data,
@@ -101,13 +115,16 @@ public:
             return (pos1 == (int)sa.text.length()) ? -1 : 1;
         };
 
-        sa.size = sa.suffixes.getSize();
         Sort::quicksort<SuffixEntry>(sa.suffixes, compareFunc);
 
         return sa;
     }
 
-    /*Searches for a query string and returns indices of all items containing it as a substring.*/ 
+    /**
+     * Searches for a query string and returns IDs of all items containing it as a substring
+     * @param query The substring to search for (case-insensitive)
+     * @return Vector of unique item IDs containing the query as a substring
+     */
     Vector<int> search(const std::string &query)
     {
         Vector<int> results;
@@ -119,26 +136,34 @@ public:
 
         std::string lowerQuery = toLowerCase(query);
 
-        int lower = binarySearch(size, [&](int mid)
-                                 {
-            std::string suffix = text.substr(suffixes[mid].i);
-            return suffix < lowerQuery ? -1 : 1; }, false);
+        int lower = binarySearch(
+            size,
+            [&](int mid)
+            {
+                std::string suffix = text.substr(suffixes[mid].i);
+                return suffix < lowerQuery ? -1 : 1;
+            },
+            false);
 
-        int upper = binarySearch(size, [&](int mid)
-                                 {
-            std::string suffix = text.substr(suffixes[mid].i);
-            bool suffixStartsWithQuery = suffix.length() >= lowerQuery.length() &&
-                                        suffix.substr(0, lowerQuery.length()) == lowerQuery;
-            return suffixStartsWithQuery || suffix < lowerQuery  ? -1 : 1; }, false);
+        int upper = binarySearch(
+            size,
+            [&](int mid)
+            {
+                std::string suffix = text.substr(suffixes[mid].i);
+                bool suffixStartsWithQuery = suffix.length() >= lowerQuery.length() &&
+                                             suffix.substr(0, lowerQuery.length()) == lowerQuery;
+                return suffixStartsWithQuery || suffix < lowerQuery ? -1 : 1;
+            },
+            false);
 
         Set<int> found;
         for (int i = lower; i < upper; i++)
         {
-            int itemIndex = suffixes[i].j;
-            if (!found.exists(itemIndex))
+            int itemId = suffixes[i].j;
+            if (!found.exists(itemId))
             {
-                results.append(itemIndex);
-                found.insert(itemIndex);
+                results.append(itemId);
+                found.insert(itemId);
             }
         }
 

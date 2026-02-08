@@ -6,7 +6,14 @@
 
 namespace Sort
 {
-    /*Median-of-three pivot selection helper for improved quicksort performance.*/
+    /**
+     * Median-of-three pivot selection helper for improved quicksort performance
+     * Rearranges elements to place the median of first, middle, and last elements at the end
+     * @param vec The vector to operate on
+     * @param low The starting index of the range
+     * @param high The ending index of the range
+     * @param compare Comparison function returning negative if a < b, 0 if a == b, positive if a > b
+     */
     template <typename T, typename Compare>
     void medianOfThree(Vector<T> &vec, int low, int high, Compare compare)
     {
@@ -36,7 +43,15 @@ namespace Sort
         vec[high] = temp;
     }
 
-    /*Partitions the vector around a pivot using median-of-three selection.*/
+    /**
+     * Partitions the vector around a pivot using median-of-three selection
+     * Elements less than pivot are moved to the left, greater to the right
+     * @param vec The vector to partition
+     * @param low The starting index of the range to partition
+     * @param high The ending index of the range to partition
+     * @param compare Comparison function returning negative if a < b, 0 if a == b, positive if a > b
+     * @return The final position of the pivot element
+     */
     template <typename T, typename Compare>
     int partition(Vector<T> &vec, int low, int high, Compare compare)
     {
@@ -63,6 +78,13 @@ namespace Sort
         return i + 1;
     }
 
+    /**
+     * Recursive helper function for quicksort implementation
+     * @param vec The vector to sort
+     * @param low The starting index of the range to sort
+     * @param high The ending index of the range to sort
+     * @param compare Comparison function returning negative if a < b, 0 if a == b, positive if a > b
+     */
     template <typename T, typename Compare>
     void quicksortHelper(Vector<T> &vec, int low, int high, Compare compare)
     {
@@ -74,9 +96,12 @@ namespace Sort
         }
     }
 
-    /*In-place quicksort with median-of-three pivot selection.
-    The compare function should return: negative if a < b, 0 if a == b, positive if a > b.
-    */
+    /**
+     * In-place quicksort with median-of-three pivot selection
+     * Sorts the entire vector using the provided comparison function
+     * @param vec The vector to sort in-place
+     * @param compare Comparison function returning negative if a < b, 0 if a == b, positive if a > b
+     */
     template <typename T, typename Compare>
     void quicksort(Vector<T> &vec, Compare compare)
     {
