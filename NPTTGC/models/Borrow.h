@@ -15,6 +15,8 @@ struct Borrow
     std::string dateBorrowed;
     std::string dateReturned;
 
+    Borrow() : borrowId(0), memberId(0), gameId(0), dateBorrowed(""), dateReturned("") {}
+
     static std::string csvHeader();
     static Borrow fromCSVRow(const Vector<std::string>& row);
     static Vector<std::string> toCSVRow(const Borrow& borrow);

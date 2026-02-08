@@ -24,24 +24,25 @@ void AppState::saveData()
 
 void AppState::loadMembers(const std::string &filename)
 {
-    members = buildDictFromFile<int, Member>(filename, Member::fromCSVRow, [](const Member &m) { return m.id; });
+    auto buildMemberAndIndexUsername = [&](const Vector<std::string> &row)
+    {
+        Member m = Member::fromCSVRow(row);
+        membersByUsername.insert(m.username, m.id);
+        return m;
+    };
+
+    members = buildDictFromFile<int, Member>(
+        filename,
+        buildMemberAndIndexUsername,
+        [](const Member &m)
+        { return m.id; });
 
     if (members.isEmpty())
     {
         printf("Starting with default admin account.\n");
-        Member admin;
-        admin.id = 1;
-        admin.username = "admin";
-        admin.isAdmin = true;
+        Member admin(1, "admin", true);
         members.insert(admin.id, admin);
-    }
-
-    // Build username index
-    Vector<Member> memberList = members.toVector();
-    for (int i = 0; i < memberList.getSize(); i++)
-    {
-        Member member = memberList.get(i);
-        membersByUsername.insert(member.username, member.id);
+        membersByUsername.insert(admin.username, admin.id);
     }
 
     printf("Loaded %d members from %s\n", members.getSize(), filename.c_str());
@@ -49,8 +50,12 @@ void AppState::loadMembers(const std::string &filename)
 
 void AppState::loadGames(const std::string &filename)
 {
-    games = buildDictFromFile<int, Game>(filename, Game::fromCSVRow, [](const Game &g) { return g.id; });
-    
+    games = buildDictFromFile<int, Game>(
+        filename,
+        Game::fromCSVRow,
+        [](const Game &g)
+        { return g.id; });
+
     Vector<Game> gameList = games.toVector();
     gameNames = SuffixArray::build(gameList.getSize(), [&](int i)
                                    { return gameList[i].name; });
@@ -60,31 +65,39 @@ void AppState::loadGames(const std::string &filename)
 
 void AppState::loadBorrows(const std::string &filename)
 {
-    borrows = buildDictFromFile<int, Borrow>(filename, Borrow::fromCSVRow, [](const Borrow &b) { return b.borrowId; });
-
-    Vector<Borrow> borrowList = borrows.toVector();
-    for (int i = 0; i < borrowList.getSize(); i++)
+    auto buildBorrowAndMarkBorrowed = [&](const Vector<std::string> &row)
     {
-        Borrow borrow = borrowList.get(i);
-        if (borrow.dateReturned.empty() || borrow.dateReturned == "N/A")
+        Borrow b = Borrow::fromCSVRow(row);
+        if (b.dateReturned.empty() || b.dateReturned == "N/A")
         {
-            borrowedGames.insert(borrow.gameId);
+            borrowedGames.insert(b.gameId);
         }
-    }
+        return b;
+    };
+
+    borrows = buildDictFromFile<int, Borrow>(
+        filename,
+        buildBorrowAndMarkBorrowed,
+        [](const Borrow &b)
+        { return b.borrowId; });
 
     printf("Loaded %d borrow records from %s\n", borrows.getSize(), filename.c_str());
 }
 
 void AppState::loadReviews(const std::string &filename)
 {
-    reviews = buildDictFromFile<int, Review>(filename, Review::fromCSVRow, [](const Review &r) { return r.reviewId; });
-
-    Vector<Review> reviewList = reviews.toVector();
-    for (int i = 0; i < reviewList.getSize(); i++)
+    auto buildReviewAndIndexByGame = [&](const Vector<std::string> &row)
     {
-        Review review = reviewList.get(i);
-        reviewsByGame.insert(review.gameId, review.reviewId);
-    }
+        Review r = Review::fromCSVRow(row);
+        reviewsByGame.insert(r.gameId, r.reviewId);
+        return r;
+    };
+
+    reviews = buildDictFromFile<int, Review>(
+        filename,
+        buildReviewAndIndexByGame,
+        [](const Review &r)
+        { return r.reviewId; });
 
     printf("Loaded %d reviews from %s\n", reviews.getSize(), filename.c_str());
 }
@@ -115,10 +128,7 @@ bool AppState::addMember(const std::string &username, bool isAdmin)
     }
 
     MemberID memberId = getNextMemberId();
-    Member newMember;
-    newMember.id = memberId;
-    newMember.username = username;
-    newMember.isAdmin = isAdmin;
+    Member newMember(memberId, username, isAdmin);
 
     members.insert(memberId, newMember);
     membersByUsername.insert(username, memberId);
@@ -243,7 +253,7 @@ bool AppState::borrowGame(int gameId)
     newBorrow.gameId = gameId;
     newBorrow.dateBorrowed = getCurrentDateTime();
     newBorrow.dateReturned = "N/A";
-    
+
     borrows.insert(newBorrow.borrowId, newBorrow);
     borrowedGames.insert(gameId);
 
@@ -266,7 +276,7 @@ bool AppState::returnGame(int borrowId)
     borrow.dateReturned = getCurrentDateTime();
     borrows.insert(borrowId, borrow);
     borrowedGames.remove(borrow.gameId);
-    
+
     saveToFile<Borrow>("borrows.csv", Borrow::csvHeader(), borrows.toVector(), Borrow::toCSVRow);
     return true;
 }

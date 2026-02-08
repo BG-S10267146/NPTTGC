@@ -13,6 +13,8 @@ struct Review
     int rating;
     std::string content;
 
+    Review() : reviewId(0), userId(0), gameId(0), rating(0), content("") {}
+
     static std::string csvHeader();
     static Review fromCSVRow(const Vector<std::string>& row);
     static Vector<std::string> toCSVRow(const Review& review);

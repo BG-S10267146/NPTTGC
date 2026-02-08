@@ -3,6 +3,7 @@
 
 #include <string>
 #include <fstream>
+#include <functional>
 #include "Vector.h"
 #include "Dictionary.h"
 
@@ -83,7 +84,7 @@ inline std::string escapeCSVField(const std::string &field)
 
 /// Loads objects from a CSV file using a builder function to construct each object from CSV fields.
 template <typename T>
-Vector<T> buildFromFile(const std::string &filepath, T (*builder)(const Vector<std::string> &))
+Vector<T> buildFromFile(const std::string &filepath, std::function<T(const Vector<std::string> &)> builder)
 {
 	Vector<T> result;
 	std::ifstream file(filepath.c_str());
@@ -110,7 +111,7 @@ Vector<T> buildFromFile(const std::string &filepath, T (*builder)(const Vector<s
 
 /// Loads objects from a CSV file and builds a Dictionary using a key extraction function.
 template <typename K, typename T>
-Dictionary<K, T> buildDictFromFile(const std::string &filepath, T (*builder)(const Vector<std::string> &), K (*keyFunc)(const T &))
+Dictionary<K, T> buildDictFromFile(const std::string &filepath, std::function<T(const Vector<std::string> &)> builder, std::function<K(const T &)> keyFunc)
 {
 	Dictionary<K, T> result;
 	std::ifstream file(filepath.c_str());
@@ -138,7 +139,7 @@ Dictionary<K, T> buildDictFromFile(const std::string &filepath, T (*builder)(con
 
 /// Saves objects to a CSV file using a rowBuilder function to convert each object to CSV fields.
 template <typename T>
-void saveToFile(const std::string &filepath, const std::string &header, const Vector<T> &data, Vector<std::string> (*rowBuilder)(const T &))
+void saveToFile(const std::string &filepath, const std::string &header, const Vector<T> &data, std::function<Vector<std::string>(const T &)> rowBuilder)
 {
 	std::ofstream file(filepath.c_str());
 

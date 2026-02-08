@@ -9,11 +9,11 @@ std::string Member::csvHeader()
 
 Member Member::fromCSVRow(const Vector<std::string>& row)
 {
-    Member member;
-    member.id = atoi(row.get(0).c_str());
-    member.username = trim(row.get(1));
-    member.isAdmin = (atoi(row.get(2).c_str()) == 1);
-    return member;
+    return Member(
+        atoi(row.get(0).c_str()),
+        trim(row.get(1)),
+        atoi(row.get(2).c_str()) == 1
+    );
 }
 
 Vector<std::string> Member::toCSVRow(const Member& member)
