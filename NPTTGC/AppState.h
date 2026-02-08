@@ -20,8 +20,10 @@ public:
     Dictionary<int, Member> members;
     Dictionary<std::string, int> membersByUsername;
     Dictionary<int, Game> games;
+    Dictionary<std::string, int> gamesByName;
     SuffixArray gameNames;
     Dictionary<int, Borrow> borrows;
+    Dictionary<int, Vector<int>> borrowsByMember;
     Set<int> borrowedGames;
     Dictionary<int, Review> reviews;
     Dictionary<int, Vector<int>> reviewsByGame;

@@ -59,7 +59,7 @@ void AppState::loadGames(const std::string &filename)
     Vector<Game> gameList = games.toVector();
     gameNames = SuffixArray::build(gameList.getSize(), [&](int i)
                                    { return gameList[i].name; });
-
+    
     printf("Loaded %d games from %s\n", games.getSize(), filename.c_str());
 }
 
@@ -68,6 +68,13 @@ void AppState::loadBorrows(const std::string &filename)
     auto buildBorrowAndMarkBorrowed = [&](const Vector<std::string> &row)
     {
         Borrow b = Borrow::fromCSVRow(row);
+        Vector<int> borrowIds;
+        if (borrowsByMember.exists(b.memberId))
+        {
+            borrowIds = borrowsByMember.get(b.memberId);
+        }
+        borrowIds.append(b.borrowId);
+        borrowsByMember.insert(b.memberId, borrowIds);
         if (b.dateReturned.empty() || b.dateReturned == "N/A")
         {
             borrowedGames.insert(b.gameId);
@@ -245,6 +252,13 @@ bool AppState::borrowGame(int gameId)
     newBorrow.dateReturned = "N/A";
 
     borrows.insert(newBorrow.borrowId, newBorrow);
+    Vector<int> borrowIds;
+    if (borrowsByMember.exists(currentUserId))
+    {
+        borrowIds = borrowsByMember.get(currentUserId);
+    }
+    borrowIds.append(newBorrow.borrowId);
+    borrowsByMember.insert(currentUserId, borrowIds);
     borrowedGames.insert(gameId);
 
     saveToFile<int, Borrow>("borrows.csv", Borrow::csvHeader(), borrows, Borrow::toCSVRow);
@@ -288,15 +302,15 @@ Vector<Borrow> AppState::getMemberBorrows()
     if (currentUserId == -1)
         return Vector<Borrow>();
 
-    Vector<Borrow> allBorrows = borrows.toVector();
     Vector<Borrow> memberBorrows;
-    for (int i = 0; i < allBorrows.getSize(); i++)
+    if (!borrowsByMember.exists(currentUserId))
+        return memberBorrows;
+
+    Vector<int> borrowIds = borrowsByMember.get(currentUserId);
+    for (int i = 0; i < borrowIds.getSize(); i++)
     {
-        Borrow borrow = allBorrows.get(i);
-        if (borrow.memberId == currentUserId)
-        {
-            memberBorrows.append(borrow);
-        }
+        int borrowId = borrowIds.get(i);
+        memberBorrows.append(borrows.get(borrowId));
     }
 
     Sort::quicksort(memberBorrows, [](const Borrow &b1, const Borrow &b2)
