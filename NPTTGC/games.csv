@@ -129,7 +129,7 @@ id,name,minplayers,maxplayers,maxplaytime,minplaytime,yearpublished,isdeleted
 510,Smash Up,2,4,45,45,2012,0
 27,Apples to Apples,4,10,30,20,1999,0
 151,Demon Worker,3,4,45,45,2016,0
-632,BANG!,4,7,40,20,2002,0
+632,BANG!,4,7,40,20,2002,1
 273,ICECOOL,2,4,30,30,2016,0
 397,Pandemic: The Cure,2,5,30,30,2014,0
 38,Atlantis Rising,2,6,90,30,2012,0
@@ -290,7 +290,7 @@ id,name,minplayers,maxplayers,maxplaytime,minplaytime,yearpublished,isdeleted
 244,"Going, Going, GONE!",2,6,20,20,2013,0
 366,Nations: The Dice Game,1,4,40,20,2014,0
 490,Sea Salt & Paper,2,4,45,30,2022,0
-7,Abandon All Artichokes,2,4,20,20,2020,0
+7,Abandon All Artichokes,2,4,20,20,2020,1
 131,Coup: Rebellion G54,3,6,15,15,2014,0
 612,Wok and Roll,1,5,45,30,2020,0
 255,Hail Hydra,5,8,75,40,2018,0
@@ -367,6 +367,7 @@ id,name,minplayers,maxplayers,maxplaytime,minplaytime,yearpublished,isdeleted
 161,Dixit,3,6,30,30,2008,0
 283,Intrigue,3,5,45,45,1994,0
 407,Phantom Ink,2,8,15,10,2022,0
+48,BANG! The Dice Game,3,8,15,15,2013,0
 529,Stone Age,2,4,90,60,2008,0
 172,Dragonkeepers,2,4,20,20,2023,0
 294,Just One,3,7,60,20,2018,0
@@ -532,6 +533,7 @@ id,name,minplayers,maxplayers,maxplaytime,minplaytime,yearpublished,isdeleted
 511,Snake Oil: Elixir,3,8,30,30,2015,0
 28,Arboretum,2,4,30,30,2015,0
 152,Deus,2,4,90,60,2014,0
+633,BANG!,4,7,40,20,2002,0
 274,Ideology: The War of Ideas,2,5,90,90,2003,0
 398,Parade,2,6,45,45,2007,0
 39,Automania,2,4,90,60,2015,0
@@ -596,7 +598,6 @@ id,name,minplayers,maxplayers,maxplaytime,minplaytime,yearpublished,isdeleted
 160,Dive! Diver! Die!,3,5,45,45,2010,0
 282,Innovation,2,5,60,20,2010,0
 406,Perudo,2,10,30,15,1800,0
-48,BANG! The Dice Game,3,8,15,15,2013,0
 528,Stockpile,2,5,45,45,2015,0
 171,Dragon's Gold,3,6,45,45,2001,0
 293,Jurassic Jumble,3,9,10,10,2004,0
