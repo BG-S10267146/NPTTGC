@@ -158,9 +158,11 @@ public:
         return *this;
     }
 
-    /// Adds a value to the set if it doesn't already exist.
-    /// Parameters: value - the value to add
-    /// Returns: true if the value was added, false if it was already in the set
+    /*
+     * Adds a value to the set if it doesn't already exist.
+     * Parameters: value - the value to add
+     * Returns: true if the value was added, false if it was already in the set
+     */
     bool insert(const T &value)
     {
         if (size >= capacity / 2)
@@ -187,9 +189,11 @@ public:
         return true;
     }
 
-    /// Removes a value from the set if it exists.
-    /// Parameters: value - the value to remove
-    /// Returns: true if the value was removed, false if it was not in the set
+    /*
+     * Removes a value from the set if it exists.
+     * Parameters: value - the value to remove
+     * Returns: true if the value was removed, false if it was not in the set
+     */
     bool remove(const T &value)
     {
         int index = getIndex(value);
@@ -219,9 +223,11 @@ public:
         return false;
     }
 
-    /// Checks whether a value is stored in the set.
-    /// Parameters: value - the value to check for
-    /// Returns: true if the value exists in the set, false otherwise
+    /*
+     * Checks whether a value is stored in the set.
+     * Parameters: value - the value to check for
+     * Returns: true if the value exists in the set, false otherwise
+     */
     bool exists(const T &value) const
     {
         int index = getIndex(value);
@@ -239,33 +245,41 @@ public:
         return false;
     }
 
-    /// Returns the number of values currently in the set.
-    /// Parameters: none
-    /// Returns: the count of unique values
+    /*
+     * Returns the number of values currently in the set.
+     * Parameters: none
+     * Returns: the count of unique values
+     */
     int getSize() const
     {
         return size;
     }
 
-    /// Returns the current capacity of the internal hash table.
-    /// Parameters: none
-    /// Returns: the maximum number of entries before resizing occurs
+    /*
+     * Returns the current capacity of the internal hash table.
+     * Parameters: none
+     * Returns: the maximum number of entries before resizing occurs
+     */
     int getCapacity() const
     {
         return capacity;
     }
 
-    /// Checks whether the set contains any values.
-    /// Parameters: none
-    /// Returns: true if the set is empty, false otherwise
+    /*
+     * Checks whether the set contains any values.
+     * Parameters: none
+     * Returns: true if the set is empty, false otherwise
+     */
     bool isEmpty() const
     {
         return size == 0;
     }
 
-    /// Removes all values from the set, leaving it empty.
-    /// Parameters: none
-    /// Returns: nothing
+    /*
+     * Removes all values from the set, leaving it empty.
+     * Parameters: none
+     * Returns: nothing
+     */
     void clear()
     {
         for (int i = 0; i < capacity; i++)
