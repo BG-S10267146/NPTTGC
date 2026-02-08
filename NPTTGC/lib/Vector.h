@@ -3,7 +3,13 @@
 
 #include <stdexcept>
 
-/// Dynamic array implementation with automatic resizing.
+/*
+ * Goh Jun Liang Bryan, Group 2, S10267146, P01
+ * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
+ * 
+ * Dynamic array implementation with automatic resizing.
+ */
+
 template <typename T>
 class Vector
 {
@@ -65,6 +71,11 @@ public:
         return *this;
     }
 
+    /*
+     * Retrieves the element at a specific position in the vector.
+     * Parameters: index - the position to access (0-based)
+     * Returns: a copy of the element at that position, or throws out_of_range if invalid
+     */
     T get(int index) const
     {
         if (index < 0 || index >= size)
@@ -74,6 +85,11 @@ public:
         return items[index];
     }
 
+    /*
+     * Accesses an element by position using bracket notation, allowing modification.
+     * Parameters: index - the position to access (0-based)
+     * Returns: a reference to the element that can be modified, or throws out_of_range if invalid
+     */
     T &operator[](int index)
     {
         if (index < 0 || index >= size)
@@ -83,6 +99,11 @@ public:
         return items[index];
     }
 
+    /*
+     * Accesses an element by position using bracket notation (read-only).
+     * Parameters: index - the position to access (0-based)
+     * Returns: a const reference to the element, or throws out_of_range if invalid
+     */
     const T &operator[](int index) const
     {
         if (index < 0 || index >= size)
@@ -92,6 +113,11 @@ public:
         return items[index];
     }
 
+    /*
+     * Removes the element at a specific position, shifting all following elements left.
+     * Parameters: index - the position of the element to remove (0-based)
+     * Returns: nothing, or throws out_of_range if invalid
+     */
     void remove(int index)
     {
         if (index < 0 || index >= size)
@@ -106,6 +132,11 @@ public:
         size--;
     }
 
+    /*
+     * Adds an element to the end of the vector, expanding capacity if needed.
+     * Parameters: value - the element to add
+     * Returns: nothing
+     */
     void append(T value)
     {
         if (size >= capacity)
@@ -116,6 +147,11 @@ public:
         size++;
     }
 
+    /*
+     * Inserts an element at a specific position, shifting all following elements right.
+     * Parameters: index - the position to insert at (0-based), value - the element to insert
+     * Returns: nothing, or throws out_of_range if index is invalid
+     */
     void insert(int index, T value)
     {
         if (index < 0 || index > size)
@@ -136,21 +172,41 @@ public:
         size++;
     }
 
+    /*
+     * Returns the number of elements currently in the vector.
+     * Parameters: none
+     * Returns: the count of elements
+     */
     int getSize() const
     {
         return size;
     }
 
+    /*
+     * Returns the current capacity of the internal array.
+     * Parameters: none
+     * Returns: the maximum number of elements before resizing occurs
+     */
     int getCapacity() const
     {
         return capacity;
     }
 
+    /*
+     * Checks whether the vector contains any elements.
+     * Parameters: none
+     * Returns: true if the vector is empty, false otherwise
+     */
     bool isEmpty() const
     {
         return size == 0;
     }
 
+    /*
+     * Removes all elements from the vector, leaving it empty.
+     * Parameters: none
+     * Returns: nothing
+     */
     void clear()
     {
         size = 0;
