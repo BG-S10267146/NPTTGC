@@ -4,8 +4,6 @@
 #include <string>
 #include "../lib/Vector.h"
 
-typedef int GameID;
-
 /// Borrow record data structure
 struct Borrow
 {

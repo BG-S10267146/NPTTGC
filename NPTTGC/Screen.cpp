@@ -274,7 +274,7 @@ void Screen::addGame()
     printf("Year published: %d\n", yearPublished);
 
     Game newGame;
-    newGame.id = appState.getGames().getSize() + 1;
+    newGame.id = appState.games.maxKey() + 1;
     newGame.name = nameBuf;
     newGame.minPlayers = minPlayers;
     newGame.maxPlayers = maxPlayers;

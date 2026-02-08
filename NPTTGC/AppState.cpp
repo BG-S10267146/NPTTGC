@@ -109,7 +109,7 @@ std::optional<Member> AppState::authenticateMember(const std::string &username)
         return std::nullopt;
     }
 
-    MemberID memberId = membersByUsername.get(username);
+    int memberId = membersByUsername.get(username);
 
     if (members.exists(memberId))
     {
@@ -127,7 +127,7 @@ bool AppState::addMember(const std::string &username, bool isAdmin)
         return false;
     }
 
-    MemberID memberId = getNextMemberId();
+    int memberId = members.maxKey() + 1;
     Member newMember(memberId, username, isAdmin);
 
     members.insert(memberId, newMember);
@@ -140,24 +140,6 @@ bool AppState::addMember(const std::string &username, bool isAdmin)
 void AppState::logout()
 {
     currentUserId = -1;
-}
-
-Member *AppState::getCurrentUser()
-{
-    if (currentUserId == -1)
-        return nullptr;
-
-    if (!members.exists(currentUserId))
-        return nullptr;
-
-    static Member currentMember;
-    currentMember = members.get(currentUserId);
-    return &currentMember;
-}
-
-int AppState::getCurrentUserId()
-{
-    return currentUserId;
 }
 
 bool AppState::addGame(const Game &game)
@@ -248,7 +230,7 @@ bool AppState::borrowGame(int gameId)
         return false;
 
     Borrow newBorrow;
-    newBorrow.borrowId = getNextBorrowId();
+    newBorrow.borrowId = borrows.maxKey() + 1;
     newBorrow.memberId = currentUserId;
     newBorrow.gameId = gameId;
     newBorrow.dateBorrowed = getCurrentDateTime();
@@ -329,7 +311,7 @@ bool AppState::addReview(int gameId, int rating, const std::string &content)
         return false;
 
     Review newReview;
-    newReview.reviewId = getNextReviewId();
+    newReview.reviewId = reviews.maxKey() + 1;
     newReview.userId = currentUserId;
     newReview.gameId = gameId;
     newReview.rating = rating;
@@ -389,60 +371,4 @@ Vector<Game> AppState::getGames()
 Vector<Member> AppState::getMembers()
 {
     return members.toVector();
-}
-
-int AppState::getNextMemberId()
-{
-    Vector<Member> memberList = members.toVector();
-    int maxId = 0;
-    for (int i = 0; i < memberList.getSize(); i++)
-    {
-        if (memberList.get(i).id > maxId)
-        {
-            maxId = memberList.get(i).id;
-        }
-    }
-    return maxId + 1;
-}
-
-int AppState::getNextGameId()
-{
-    Vector<Game> gameList = games.toVector();
-    int maxId = 0;
-    for (int i = 0; i < gameList.getSize(); i++)
-    {
-        if (gameList.get(i).id > maxId)
-        {
-            maxId = gameList.get(i).id;
-        }
-    }
-    return maxId + 1;
-}
-
-int AppState::getNextBorrowId()
-{
-    Vector<Borrow> borrowList = borrows.toVector();
-    int maxId = 0;
-    for (int i = 0; i < borrowList.getSize(); i++)
-    {
-        if (borrowList.get(i).borrowId > maxId)
-        {
-            maxId = borrowList.get(i).borrowId;
-        }
-    }
-    return maxId + 1;
-}
-
-int AppState::getNextReviewId()
-{
-    Vector<Review> reviewList = reviews.toVector();
-    int maxId = 0;
-    for (int i = 0; i < reviewList.getSize(); i++)
-    {
-        if (reviewList.get(i).reviewId > maxId)
-        {
-            maxId = reviewList.get(i).reviewId;
-        }
-    }
-    return maxId + 1;
 }

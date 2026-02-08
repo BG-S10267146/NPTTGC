@@ -29,6 +29,7 @@ private:
     DictionaryNode<K, V> **items; // Array of pointers to DictionaryNode
     int size;
     int capacity;
+    K maxKey_;
 
     int getIndex(const K &key) const
     {
@@ -79,7 +80,7 @@ private:
 
 public:
     Dictionary(int initialCapacity = 10)
-        : capacity(initialCapacity), size(0)
+        : capacity(initialCapacity), size(0), maxKey_(K())
     {
         items = new DictionaryNode<K, V> *[capacity];
         for (int i = 0; i < capacity; i++)
@@ -104,7 +105,7 @@ public:
     }
 
     Dictionary(const Dictionary &other)
-        : capacity(other.capacity), size(other.size)
+        : capacity(other.capacity), size(other.size), maxKey_(other.maxKey_)
     {
         items = new DictionaryNode<K, V> *[capacity];
         for (int i = 0; i < capacity; i++)
@@ -144,6 +145,7 @@ public:
             // Allocate new hash table matching other's capacity
             capacity = other.capacity;
             size = 0;
+            maxKey_ = other.maxKey_;
             items = new DictionaryNode<K, V> *[capacity];
             for (int i = 0; i < capacity; i++)
             {
@@ -190,6 +192,12 @@ public:
         newNode->next = items[index];
         items[index] = newNode;
         size++;
+
+        // Update maxKey if this is the first key or a larger key
+        if (size == 1 || key > maxKey_)
+        {
+            maxKey_ = key;
+        }
     }
 
     /// Removes a key-value pair by key. Returns true if removed, false if not found.
@@ -287,6 +295,7 @@ public:
             items[i] = nullptr;
         }
         size = 0;
+        maxKey_ = K();
     }
 
     /// Converts all values in the dictionary to a Vector.
@@ -320,6 +329,12 @@ public:
             }
         }
         return result;
+    }
+
+    /// Returns the maximum key in the dictionary. Returns default-constructed K if empty.
+    K maxKey() const
+    {
+        return maxKey_;
     }
 };
 

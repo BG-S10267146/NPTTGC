@@ -4,17 +4,15 @@
 #include <string>
 #include "../lib/Vector.h"
 
-typedef int MemberID;
-
 /// Member data structure
 struct Member
 {
-    MemberID id;
+    int id;
     std::string username;
     bool isAdmin;
 
     Member() : id(0), username(""), isAdmin(false) {}
-    Member(MemberID id, const std::string& username, bool isAdmin) 
+    Member(int id, const std::string& username, bool isAdmin) 
         : id(id), username(username), isAdmin(isAdmin) {}
 
     static std::string csvHeader();

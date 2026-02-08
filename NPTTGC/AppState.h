@@ -15,23 +15,17 @@
 /// Application state coordinator - manages all data and business logic
 class AppState
 {
-private:
+public:
+    int currentUserId;
     Dictionary<int, Member> members;
-    Dictionary<std::string, MemberID> membersByUsername;
+    Dictionary<std::string, int> membersByUsername;
     Dictionary<int, Game> games;
     SuffixArray gameNames;
     Dictionary<int, Borrow> borrows;
-    Set<GameID> borrowedGames;
+    Set<int> borrowedGames;
     Dictionary<int, Review> reviews;
     Dictionary<int, int> reviewsByGame;
-    int currentUserId;
 
-    int getNextMemberId();
-    int getNextGameId();
-    int getNextBorrowId();
-    int getNextReviewId();
-
-public:
     AppState();
 
     void loadData();
@@ -44,8 +38,6 @@ public:
     std::optional<Member> authenticateMember(const std::string &username);
     bool addMember(const std::string &username, bool isAdmin);
     void logout();
-    Member *getCurrentUser();
-    int getCurrentUserId();
 
     bool addGame(const Game &game);
     bool removeGame(int gameId);
