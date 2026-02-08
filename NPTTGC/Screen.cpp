@@ -761,10 +761,18 @@ void Screen::viewReviews()
     searchBuf[strcspn(searchBuf, "\n")] = 0;
     std::string searchTerm = searchBuf;
 
+    Set<std::string> seenGameNames;
     Vector<Game> activeGames = appState.searchGames(
         searchTerm,
-        [](const Game &g)
-        { return !g.isDeleted; });
+        [&](const Game &g)
+        {
+            bool include = !g.isDeleted && !seenGameNames.exists(g.name);
+            if (include)
+            {
+                seenGameNames.insert(g.name);
+            }
+            return include;
+        });
 
     if (activeGames.isEmpty())
     {
@@ -1315,10 +1323,18 @@ void Screen::writeReview()
     searchBuf[strcspn(searchBuf, "\n")] = 0;
     std::string searchTerm = searchBuf;
 
+    Set<std::string> seenGameNames;
     Vector<Game> activeGames = appState.searchGames(
         searchTerm,
-        [](const Game &g)
-        { return !g.isDeleted; });
+        [&](const Game &g)
+        {
+            bool include = !g.isDeleted && !seenGameNames.exists(g.name);
+            if (include)
+            {
+                seenGameNames.insert(g.name);
+            }
+            return include;
+        });
 
     if (activeGames.isEmpty())
     {
