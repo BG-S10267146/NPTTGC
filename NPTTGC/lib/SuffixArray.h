@@ -1,8 +1,3 @@
-/**
- * Goh Jun Liang Bryan, Group 2, S10267146, P01
- * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
- */
-
 #ifndef SUFFIXARRAY_H
 #define SUFFIXARRAY_H
 
@@ -15,6 +10,10 @@
 #include "Search.h"
 #include "Sort.h"
 
+/**
+ * Goh Jun Liang Bryan, Group 2, S10267146, P01
+ * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
+ */
 struct SuffixEntry
 {
     // Position in combined string

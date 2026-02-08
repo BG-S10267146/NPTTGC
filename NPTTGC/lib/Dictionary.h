@@ -1,7 +1,3 @@
-/**
- * Goh Jun Liang Bryan, Group 2, S10267146, P01
- * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
- */
 
 #ifndef DICTIONARY_H
 #define DICTIONARY_H
@@ -12,6 +8,10 @@
 #include "Hash.h"
 #include "Vector.h"
 
+/**
+ * Goh Jun Liang Bryan, Group 2, S10267146, P01
+ * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
+ */
 template <typename K, typename V>
 class DictionaryNode
 {

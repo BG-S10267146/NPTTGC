@@ -1,8 +1,3 @@
-/**
- * Goh Jun Liang Bryan, Group 2, S10267146, P01
- * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
- */
-
 #ifndef SET_H
 #define SET_H
 
@@ -10,6 +5,10 @@
 #include <stdexcept>
 #include "Hash.h"
 
+/**
+ * Goh Jun Liang Bryan, Group 2, S10267146, P01
+ * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
+ */
 template <typename T>
 class SetNode
 {

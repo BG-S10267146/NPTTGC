@@ -1,13 +1,12 @@
-/**
- * Goh Jun Liang Bryan, Group 2, S10267146, P01
- * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
- */
-
 #ifndef VECTOR_H
 #define VECTOR_H
 
 #include <stdexcept>
 
+/**
+ * Goh Jun Liang Bryan, Group 2, S10267146, P01
+ * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
+ */
 /// Dynamic array implementation with automatic resizing.
 template <typename T>
 class Vector
