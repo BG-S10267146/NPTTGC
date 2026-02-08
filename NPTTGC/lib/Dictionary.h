@@ -331,6 +331,20 @@ public:
         return result;
     }
 
+    /// Applies a function to each key-value pair in the dictionary.
+    void forEach(std::function<void(const K &, const V &)> func) const
+    {
+        for (int i = 0; i < capacity; i++)
+        {
+            DictionaryNode<K, V> *current = items[i];
+            while (current != nullptr)
+            {
+                func(current->key, current->item);
+                current = current->next;
+            }
+        }
+    }
+
     /// Returns the maximum key in the dictionary. Returns default-constructed K if empty.
     K maxKey() const
     {

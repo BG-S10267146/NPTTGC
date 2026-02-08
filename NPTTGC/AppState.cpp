@@ -16,10 +16,10 @@ void AppState::loadData()
 
 void AppState::saveData()
 {
-    saveToFile<Member>("members.csv", Member::csvHeader(), members.toVector(), Member::toCSVRow);
-    saveToFile<Game>("games.csv", Game::csvHeader(), games.toVector(), Game::toCSVRow);
-    saveToFile<Borrow>("borrows.csv", Borrow::csvHeader(), borrows.toVector(), Borrow::toCSVRow);
-    saveToFile<Review>("reviews.csv", Review::csvHeader(), reviews.toVector(), Review::toCSVRow);
+    saveToFile<int, Member>("members.csv", Member::csvHeader(), members, Member::toCSVRow);
+    saveToFile<int, Game>("games.csv", Game::csvHeader(), games, Game::toCSVRow);
+    saveToFile<int, Borrow>("borrows.csv", Borrow::csvHeader(), borrows, Borrow::toCSVRow);
+    saveToFile<int, Review>("reviews.csv", Review::csvHeader(), reviews, Review::toCSVRow);
 }
 
 void AppState::loadMembers(const std::string &filename)
@@ -133,7 +133,7 @@ bool AppState::addMember(const std::string &username, bool isAdmin)
     members.insert(memberId, newMember);
     membersByUsername.insert(username, memberId);
 
-    saveToFile<Member>("members.csv", Member::csvHeader(), members.toVector(), Member::toCSVRow);
+    saveToFile<int, Member>("members.csv", Member::csvHeader(), members, Member::toCSVRow);
     return true;
 }
 
@@ -146,8 +146,10 @@ bool AppState::addGame(const Game &game)
 {
     games.insert(game.id, game);
     Vector<Game> gameList = games.toVector();
-    gameNames = SuffixArray::build(gameList.getSize(), [&](int i)
-                                   { return gameList[i].name; });
+    gameNames = SuffixArray::build(
+        gameList.getSize(),
+        [&](int i)
+        { return gameList[i].name; });
     saveToFile<Game>("games.csv", Game::csvHeader(), gameList, Game::toCSVRow);
     return true;
 }
@@ -239,7 +241,7 @@ bool AppState::borrowGame(int gameId)
     borrows.insert(newBorrow.borrowId, newBorrow);
     borrowedGames.insert(gameId);
 
-    saveToFile<Borrow>("borrows.csv", Borrow::csvHeader(), borrows.toVector(), Borrow::toCSVRow);
+    saveToFile<int, Borrow>("borrows.csv", Borrow::csvHeader(), borrows, Borrow::toCSVRow);
     return true;
 }
 
@@ -259,7 +261,7 @@ bool AppState::returnGame(int borrowId)
     borrows.insert(borrowId, borrow);
     borrowedGames.remove(borrow.gameId);
 
-    saveToFile<Borrow>("borrows.csv", Borrow::csvHeader(), borrows.toVector(), Borrow::toCSVRow);
+    saveToFile<int, Borrow>("borrows.csv", Borrow::csvHeader(), borrows, Borrow::toCSVRow);
     return true;
 }
 
@@ -320,7 +322,7 @@ bool AppState::addReview(int gameId, int rating, const std::string &content)
     reviews.insert(newReview.reviewId, newReview);
     reviewsByGame.insert(gameId, newReview.reviewId);
 
-    saveToFile<Review>("reviews.csv", Review::csvHeader(), reviews.toVector(), Review::toCSVRow);
+    saveToFile<int, Review>("reviews.csv", Review::csvHeader(), reviews, Review::toCSVRow);
     return true;
 }
 

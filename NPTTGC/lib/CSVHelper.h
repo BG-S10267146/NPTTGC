@@ -166,4 +166,32 @@ void saveToFile(const std::string &filepath, const std::string &header, const Ve
 	file.close();
 }
 
+/// Saves Dictionary values to a CSV file a rowBuilder function.
+template <typename K, typename V>
+void saveToFile(const std::string &filepath, const std::string &header, const Dictionary<K, V> &data, std::function<Vector<std::string>(const V &)> rowBuilder)
+{
+	std::ofstream file(filepath.c_str());
+
+	if (!file.is_open())
+	{
+		printf("Error: Could not open %s for writing.\n", filepath.c_str());
+		return;
+	}
+
+	file << header << "\n";
+
+	data.forEach([&](const K &key, const V &value)
+				 {
+		Vector<std::string> fields = rowBuilder(value);
+		for (int j = 0; j < fields.getSize(); j++)
+		{
+			if (j > 0)
+				file << ",";
+			file << escapeCSVField(fields.get(j));
+		}
+		file << "\n"; });
+
+	file.close();
+}
+
 #endif
