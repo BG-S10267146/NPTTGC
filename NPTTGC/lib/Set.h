@@ -33,8 +33,8 @@ private:
 
     int getIndex(const T &value) const
     {
-        int hashValue = ::hash(value);
-        return ((hashValue % capacity) + capacity) % capacity;
+        unsigned int hashValue = hash(value);
+        return hashValue % capacity;
     }
 
     void resize()

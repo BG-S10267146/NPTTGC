@@ -38,7 +38,7 @@ private:
 
     int getIndex(const K &key) const
     {
-        int hashValue = hash(key);
+        unsigned int hashValue = hash(key);
         return hashValue % capacity;
     }
 

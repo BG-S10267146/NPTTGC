@@ -205,14 +205,22 @@ void Screen::addGame()
         printf("  Max Playtime: %d minutes\n", existingGame.maxPlaytime);
         printf("  Year Published: %d\n", existingGame.yearPublished);
         printf("\nAll parameters must match the existing game to add a duplicate copy.\n");
-        printf("Press Enter to use these values or type 'cancel' to abort.\n");
+        printf("Press 'Enter' to use these values or type 'Cancel' to abort.\n");
 
-        std::string confirmation = StringHelper::readLine();
-
-        if (confirmation == "cancel")
+        std::string confirmation;
+        while (true)
         {
-            printf("Game creation cancelled.\n");
-            return;
+            confirmation = StringHelper::readLine();
+            if (confirmation.empty())
+            {
+                break;
+            }
+            if (StringHelper::toLower(confirmation) == "cancel")
+            {
+                printf("Game creation cancelled.\n");
+                return;
+            }
+            printf("Invalid input. Press 'Enter' to continue or type 'Cancel' to abort.\n");
         }
 
         // Autofill from existing game
