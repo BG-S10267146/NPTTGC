@@ -737,15 +737,17 @@ void Screen::viewReviews()
     }
 
     Vector<Game> activeGames;
+    Set<std::string> seenGameNames;
     const Vector<Game> &allGames = appState.getGames();
 
     for (int i = 0; i < matchingGameIndices.getSize(); i++)
     {
         int gameIdx = matchingGameIndices.get(i);
         Game game = allGames.get(gameIdx);
-        if (!game.isDeleted)
+        if (!game.isDeleted && !seenGameNames.exists(game.name))
         {
             activeGames.append(game);
+            seenGameNames.insert(game.name);
         }
     }
 
@@ -865,7 +867,7 @@ void Screen::viewReviews()
     if (selectedGame >= 0)
     {
         Game selectedGameObj = activeGames.get(selectedGame);
-        Vector<Review> gameReviews = appState.getReviewsForGame(selectedGameObj.id);
+        Vector<Review> gameReviews = appState.getReviewsForGameName(selectedGameObj.name);
 
         printf("\n=== Reviews for Game: %s ===\n\n", selectedGameObj.name.c_str());
 
@@ -886,7 +888,7 @@ void Screen::viewReviews()
         }
         printf("\n");
 
-        float averageRating = appState.getAverageRating(selectedGameObj.id);
+        float averageRating = appState.getAverageRatingByGameName(selectedGameObj.name);
         printf("Average rating for %s: %.2f/5 (%d reviews)\n",
                selectedGameObj.name.c_str(), averageRating, gameReviews.getSize());
     }
@@ -1318,15 +1320,17 @@ void Screen::writeReview()
     }
 
     Vector<Game> activeGames;
+    Set<std::string> seenGameNames;
     const Vector<Game> &allGames = appState.getGames();
 
     for (int i = 0; i < matchingGameIndices.getSize(); i++)
     {
         int gameIdx = matchingGameIndices.get(i);
         Game game = allGames.get(gameIdx);
-        if (!game.isDeleted)
+        if (!game.isDeleted && !seenGameNames.exists(game.name))
         {
             activeGames.append(game);
+            seenGameNames.insert(game.name);
         }
     }
 
