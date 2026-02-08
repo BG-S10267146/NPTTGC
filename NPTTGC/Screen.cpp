@@ -211,71 +211,115 @@ void Screen::addGame()
         return;
     }
 
+    // Check if game with this name already exists (non-deleted)
+    Game *existingGame = nullptr;
+    Vector<Game> allGames = appState.getGames();
+    for (int i = 0; i < allGames.getSize(); i++)
+    {
+        if (allGames.get(i).name == std::string(nameBuf) && !allGames.get(i).isDeleted)
+        {
+            existingGame = &allGames.get(i);
+            break;
+        }
+    }
+
     int minPlayers, maxPlayers, minPlaytime, maxPlaytime, yearPublished;
 
-    printf("Enter minimum players: ");
-    if (!readInteger(minPlayers) || minPlayers <= 0)
+    if (existingGame != nullptr)
     {
-        printf("Error: Minimum players must be a positive number.\n");
-        return;
-    }
-
-    printf("Enter maximum players: ");
-    if (!readInteger(maxPlayers) || maxPlayers <= 0)
-    {
-        printf("Error: Maximum players must be a positive number.\n");
-        return;
-    }
-
-    if (maxPlayers < minPlayers)
-    {
-        printf("Error: Maximum players cannot be less than minimum players.\n");
-        return;
-    }
-
-    printf("Enter minimum playtime (minutes): ");
-    if (!readInteger(minPlaytime) || minPlaytime <= 0)
-    {
-        printf("Error: Minimum playtime must be a positive number.\n");
-        return;
-    }
-
-    printf("Enter maximum playtime (minutes): ");
-    if (!readInteger(maxPlaytime) || maxPlaytime <= 0)
-    {
-        printf("Error: Maximum playtime must be a positive number.\n");
-        return;
-    }
-
-    if (maxPlaytime < minPlaytime)
-    {
-        printf("Error: Maximum playtime cannot be less than minimum playtime.\n");
-        return;
-    }
-
-    std::time_t t = std::time(nullptr);
-    std::tm now;
-    localtime_s(&now, &t);
-    int currentYear = now.tm_year + 1900;
-
-    printf("Enter year published (or press Enter for current year %d): ", currentYear);
-    char yearBuf[10];
-    fgets(yearBuf, sizeof(yearBuf), stdin);
-    yearBuf[strcspn(yearBuf, "\n")] = 0;
-
-    if (strlen(yearBuf) == 0)
-    {
-        yearPublished = currentYear;
+        printf("\nGame '%s' already exists with the following parameters:\n", existingGame->name.c_str());
+        printf("  Min Players: %d\n", existingGame->minPlayers);
+        printf("  Max Players: %d\n", existingGame->maxPlayers);
+        printf("  Min Playtime: %d minutes\n", existingGame->minPlaytime);
+        printf("  Max Playtime: %d minutes\n", existingGame->maxPlaytime);
+        printf("  Year Published: %d\n", existingGame->yearPublished);
+        printf("\nAll parameters must match the existing game to add a duplicate copy.\n");
+        printf("Press Enter to use these values or type 'cancel' to abort.\n");
+        
+        char confirmBuf[20];
+        fgets(confirmBuf, sizeof(confirmBuf), stdin);
+        confirmBuf[strcspn(confirmBuf, "\n")] = 0;
+        
+        if (strcmp(confirmBuf, "cancel") == 0)
+        {
+            printf("Game creation cancelled.\n");
+            return;
+        }
+        
+        // Autofill from existing game
+        minPlayers = existingGame->minPlayers;
+        maxPlayers = existingGame->maxPlayers;
+        minPlaytime = existingGame->minPlaytime;
+        maxPlaytime = existingGame->maxPlaytime;
+        yearPublished = existingGame->yearPublished;
     }
     else
     {
-        if (!readIntegerFromString(yearBuf, yearPublished) || yearPublished < 1990 || yearPublished > currentYear)
+        // New game - prompt for all parameters
+        printf("Enter minimum players: ");
+        if (!readInteger(minPlayers) || minPlayers <= 0)
         {
-            printf("Error: Year published must be a valid number between 1990 and %d.\n", currentYear);
+            printf("Error: Minimum players must be a positive number.\n");
             return;
         }
+
+        printf("Enter maximum players: ");
+        if (!readInteger(maxPlayers) || maxPlayers <= 0)
+        {
+            printf("Error: Maximum players must be a positive number.\n");
+            return;
+        }
+
+        if (maxPlayers < minPlayers)
+        {
+            printf("Error: Maximum players cannot be less than minimum players.\n");
+            return;
+        }
+
+        printf("Enter minimum playtime (minutes): ");
+        if (!readInteger(minPlaytime) || minPlaytime <= 0)
+        {
+            printf("Error: Minimum playtime must be a positive number.\n");
+            return;
+        }
+
+        printf("Enter maximum playtime (minutes): ");
+        if (!readInteger(maxPlaytime) || maxPlaytime <= 0)
+        {
+            printf("Error: Maximum playtime must be a positive number.\n");
+            return;
+        }
+
+        if (maxPlaytime < minPlaytime)
+        {
+            printf("Error: Maximum playtime cannot be less than minimum playtime.\n");
+            return;
+        }
+
+        std::time_t t = std::time(nullptr);
+        std::tm now;
+        localtime_s(&now, &t);
+        int currentYear = now.tm_year + 1900;
+
+        printf("Enter year published (or press Enter for current year %d): ", currentYear);
+        char yearBuf[10];
+        fgets(yearBuf, sizeof(yearBuf), stdin);
+        yearBuf[strcspn(yearBuf, "\n")] = 0;
+
+        if (strlen(yearBuf) == 0)
+        {
+            yearPublished = currentYear;
+        }
+        else
+        {
+            if (!readIntegerFromString(yearBuf, yearPublished) || yearPublished < 1990 || yearPublished > currentYear)
+            {
+                printf("Error: Year published must be a valid number between 1990 and %d.\n", currentYear);
+                return;
+            }
+        }
+        printf("Year published: %d\n", yearPublished);
     }
-    printf("Year published: %d\n", yearPublished);
 
     Game newGame;
     newGame.id = appState.games.maxKey() + 1;

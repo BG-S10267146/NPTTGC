@@ -1,633 +1,634 @@
 id,name,minplayers,maxplayers,maxplaytime,minplaytime,yearpublished,isdeleted
 0,12 Days,3,5,15,15,2011,0
-1,5-Minute Marvel,2,5,5,5,2018,0
-2,7 Wonders,2,7,30,30,2010,0
-3,7 Wonders Duel,2,2,30,30,2015,0
-4,7 Wonders: Architects,2,7,25,25,2021,0
-5,Aargh!,2,4,20,20,2005,0
-6,Abalone,2,2,30,30,1987,0
-7,Abandon All Artichokes,2,4,20,20,2020,0
-8,Abyss,2,4,60,30,2014,0
-9,Acquire,2,6,90,90,1963,0
-10,Adventure Land,2,4,45,45,2015,0
-11,The Adventurers: The Temple of Chac,2,6,45,45,2009,0
-12,Aeon's End: War Eternal,1,4,60,60,2017,0
-13,Africana,2,4,60,60,2012,0
-14,Airlines Europe,2,5,75,75,2011,0
-15,Akropolis,1,4,30,20,2022,0
-16,Akrotiri,2,2,45,45,2014,0
-17,Aladdin's Dragons,3,5,90,60,2000,0
-18,Alchemists,2,4,120,120,2014,0
-19,Alea Iacta Est,2,5,60,60,2009,0
-20,Alhambra,2,6,60,45,2003,0
-21,Alien Frontiers,2,4,90,90,2010,0
-22,Among the Stars,2,4,30,30,2012,0
-23,Das Amulett,3,6,60,60,2001,0
-24,Anima: Shadow of Omega,2,5,60,60,2006,0
-25,Animals on Board,2,4,30,15,2016,0
-26,Anomia,3,6,30,30,2010,0
-27,Apples to Apples,4,10,30,20,1999,0
-28,Arboretum,2,4,30,30,2015,0
-29,Arcane Academy,2,4,45,30,2016,0
-30,Archaeology: The Card Game,2,4,20,20,2007,0
-31,Archaeology: The New Expedition,2,5,30,20,2016,0
-32,Architects of the West Kingdom,1,5,80,60,2018,0
-33,Arena: Roma II,2,2,45,30,2009,0
-34,"Artifacts, Inc.",2,4,60,60,2014,0
-35,Asante,2,2,40,40,2013,0
-36,Ascension: Storm of Souls,1,4,30,30,2011,0
-37,At the Gates of Loyang,1,4,120,60,2009,0
-38,Atlantis Rising,2,6,90,30,2012,0
-39,Automania,2,4,90,60,2015,0
-40,Azul,2,4,45,30,2017,0
-41,Bacchus' Banquet,3,5,30,30,2008,0
-42,Back to the Future: Back in Time,2,4,50,50,2020,0
-43,Bad Company,1,6,30,30,2021,0
-44,Bag of Chips,2,5,20,15,2021,0
-45,Bandido,1,4,15,10,2016,0
-46,BANG!,4,7,40,20,2002,0
-47,BANG! The Dice Game,3,8,15,15,2013,0
-48,BANG! The Dice Game,3,8,15,15,2013,0
-49,Barbarossa,3,4,60,60,1988,0
-50,Bargain Quest,2,6,60,30,2017,0
-51,BasketBoss,2,5,50,50,2009,0
-52,Battle Line,2,2,30,30,2000,0
-53,Battle Merchants,2,4,120,120,2014,0
-54,BattleCON: Fate of Indines,2,2,60,30,2015,0
-55,Beasty Bar,2,4,20,20,2014,0
-56,Beer!,2,6,0,0,2001,0
-57,Belratti,3,7,25,25,2018,0
-58,Betrayal at House on the Hill,3,6,60,60,2004,0
-59,Between Two Cities,1,7,25,25,2015,0
-60,Biblios,2,4,30,30,2007,0
-61,Black Friday,2,5,55,55,2010,0
-62,Blokus,2,4,20,20,2000,0
-63,Blood Bound,6,12,30,30,2013,0
-64,Blood Rage,2,4,90,60,2015,0
-65,Bloodborne: The Card Game,3,5,45,30,2016,0
-66,The Bloody Inn,1,4,60,30,2015,0
-67,Blueprints,2,4,30,30,2013,0
-68,Blueprints,2,4,30,30,2013,0
-69,Boggle,1,8,10,10,1972,0
-70,Bohnanza,2,7,45,45,1997,0
-71,Bomb Busters,2,5,30,30,2024,0
-72,Boss Monster: The Dungeon Building Card Game,2,4,30,30,2013,0
-73,Bosworth,2,4,60,60,1998,0
-74,Botswana,2,5,30,20,1994,0
-75,Brass: Birmingham,2,4,120,60,2018,0
-76,Bridge Troll,3,6,45,45,2009,0
-77,Broom Service,2,5,75,30,2015,0
-78,Bruges,2,4,60,60,2013,0
-79,Brynk,2,99,30,15,2016,0
-80,Buccaneer Bones,1,4,15,15,2013,0
-81,Bunny Kingdom,2,4,60,40,2017,0
-82,"But Wait, There's More!",3,10,30,30,2011,0
-83,Butterfly Garden,2,4,30,30,2012,0
-84,BuyWord,1,4,45,45,2004,0
-85,Ca$h 'n Gun$,4,6,30,30,2005,0
-86,Ca$h 'n Gun$: Live,8,20,30,30,2007,0
-87,Camel Up,2,8,30,20,2014,0
-88,Can't Stop,2,4,30,30,1980,0
-89,The Capitals,2,5,120,120,2013,0
-90,Captain Sonar,2,8,60,45,2016,0
-91,Carcassonne,2,5,45,30,2000,0
-92,Carcassonne,2,5,45,30,2000,0
-93,The Card Game of Oz,1,4,20,20,2014,0
-94,Cartographers,1,100,45,30,2019,0
-95,Cascadia,1,4,45,30,2021,0
-96,Castell,2,4,90,60,2018,0
-97,Castle Combo,2,5,25,10,2024,0
-98,Castle Dice,1,4,45,45,2013,0
-99,Castle Panic,1,6,60,30,2009,0
-100,The Castles of Burgundy,2,4,90,30,2011,0
-101,Castles of Mad King Ludwig,1,4,90,90,2014,0
-102,Cat Packs,1,4,45,30,2024,0
-103,Caylus,2,5,150,60,2005,0
-104,Century: Golem Edition,2,5,45,30,2017,0
-105,Challengers!,1,8,45,45,2022,0
-106,The Chameleon,3,8,15,15,2017,0
-107,Chateau Roquefort,2,4,30,30,2007,0
-108,Chimera Station,2,4,90,60,2017,0
-109,Chinese Checkers,2,6,30,30,1893,0
-110,Chronicles of Crime: 1400,1,4,90,60,2020,0
-111,Chronicles of Crime: 1900,1,4,90,60,2021,0
-112,Cinque Terre,2,5,60,60,2013,0
-113,Citadels,2,8,60,20,2000,0
-114,Citadels,2,8,60,20,2000,0
-115,Clank!: A Deck-Building Adventure,2,4,60,30,2016,0
-116,Clans of Caledonia,1,4,120,30,2017,0
-117,Clue: The Card Game,3,5,45,45,2002,0
-118,Cockroach Poker Royal,2,6,25,15,2012,0
-119,Codenames,2,8,15,15,2015,0
-120,Coimbra,2,4,90,60,2018,0
-121,Coin & Crown,1,4,60,45,2018,0
-122,Colony,1,4,60,45,2016,0
-123,Colt Express,2,6,40,40,2014,0
 124,Concept,4,12,40,40,2013,0
-125,Concordia,2,5,100,100,2013,0
-126,Connect Four,2,2,10,10,1974,0
-127,Copycat,2,4,95,95,2012,0
-128,Cottage Garden,1,4,60,60,2016,0
-129,Council of Verona (Second Edition),2,5,20,20,2014,0
-130,Coup,2,6,15,15,2012,0
-131,Coup: Rebellion G54,3,6,15,15,2014,0
-132,Courtier,2,4,45,45,2012,0
-133,Cranium,4,99,60,60,1998,0
-134,Creature Caravan,1,4,90,60,2024,0
-135,Creature Comforts,1,5,45,45,2022,0
-136,Cretaceous Rails,1,4,120,30,2025,0
-137,The Crew: The Quest for Planet Nine,2,5,20,20,2019,0
-138,Crossfire,5,10,10,5,2017,0
-139,Crusaders: Thy Will Be Done,2,4,60,40,2018,0
-140,Cuckoo Zoo,2,10,20,20,2002,0
-141,Cutthroat Caverns,3,6,90,90,2007,0
-142,CV,2,4,60,60,2013,0
-143,Dairyman,2,4,30,20,2016,0
-144,Dead Cells: The Rogue-Lite Board Game,1,4,45,45,2024,0
-145,Dead of Winter: A Crossroads Game,2,5,120,60,2014,0
-146,Dead of Winter: The Long Night,2,5,120,60,2016,0
-147,Deadwood,2,5,60,30,2011,0
-148,Deception: Murder in Hong Kong,4,12,20,20,2014,0
-149,Decrypto,3,8,45,15,2018,0
-150,Defenders of the Realm,1,4,90,90,2010,0
-151,Demon Worker,3,4,45,45,2016,0
-152,Deus,2,4,90,60,2014,0
-153,Diabolo,3,5,30,30,2006,0
-154,Diamant,3,8,40,20,2005,0
-155,Dice Forge,2,4,45,45,2017,0
-156,Dice Manor,2,4,45,30,2023,0
-157,Dice Town,2,5,45,45,2009,0
-158,Discoveries: The Journals of Lewis & Clark,2,4,60,60,2015,0
-159,Discworld: Ankh-Morpork,2,4,60,60,2011,0
-160,Dive! Diver! Die!,3,5,45,45,2010,0
-161,Dixit,3,6,30,30,2008,0
-162,Dixit: Odyssey,3,12,30,30,2011,0
-163,Dog Lover,2,4,30,30,2021,0
-164,Dominion,2,4,30,30,2008,0
-165,Dominion: Intrigue,2,6,30,30,2009,0
-166,Don't Mess with Cthulhu Deluxe,4,8,30,1,2018,0
-167,DONUTS,2,2,15,10,2023,0
-168,Downforce,2,6,40,20,2017,0
-169,Dr. Eureka,2,4,15,15,2015,0
-170,Draftosaurus,2,5,15,15,2019,0
-171,Dragon's Gold,3,6,45,45,2001,0
-172,Dragonkeepers,2,4,20,20,2023,0
-173,Drakon,2,6,20,20,2001,0
-174,Dream Home,2,4,30,30,2016,0
-175,Drop It,2,4,30,30,2018,0
-176,Drum Roll,2,4,90,90,2011,0
-177,Dungeon Fighter,1,6,60,45,2011,0
-178,Dungeon Petz,2,4,90,90,2011,0
-179,Dungeons & Dragons: Rock Paper Wizard,3,6,30,30,2016,0
-180,Dutch Blitz,2,4,15,1,1960,0
-181,The Dutch Golden Age,3,4,60,60,2008,0
-182,Earth,1,5,90,45,2023,0
-183,Eclipse: New Dawn for the Galaxy,2,6,180,60,2011,0
-184,Ecos: First Continent,2,6,75,45,2019,0
-185,Elder Sign,1,8,90,90,2011,0
-186,Eldritch Horror,1,8,240,120,2013,0
-187,Elfenland,2,6,60,60,1998,0
-188,Elysium,2,4,60,60,2015,0
-189,Eminent Domain: Microcosm,2,2,15,15,2014,0
-190,Empire Builder,2,6,180,180,1982,0
-191,Empire's End,2,4,60,45,2023,0
-192,Endeavor: Age of Sail,2,5,90,60,2018,0
-193,Entropy,2,6,15,15,2015,0
-194,Eruption,2,6,60,30,2011,0
-195,Escape from the Aliens in Outer Space,2,8,45,20,2010,0
-196,Escape Room: The Game,3,5,60,60,2016,0
-197,Ethnos,2,6,60,45,2017,0
-198,Eurorails,2,6,240,180,1990,0
-199,Evolution,2,6,60,60,2014,0
-200,Evolution: Climate,2,6,60,60,2016,0
-201,Expedition Altiplano,2,2,30,30,2006,0
-202,Explorers of Navoria,2,4,80,40,2024,0
-203,Fallout Shelter: The Board Game,2,4,90,60,2020,0
-204,Family Business,2,6,30,30,1982,0
-205,Fantastic Factories,1,5,60,45,2019,0
-206,Fantasy Realms,2,6,20,20,2017,0
-207,Fidelitas,1,4,30,30,2015,0
-208,First Empires,2,5,60,45,2022,0
-209,First Rat,1,5,75,30,2022,0
-210,Fjords,1,2,30,30,2005,0
-211,Flamecraft,1,5,60,60,2022,0
-212,Flash Point: Fire Rescue,2,6,45,45,2011,0
-213,Fleet,2,4,45,30,2012,0
-214,Flip 7,3,18,20,20,2024,0
-215,For Sale,3,6,30,30,1997,0
-216,Forbidden Desert,2,5,45,45,2013,0
-217,Forbidden Island,2,4,30,30,2010,0
-218,Forest Shuffle,2,5,60,40,2023,0
-219,Formula De,2,10,120,120,1997,0
-220,Fortuna,2,4,60,60,2011,0
-221,Fortune and Glory: The Cliffhanger Game,1,8,240,90,2011,0
-222,The Fox Experiment,1,4,60,60,2023,0
-223,Fractured Sky,1,5,75,45,2024,0
-224,Friday,1,1,25,25,2011,0
-225,Fromage,1,4,45,30,2024,0
-226,Funfair,2,4,60,30,2021,0
-227,Fury of Dracula (Third/Fourth Edition),2,5,180,120,2015,0
-228,FUSE,1,5,10,10,2015,0
-229,The Game,1,5,20,20,2015,0
-230,Game of Thrones: The Iron Throne,3,5,60,30,2016,0
-231,Gauner raus!,2,4,60,30,2016,0
-232,Geek Out!,2,99,30,30,2013,0
-233,Get Bit!,2,7,20,10,2007,0
-234,Get on Board: New York & London,2,5,30,30,2022,0
-235,Ghost Blitz,2,8,20,20,2010,0
-236,Ghost Stories,1,4,60,60,2008,0
-237,Ghosts Love Candy Too,2,6,45,20,2022,0
-238,Give Me the Brain!,3,8,15,15,1996,0
-239,Gizmos,2,4,50,40,2018,0
-240,Glass Road,1,4,80,20,2013,0
-241,Gloom,2,5,60,60,2005,0
-242,The Gnomes of Zavandor,2,4,90,60,2011,0
-243,Going Postal,3,6,15,10,2019,0
-244,"Going, Going, GONE!",2,6,20,20,2013,0
-245,Good Cop Bad Cop,4,8,20,10,2014,0
-246,Grand Austria Hotel,2,4,120,60,2015,0
-247,The Grand Carnival,1,4,60,45,2020,0
-248,El Grande: Decennial Edition,2,5,90,90,2006,0
-249,The Great Split,2,7,45,45,2022,0
-250,The Grizzled,2,5,30,30,2015,0
-251,The Guild of Merchant Explorers,1,4,45,45,2022,0
-252,Guildhall,2,4,45,30,2012,0
-253,Guillotine,2,5,30,30,1998,0
-254,Habitats,1,5,50,30,2016,0
-255,Hail Hydra,5,8,75,40,2018,0
-256,Halli Galli,2,6,10,10,1990,0
-257,Halloween Party,3,6,20,20,2004,0
-258,Hanabi,2,5,25,25,2010,0
-259,Hanamikoji,2,2,15,15,2013,0
-260,Hansa Teutonica: Big Box,3,5,90,45,2020,0
-261,Happy Salmon,3,8,2,2,2016,0
-262,Harbour,1,4,60,30,2015,0
-263,Hardback,1,5,90,45,2018,0
-264,Le Havre,1,5,150,30,2008,0
-265,Heat: Pedal to the Metal,1,6,60,30,2022,0
-266,Herd Mentality,4,20,30,20,2020,0
-267,Here to Slay,2,6,60,30,2020,0
-268,"Hey, That's My Fish!",2,4,20,20,2003,0
-269,High Society,3,5,30,15,1995,0
-270,Hoity Toity,2,5,45,45,1990,0
-271,Horrified,1,5,60,60,2019,0
-272,I'm the Boss!,3,6,60,60,1994,0
-273,ICECOOL,2,4,30,30,2016,0
-274,Ideology: The War of Ideas,2,5,90,90,2003,0
-275,Imaginiff,3,8,30,30,1998,0
-276,Imhotep,2,4,40,40,2016,0
-277,Imhotep: The Duel,2,2,30,30,2018,0
-278,Imperial Settlers,1,4,90,45,2014,0
-279,The Impregnable Fortress,2,2,60,30,2017,0
-280,Ingenious,1,4,45,30,2004,0
-281,Ingenious,1,4,45,30,2004,0
-282,Innovation,2,5,60,20,2010,0
-283,Intrigue,3,5,45,45,1994,0
-284,La Isla,2,4,60,30,2014,0
-285,Isle of Skye: From Chieftain to King,2,5,50,30,2015,0
-286,Islebound,2,4,120,60,2016,0
-287,Istanbul,2,5,60,40,2014,0
-288,Istanbul: The Dice Game,2,4,40,20,2017,0
-289,Jaipur,2,2,30,30,2009,0
-290,Jamaica,2,6,60,30,2007,0
-291,Jump Drive,2,4,30,10,2017,0
-292,Jungle Speed,2,10,10,10,1997,0
-293,Jurassic Jumble,3,9,10,10,2004,0
-294,Just One,3,7,60,20,2018,0
-295,Kanagawa,2,4,45,45,2016,0
-296,Karuba,2,4,40,30,2015,0
-297,Keyflower,2,6,120,90,2012,0
-298,Kill Doctor Lucky,3,8,45,45,1996,0
-299,King of Tokyo,2,6,30,30,2011,0
-300,The King's Guild,1,6,120,60,2018,0
-301,Kingdomino,2,4,25,15,2016,0
-302,Kitchen Rush,1,4,45,30,2017,0
-303,Kites,2,6,10,10,2022,0
-304,Knarr,2,4,30,30,2023,0
-305,Kodama: The Tree Spirits,2,5,30,30,2016,0
-306,Ladies & Gentlemen,4,10,30,30,2013,0
-307,Lady Alice,3,5,30,30,2012,0
-308,Lanterns: The Harvest Festival,2,4,30,30,2015,0
-309,Las Vegas,2,5,30,30,2012,0
-310,Last Will,2,5,75,45,2011,0
-311,Lawless Empire,3,5,120,90,2016,0
-312,Legacy: Gears of Time,2,4,60,60,2012,0
-313,Legacy: The Testament of Duke de Crecy,1,4,60,60,2013,0
-314,Legend of Vyas,2,2,0,0,2015,0
-315,Legendary: A Marvel Deck Building Game,1,5,60,30,2012,0
-316,Let's Kill!,2,6,20,20,1997,0
-317,Letters from Whitechapel,2,6,90,90,2011,0
-318,Level 7 [Omega Protocol],2,6,90,60,2013,0
-319,Lewis & Clark: The Expedition,1,5,120,120,2013,0
-320,Libertalia,2,6,60,40,2012,0
-321,Lift it!,1,8,30,30,2012,0
-322,Light Speed: Arena,1,4,15,5,2025,0
-323,Link City,2,6,30,30,2024,0
-324,Livingstone,2,5,35,35,2009,0
-325,Lonpos 4D Puzzle Game,1,2,5,5,2000,0
-326,Loot,2,8,20,20,1992,0
-327,Lord of the Rings,2,5,20,20,2003,0
-328,The Lord of the Rings: The Card Game,1,2,60,30,2011,0
-329,Lords of Scotland,2,5,35,35,2010,0
-330,Lords of Xidit,3,5,90,90,2014,0
-331,Lost Cities,2,2,30,30,1999,0
-332,Lost Legends,3,5,70,70,2013,0
-333,Lost Ruins of Arnak,1,4,120,30,2020,0
-334,Love Letter,2,4,20,20,2012,0
-335,Magic Maze,1,8,15,15,2017,0
-336,Majesty: For the Realm,2,4,30,20,2017,0
-337,The Manhattan Project,2,5,120,120,2012,0
-338,The Manhattan Project: Energy Empire,1,5,120,60,2016,0
-339,Mansions of Madness,2,5,180,120,2011,0
-340,Mansions of Madness: Second Edition,1,5,180,120,2016,0
-341,Martian Dice,2,99,10,10,2011,0
-342,Mascarade,2,13,30,30,2013,0
-343,Master of Orion: The Board Game,2,4,60,40,2016,0
-344,Master of Respect,3,5,60,60,2016,0
-345,Mastermind,2,2,20,20,1971,0
-346,Mechs vs. Minions,2,4,120,60,2016,0
-347,Medieval Academy,2,5,30,30,2014,0
-348,Medieval Merchant,2,6,90,60,1998,0
-349,Medina (Second Edition),2,4,60,60,2014,0
-350,Medium,2,8,45,30,2019,0
-351,Meeple War,2,4,60,30,2016,0
-352,Merkator,1,4,90,45,2010,0
-353,MicroMacro: Crime City,1,4,45,15,2020,0
-354,The Mines of Zavandor,2,4,90,45,2010,0
-355,Mission: Red Planet,3,5,60,60,2005,0
-356,Monopoly Deal Card Game,2,5,15,15,2008,1
-357,Monster Caf�,2,4,20,20,2013,0
-358,Morels,2,2,30,30,2012,0
-359,Mr. Jack,2,2,30,30,2006,0
-360,Munchkin Dungeon,2,5,90,60,2020,0
-361,Mysterium,2,7,42,42,2015,0
-362,Mysterium Park,2,6,45,30,2020,0
-363,Mystic Market,2,4,45,30,2019,0
-364,Mystic Vale,2,4,45,45,2016,0
-365,Nations,1,5,200,40,2013,0
-366,Nations: The Dice Game,1,4,40,20,2014,0
-367,Near and Far,2,4,120,90,2017,0
-368,New Haven,2,4,60,60,2013,0
-369,New York 1901,2,4,60,30,2015,0
-370,New York Slice,2,6,30,30,2017,0
-371,Nidavellir,2,5,45,45,2020,0
-372,The Night Cage,1,5,60,40,2021,0
-373,Night of the Ninja,4,11,30,15,2021,0
-374,Nimalia,2,4,30,25,2023,0
-375,No Thanks!,3,7,20,20,2004,0
-376,No Thanks!,3,7,20,20,2004,0
-377,Nobody but Us Chickens,3,6,20,20,2003,0
-378,Not Alone,2,7,45,30,2016,0
-379,Notre Dame,2,5,75,45,2007,0
-380,Nuns on the Run,2,8,60,45,2010,0
-381,Oceanos,2,5,45,30,2016,0
-382,OddVille,2,4,60,30,2012,0
-383,Oh My Goods!,2,4,30,30,2015,0
-384,Old Maid,2,6,5,5,1874,0
-385,On Tour: Paris and New York,1,8,30,20,2022,0
-386,Once Upon a Time: The Storytelling Card Game,2,6,30,30,1993,0
-387,One Night Revolution,3,10,15,15,2015,0
-388,One Night Ultimate Werewolf,3,10,10,10,2014,0
-389,Onitama,2,2,20,15,2014,0
-390,Orleans,2,5,90,90,2014,0
-391,Outlive,2,4,110,40,2017,0
-392,Packet Row,2,5,75,45,2013,0
-393,Paleo,2,4,60,45,2020,0
-394,Pandemic,2,4,45,45,2008,0
-395,Pandemic,2,4,45,45,2008,0
-396,Pandemic: Rapid Response,2,4,20,20,2019,0
-397,Pandemic: The Cure,2,5,30,30,2014,0
-398,Parade,2,6,45,45,2007,0
-399,Party Panda Pirates,2,6,45,30,2024,0
-400,Pasha,2,5,30,30,2013,0
-401,Pass the Bomb,2,10,20,20,1994,0
-402,Patchwork,2,2,30,15,2014,0
-403,Pathfinder Adventure Card Game: Rise of the Runelords – Base Set,1,4,90,90,2013,0
-404,Pay Dirt,2,5,90,90,2014,0
-405,Peloponnes,1,5,45,45,2009,0
-406,Perudo,2,10,30,15,1800,0
-407,Phantom Ink,2,8,15,10,2022,0
-408,Pick-a-Dog,1,5,15,15,2012,0
-409,Pick-a-Dog,1,5,15,15,2012,0
-410,The Pillars of the Earth,2,4,120,90,2006,0
-411,Pioneer Days,2,4,75,45,2017,0
-412,Pit,3,8,90,30,1903,0
-413,Planted: A Game of Nature & Nurture,2,5,30,20,2022,0
-414,Pluckin' Pairs,3,8,50,50,2012,0
-415,Plunder,2,6,45,30,2013,0
-416,Point Salad,2,6,30,15,2019,0
-417,Police Precinct,1,6,90,90,2013,0
-418,Poo: The Card Game,2,8,15,5,2009,0
-419,Port Royal,2,5,50,20,2014,0
-420,Power Grid,2,6,120,120,2004,0
-421,The Price Is Right,3,5,60,60,1973,0
-422,Progress: Evolution of Technology,1,5,90,45,2014,0
-423,Project L,1,4,40,20,2020,0
-424,Project: ELITE,1,4,30,30,2016,0
-425,Puerto Rico,3,5,150,90,2002,0
-426,Pulsar 2849,2,4,90,60,2017,0
-427,The Pursuit of Happiness,1,4,90,60,2015,0
-428,PUSH,2,6,25,20,2018,0
-429,QE,3,5,45,45,2019,0
-430,Quacks,2,4,45,45,2018,0
-431,Quadropolis,2,4,60,30,2016,0
-432,The Quest for El Dorado,2,4,60,30,2017,0
-433,Qwirkle,2,4,45,45,2006,0
-434,Raccoon Tycoon: Deluxe Edition,2,6,120,30,2021,0
-435,Race for the Galaxy,2,4,60,30,2007,0
-436,Race to Adventure: The Spirit of the Century Exploration Game,2,5,20,20,2013,0
-437,Raiders of the North Sea,2,4,80,60,2015,0
-438,Railroad Revolution,2,4,90,45,2016,0
-439,Rat-a-Tat Cat,2,6,10,10,1995,0
-440,Rat-a-Tat Cat,2,6,10,10,1995,0
-441,Rat-a-Tat Cat,2,6,10,10,1995,0
-442,RattleSnake,2,4,15,15,2007,0
-443,Ready Set Bet,2,9,60,45,2022,0
-444,The Reckoners,1,6,100,60,2018,0
-445,Red7,2,4,30,5,2014,0
-446,Reef,2,4,45,30,2018,0
-447,Relic Runners,2,5,80,40,2013,0
-448,Rent a Hero,3,5,30,20,2012,0
-449,Res Arcana,2,4,60,30,2019,0
-450,The Resistance,5,10,30,30,2009,0
-451,The Resistance,5,10,30,30,2009,0
-452,The Resistance: Avalon,5,10,30,30,2012,0
-453,Revolution!,3,4,60,60,2009,0
-454,Ricochet Robots,1,99,30,30,1999,0
-455,Riftforce,2,2,30,20,2021,0
-456,Rise,2,4,60,60,2022,0
-457,Rise of Augustus,2,6,30,30,2013,0
-458,Rising 5: Runes of Asteros,1,5,30,30,2017,0
-459,Risk,2,6,120,120,1959,0
-460,Risk 2210 A.D.,2,5,240,240,2001,0
-461,Risk: Star Wars Edition,2,4,45,30,2015,0
-462,River of Gold,2,4,90,60,2024,0
-463,River Valley Glassworks,1,5,45,25,2024,0
-464,Robinson Crusoe: Adventures on the Cursed Island,1,4,120,60,2012,0
-465,RoboRally,2,8,120,45,1994,0
-466,Rococo,2,5,120,60,2013,0
-467,Roll for the Galaxy,2,5,45,45,2014,0
-468,Roll Player,1,4,90,60,2016,0
-469,Roll Through the Ages: The Bronze Age,1,4,45,30,2008,0
-470,Room 25,1,6,30,30,2013,0
-471,Royals,2,5,60,60,2014,0
-472,Rummikub,2,4,60,60,1977,0
-473,"Run, Fight, or Die!",1,4,40,40,2014,0
-474,Russian Railroads,2,4,120,120,2013,0
-475,Saboteur,3,10,30,30,2004,0
-476,Saboteur,3,10,30,30,2004,0
-477,Sail to India,3,4,60,60,2013,0
-478,Saint Malo,2,5,45,45,2012,0
-479,Saint Petersburg,2,4,60,45,2004,0
-480,Samurai,2,4,60,30,1998,0
-481,San Juan,2,4,60,45,2004,0
-482,Sanssouci,2,4,45,30,2013,0
-483,Santa Maria,1,4,90,45,2017,0
-484,Santo Domingo,2,6,30,20,2017,0
-485,Santorini,2,4,20,20,2016,0
-486,Say Anything,3,8,30,30,2008,0
-487,Say Anything Family Edition,3,6,30,30,2011,0
-488,Scotland Yard: Hunting Mister X,2,4,15,15,2019,0
-489,Scythe,1,5,115,115,2016,0
-490,Sea Salt & Paper,2,4,45,30,2022,0
-491,Seasons,2,4,60,60,2012,0
-492,Secret Hitler,5,10,45,45,2016,0
-493,Sentinels of the Multiverse,2,5,60,30,2011,0
-494,Sequence,2,12,30,10,1982,0
-495,The Settlers of Catan,3,6,75,60,2008,0
-496,Seven Dragons,2,5,30,10,2011,0
-497,Shadow Hunters,4,8,60,60,2005,0
-498,Shadowrift,1,6,120,45,2012,0
-499,Shadowrun: Crossfire,1,4,60,30,2014,0
-500,Shadows over Camelot,3,7,90,60,2005,0
-501,Sherlock Holmes Consulting Detective: The Thames Murders & Other Cases,1,8,120,60,1981,0
-502,The Shipwreck Arcana,2,5,30,10,2017,0
-503,Shogun,3,5,120,90,2006,0
-504,Signorie,2,4,120,60,2015,0
-505,Similo,2,8,15,10,2019,0
-506,Skull,3,6,45,15,2011,0
-507,Sleeping Queens,2,5,20,20,2005,0
-508,Small World,2,5,80,40,2009,0
-509,Small World Underground,2,5,90,30,2011,0
-510,Smash Up,2,4,45,45,2012,0
-511,Snake Oil: Elixir,3,8,30,30,2015,0
-512,Sneaks & Snitches,2,5,20,20,2010,0
-513,Snorta!,3,8,20,20,2004,0
-514,So Clover!,3,6,30,30,2021,0
-515,Sonora,1,4,45,30,2020,0
-516,Space Base,2,5,60,60,2018,0
-517,Specter Ops,2,5,120,60,2015,0
-518,Spirit Island,1,4,120,90,2017,0
-519,Spit It Out!,3,8,30,20,2015,0
-520,Splendor,2,4,30,30,2014,0
-521,Splendor Duel,2,2,30,30,2022,0
-522,Spots,1,4,30,25,2022,0
-523,Squint,3,8,30,30,2002,0
-524,Star Realms,2,2,20,20,2014,0
-525,Star Wars: Outer Rim,1,4,180,120,2019,0
-526,Steam Time,2,4,90,90,2015,0
-527,Steampunk Rally,2,8,60,45,2015,0
-528,Stockpile,2,5,45,45,2015,0
-529,Stone Age,2,4,90,60,2008,0
-530,Strike,2,5,15,15,2012,0
-531,Suburbia,1,4,90,60,2012,0
-532,Survive: Escape from Atlantis!,2,4,60,45,1982,0
-533,Sushi Go!,2,5,15,15,2013,0
-534,Sushi Roll,2,5,20,20,2019,0
-535,Sushi Roll!,3,8,10,10,2009,0
-536,T.I.M.E Stories,2,4,90,90,2015,0
-537,Taboo,4,10,20,20,1989,0
-538,Tac Tac Jack,2,7,10,10,2008,0
-539,Take 5,2,10,45,45,1994,0
-540,Takenoko,2,4,45,45,2011,0
-541,Tales & Games: The Hare & the Tortoise,2,5,20,15,2011,0
-542,Tapple,2,10,30,30,2012,0
-543,Targi,2,2,60,60,2012,0
-544,Telestrations,4,8,30,30,2009,0
-545,Tenpenny Parks,1,4,75,45,2022,0
-546,Teotihuacan: City of Gods,1,4,120,90,2018,0
-547,Terror Below,1,5,60,45,2019,0
-548,Terror in Meeple City,2,4,30,30,2013,0
-549,Terrorscape,2,4,45,30,2023,0
-550,This Game Is Killer: Alien on Board,3,10,15,10,2024,0
-551,Those Pesky Humans!,2,4,90,90,2009,0
-552,Three Kingdoms Redux,3,3,165,135,2014,0
-553,Thunderstone Advance: Towers of Ruin,1,5,45,45,2012,0
-554,Thurn and Taxis,2,4,60,60,2006,0
-555,Ticket to Ride,2,5,60,30,2004,0
-556,Ticket to Ride: Europe,2,5,60,30,2005,0
-557,Tides of Time,2,2,20,20,2015,0
-558,Tiefe Taschen,4,8,50,20,2016,0
-559,Tigris & Euphrates,2,4,120,60,1997,0
-560,Tiki Topple,2,4,20,20,2008,0
-561,Time's Up!,4,18,90,90,1999,0
-562,Time's Up! Title Recall!,4,18,60,60,2008,0
-563,Timeline: Events,2,8,15,15,2011,0
-564,Timeline: Inventions,2,8,15,15,2010,0
-565,Timeline: Music & Cinema,2,8,15,15,2013,0
-566,Timeline: Science & Discoveries,2,8,15,15,2011,0
-567,Tiny Epic Defenders,1,4,30,30,2015,0
-568,Tiny Epic Galaxies,1,5,45,30,2015,0
-569,Tobago,2,4,60,60,2009,0
-570,Tofu Kingdom,3,8,30,10,2015,0
-571,Tokaido,1,5,45,45,2012,0
-572,Torres,2,4,60,60,1999,0
-573,Tournay,2,4,60,30,2011,0
-574,Trekking Through History,1,4,60,30,2022,0
-575,Tribes: Dawn of Humanity,2,4,45,45,2018,0
-576,Trio,3,6,15,15,2021,0
-577,Truffle Shuffle,2,4,30,15,2020,0
-578,Tumult Royale,2,4,40,40,2015,0
-579,Tutankhamun,2,6,30,30,2021,0
-580,Twister,2,4,10,10,1966,0
-581,Uglydoll Card Game,2,6,15,15,2006,0
-582,Ultimate Werewolf: Deluxe Edition,5,75,30,30,2014,0
-583,Undermining,2,5,45,45,2011,0
-584,Unlock!: Exotic Adventures,1,6,90,60,2018,0
-585,Unlock!: Extraordinary Adventures,1,6,90,60,2022,0
-586,Unlock!: Game Adventures,1,6,60,30,2021,0
-587,Unlock!: Heroic Adventures,1,6,60,60,2018,0
-588,Unlock!: Legendary Adventures,1,6,60,60,2021,0
-589,Unlock!: Secret Adventures,1,6,60,60,2017,0
-590,UNO Stacko,2,10,20,20,1994,0
-591,Unusual Suspects,3,16,20,20,2015,0
-592,The Vale of Eternity,2,4,45,30,2023,0
-593,Vault Wars,3,5,60,45,2015,0
-594,Il Vecchio,2,4,60,60,2012,0
-595,Via Nebula,2,4,60,45,2016,0
-596,Viceroy,1,4,60,45,2014,0
-597,Village Pillage,2,5,20,20,2019,0
-598,Vindication,2,5,150,45,2018,0
-599,Viticulture,2,6,90,90,2013,0
-600,VivaJava: The Coffee Game: The Dice Game,1,4,40,20,2014,0
-601,The Voyages of Marco Polo,2,4,100,40,2015,0
-602,Warsaw: City of Ruins,2,4,60,60,2016,0
-603,Wasteland Express Delivery Service,2,5,120,90,2017,0
-604,Welcome to the Dungeon,2,4,30,30,2013,0
 605,Werewords,4,10,10,10,2017,0
-606,Wheel of Fortune,2,4,60,60,1975,0
-607,Whitehall Mystery,2,4,60,45,2017,0
-608,Wild Space,1,5,40,15,2020,0
-609,Wingspan,1,5,70,40,2019,0
-610,WINK,3,8,20,20,1994,0
-611,Wits & Wagers,3,7,25,25,2005,0
-612,Wok and Roll,1,5,45,30,2020,0
-613,Word Slam,3,99,45,45,2016,0
-614,Word Slam,3,99,45,45,2016,0
-615,World of Yo-Ho,2,4,90,45,2016,0
+248,El Grande: Decennial Edition,2,5,90,90,2006,0
+370,New York Slice,2,6,30,30,2017,0
+494,Sequence,2,12,30,10,1982,0
+11,The Adventurers: The Temple of Chac,2,6,45,45,2009,0
+135,Creature Comforts,1,5,45,45,2022,0
 616,World Wonders,1,5,70,50,2023,0
-617,World's Fair 1893,2,4,45,35,2016,0
-618,Wreck Raiders,1,5,45,45,2019,0
-619,Wreckage,2,4,45,45,2003,0
-620,XenoShyft: Onslaught,1,4,60,30,2015,0
-621,Yamatai,2,4,80,40,2017,0
-622,Yardmaster,2,5,20,20,2014,0
-623,Yedo,2,5,180,120,2012,0
-624,You Robot,4,10,20,20,2009,0
-625,Zendo,2,6,60,15,2001,0
-626,Zeus on the Loose,2,5,15,15,2006,0
+257,Halloween Party,3,6,20,20,2004,0
+381,Oceanos,2,5,45,30,2016,0
+505,Similo,2,8,15,10,2019,0
+22,Among the Stars,2,4,30,30,2012,0
+146,Dead of Winter: The Long Night,2,5,120,60,2016,0
 627,Zombie Fluxx,2,6,40,10,2007,0
-628,Zooloretto,2,5,45,45,2007,0
+268,"Hey, That's My Fish!",2,4,20,20,2003,0
+392,Packet Row,2,5,75,45,2013,0
+33,Arena: Roma II,2,2,45,30,2009,0
+514,So Clover!,3,6,30,30,2021,0
+157,Dice Town,2,5,45,45,2009,0
+279,The Impregnable Fortress,2,2,60,30,2017,0
+403,Pathfinder Adventure Card Game: Rise of the Runelords – Base Set,1,4,90,90,2013,0
+44,Bag of Chips,2,5,20,15,2021,0
+525,Star Wars: Outer Rim,1,4,180,120,2019,0
+168,Downforce,2,6,40,20,2017,0
+290,Jamaica,2,6,60,30,2007,0
+414,Pluckin' Pairs,3,8,50,50,2012,0
+55,Beasty Bar,2,4,20,20,2014,0
+536,T.I.M.E Stories,2,4,90,90,2015,0
+179,Dungeons & Dragons: Rock Paper Wizard,3,6,30,30,2016,0
+301,Kingdomino,2,4,25,15,2016,0
+425,Puerto Rico,3,5,150,90,2002,0
+66,The Bloody Inn,1,4,60,30,2015,0
+547,Terror Below,1,5,60,45,2019,0
+190,Empire Builder,2,6,180,180,1982,0
+312,Legacy: Gears of Time,2,4,60,60,2012,0
+436,Race to Adventure: The Spirit of the Century Exploration Game,2,5,20,20,2013,0
+77,Broom Service,2,5,75,30,2015,0
+558,Tiefe Taschen,4,8,50,20,2016,0
+201,Expedition Altiplano,2,2,30,30,2006,0
+323,Link City,2,6,30,30,2024,0
+447,Relic Runners,2,5,80,40,2013,0
+88,Can't Stop,2,4,30,30,1980,0
+569,Tobago,2,4,60,60,2009,0
+212,Flash Point: Fire Rescue,2,6,45,45,2011,0
+334,Love Letter,2,4,20,20,2012,0
+458,Rising 5: Runes of Asteros,1,5,30,30,2017,0
+99,Castle Panic,1,6,60,30,2009,0
+580,Twister,2,4,10,10,1966,0
+223,Fractured Sky,1,5,75,45,2024,0
+345,Mastermind,2,2,20,20,1971,0
+469,Roll Through the Ages: The Bronze Age,1,4,45,30,2008,0
+110,Chronicles of Crime: 1400,1,4,90,60,2020,0
+591,Unusual Suspects,3,16,20,20,2015,0
+234,Get on Board: New York & London,2,5,30,30,2022,0
+356,Monopoly Deal Card Game,2,5,15,15,2008,1
+480,Samurai,2,4,60,30,1998,0
+121,Coin & Crown,1,4,60,45,2018,0
+602,Warsaw: City of Ruins,2,4,60,60,2016,0
+245,Good Cop Bad Cop,4,8,20,10,2014,0
+367,Near and Far,2,4,120,90,2017,0
+491,Seasons,2,4,60,60,2012,0
+8,Abyss,2,4,60,30,2014,0
+132,Courtier,2,4,45,45,2012,0
+613,Word Slam,3,99,45,45,2016,0
+378,Not Alone,2,7,45,30,2016,0
+502,The Shipwreck Arcana,2,5,30,10,2017,0
+19,Alea Iacta Est,2,5,60,60,2009,0
+143,Dairyman,2,4,30,20,2016,0
+624,You Robot,4,10,20,20,2009,0
+265,Heat: Pedal to the Metal,1,6,60,30,2022,0
+389,Onitama,2,2,20,15,2014,0
+30,Archaeology: The Card Game,2,4,20,20,2007,0
+154,Diamant,3,8,40,20,2005,0
+276,Imhotep,2,4,40,40,2016,0
+400,Pasha,2,5,30,30,2013,0
+41,Bacchus' Banquet,3,5,30,30,2008,0
+522,Spots,1,4,30,25,2022,0
+165,Dominion: Intrigue,2,6,30,30,2009,0
+287,Istanbul,2,5,60,40,2014,0
+411,Pioneer Days,2,4,75,45,2017,0
+52,Battle Line,2,2,30,30,2000,0
+533,Sushi Go!,2,5,15,15,2013,0
+176,Drum Roll,2,4,90,90,2011,0
+298,Kill Doctor Lucky,3,8,45,45,1996,0
+422,Progress: Evolution of Technology,1,5,90,45,2014,0
+63,Blood Bound,6,12,30,30,2013,0
+544,Telestrations,4,8,30,30,2009,0
+187,Elfenland,2,6,60,60,1998,0
+309,Las Vegas,2,5,30,30,2012,0
+433,Qwirkle,2,4,45,45,2006,0
+74,Botswana,2,5,30,20,1994,0
+555,Ticket to Ride,2,5,60,30,2004,0
+198,Eurorails,2,6,240,180,1990,0
+320,Libertalia,2,6,60,40,2012,0
+444,The Reckoners,1,6,100,60,2018,0
+85,Ca$h 'n Gun$,4,6,30,30,2005,0
+566,Timeline: Science & Discoveries,2,8,15,15,2011,0
+209,First Rat,1,5,75,30,2022,0
+331,Lost Cities,2,2,30,30,1999,0
+455,Riftforce,2,2,30,20,2021,0
+96,Castell,2,4,90,60,2018,0
+577,Truffle Shuffle,2,4,30,15,2020,0
+220,Fortuna,2,4,60,60,2011,0
+342,Mascarade,2,13,30,30,2013,0
+466,Rococo,2,5,120,60,2013,0
+107,Chateau Roquefort,2,4,30,30,2007,0
+588,Unlock!: Legendary Adventures,1,6,60,60,2021,0
+231,Gauner raus!,2,4,60,30,2016,0
+353,MicroMacro: Crime City,1,4,45,15,2020,0
+477,Sail to India,3,4,60,60,2013,0
+118,Cockroach Poker Royal,2,6,25,15,2012,0
+599,Viticulture,2,6,90,90,2013,0
+242,The Gnomes of Zavandor,2,4,90,60,2011,0
+364,Mystic Vale,2,4,45,45,2016,0
+488,Scotland Yard: Hunting Mister X,2,4,15,15,2019,0
+5,Aargh!,2,4,20,20,2005,0
+129,Council of Verona (Second Edition),2,5,20,20,2014,0
+610,WINK,3,8,20,20,1994,0
+253,Guillotine,2,5,30,30,1998,0
+375,No Thanks!,3,7,20,20,2004,0
+499,Shadowrun: Crossfire,1,4,60,30,2014,0
+16,Akrotiri,2,2,45,45,2014,0
+140,Cuckoo Zoo,2,10,20,20,2002,0
+621,Yamatai,2,4,80,40,2017,0
+262,Harbour,1,4,60,30,2015,0
+386,Once Upon a Time: The Storytelling Card Game,2,6,30,30,1993,0
+510,Smash Up,2,4,45,45,2012,0
+27,Apples to Apples,4,10,30,20,1999,0
+151,Demon Worker,3,4,45,45,2016,0
+632,BANG!,4,7,40,20,2002,0
+273,ICECOOL,2,4,30,30,2016,0
+397,Pandemic: The Cure,2,5,30,30,2014,0
+38,Atlantis Rising,2,6,90,30,2012,0
+519,Spit It Out!,3,8,30,20,2015,0
+162,Dixit: Odyssey,3,12,30,30,2011,0
+284,La Isla,2,4,60,30,2014,0
+408,Pick-a-Dog,1,5,15,15,2012,0
+49,Barbarossa,3,4,60,60,1988,0
+530,Strike,2,5,15,15,2012,0
+173,Drakon,2,6,20,20,2001,0
+295,Kanagawa,2,4,45,45,2016,0
+419,Port Royal,2,5,50,20,2014,0
+60,Biblios,2,4,30,30,2007,0
+541,Tales & Games: The Hare & the Tortoise,2,5,20,15,2011,0
+184,Ecos: First Continent,2,6,75,45,2019,0
+306,Ladies & Gentlemen,4,10,30,30,2013,0
+430,Quacks,2,4,45,45,2018,0
+71,Bomb Busters,2,5,30,30,2024,0
+552,Three Kingdoms Redux,3,3,165,135,2014,0
+195,Escape from the Aliens in Outer Space,2,8,45,20,2010,0
+317,Letters from Whitechapel,2,6,90,90,2011,0
+441,Rat-a-Tat Cat,2,6,10,10,1995,0
+82,"But Wait, There's More!",3,10,30,30,2011,0
+563,Timeline: Events,2,8,15,15,2011,0
+206,Fantasy Realms,2,6,20,20,2017,0
+328,The Lord of the Rings: The Card Game,1,2,60,30,2011,0
+452,The Resistance: Avalon,5,10,30,30,2012,0
+93,The Card Game of Oz,1,4,20,20,2014,0
+574,Trekking Through History,1,4,60,30,2022,0
+217,Forbidden Island,2,4,30,30,2010,0
+339,Mansions of Madness,2,5,180,120,2011,0
+463,River Valley Glassworks,1,5,45,25,2024,0
+104,Century: Golem Edition,2,5,45,30,2017,0
+585,Unlock!: Extraordinary Adventures,1,6,90,60,2022,0
+228,FUSE,1,5,10,10,2015,0
+350,Medium,2,8,45,30,2019,0
+474,Russian Railroads,2,4,120,120,2013,0
+115,Clank!: A Deck-Building Adventure,2,4,60,30,2016,0
+596,Viceroy,1,4,60,45,2014,0
+239,Gizmos,2,4,50,40,2018,0
+361,Mysterium,2,7,42,42,2015,0
+485,Santorini,2,4,20,20,2016,0
+2,7 Wonders,2,7,30,30,2010,0
+126,Connect Four,2,2,10,10,1974,0
+607,Whitehall Mystery,2,4,60,45,2017,0
+250,The Grizzled,2,5,30,30,2015,0
+372,The Night Cage,1,5,60,40,2021,0
+496,Seven Dragons,2,5,30,10,2011,0
+13,Africana,2,4,60,60,2012,0
+137,The Crew: The Quest for Planet Nine,2,5,20,20,2019,0
+618,Wreck Raiders,1,5,45,45,2019,0
+259,Hanamikoji,2,2,15,15,2013,0
+383,Oh My Goods!,2,4,30,30,2015,0
+507,Sleeping Queens,2,5,20,20,2005,0
+24,Anima: Shadow of Omega,2,5,60,60,2006,0
+148,Deception: Murder in Hong Kong,4,12,20,20,2014,0
 629,trash,1,3,0,0,0,0
-630,monopoly: ultimate banking,2,6,30,10,2026,1
+270,Hoity Toity,2,5,45,45,1990,0
+394,Pandemic,2,4,45,45,2008,0
+35,Asante,2,2,40,40,2013,0
+516,Space Base,2,5,60,60,2018,0
+159,Discworld: Ankh-Morpork,2,4,60,60,2011,0
+281,Ingenious,1,4,45,30,2004,0
+405,Peloponnes,1,5,45,45,2009,0
+46,BANG!,4,7,40,20,2002,0
+527,Steampunk Rally,2,8,60,45,2015,0
+170,Draftosaurus,2,5,15,15,2019,0
+292,Jungle Speed,2,10,10,10,1997,0
+416,Point Salad,2,6,30,15,2019,0
+57,Belratti,3,7,25,25,2018,0
+538,Tac Tac Jack,2,7,10,10,2008,0
+181,The Dutch Golden Age,3,4,60,60,2008,0
+303,Kites,2,6,10,10,2022,0
+427,The Pursuit of Happiness,1,4,90,60,2015,0
+68,Blueprints,2,4,30,30,2013,0
+549,Terrorscape,2,4,45,30,2023,0
+192,Endeavor: Age of Sail,2,5,90,60,2018,0
+314,Legend of Vyas,2,2,0,0,2015,0
+438,Railroad Revolution,2,4,90,45,2016,0
+79,Brynk,2,99,30,15,2016,0
+560,Tiki Topple,2,4,20,20,2008,0
+203,Fallout Shelter: The Board Game,2,4,90,60,2020,0
+325,Lonpos 4D Puzzle Game,1,2,5,5,2000,0
+449,Res Arcana,2,4,60,30,2019,0
+90,Captain Sonar,2,8,60,45,2016,0
+571,Tokaido,1,5,45,45,2012,0
+214,Flip 7,3,18,20,20,2024,0
+336,Majesty: For the Realm,2,4,30,20,2017,0
+460,Risk 2210 A.D.,2,5,240,240,2001,0
+101,Castles of Mad King Ludwig,1,4,90,90,2014,0
+582,Ultimate Werewolf: Deluxe Edition,5,75,30,30,2014,0
+225,Fromage,1,4,45,30,2024,0
+347,Medieval Academy,2,5,30,30,2014,0
+471,Royals,2,5,60,60,2014,0
+112,Cinque Terre,2,5,60,60,2013,0
+593,Vault Wars,3,5,60,45,2015,0
+236,Ghost Stories,1,4,60,60,2008,0
+358,Morels,2,2,30,30,2012,0
+482,Sanssouci,2,4,45,30,2013,0
+123,Colt Express,2,6,40,40,2014,0
+604,Welcome to the Dungeon,2,4,30,30,2013,0
+247,The Grand Carnival,1,4,60,45,2020,0
+369,New York 1901,2,4,60,30,2015,0
+493,Sentinels of the Multiverse,2,5,60,30,2011,0
+10,Adventure Land,2,4,45,45,2015,0
+134,Creature Caravan,1,4,90,60,2024,0
+615,World of Yo-Ho,2,4,90,45,2016,0
+256,Halli Galli,2,6,10,10,1990,0
+380,Nuns on the Run,2,8,60,45,2010,0
+504,Signorie,2,4,120,60,2015,0
+21,Alien Frontiers,2,4,90,90,2010,0
+145,Dead of Winter: A Crossroads Game,2,5,120,60,2014,0
+626,Zeus on the Loose,2,5,15,15,2006,0
+267,Here to Slay,2,6,60,30,2020,0
+391,Outlive,2,4,110,40,2017,0
+32,Architects of the West Kingdom,1,5,80,60,2018,0
+513,Snorta!,3,8,20,20,2004,0
+156,Dice Manor,2,4,45,30,2023,0
+278,Imperial Settlers,1,4,90,45,2014,0
+402,Patchwork,2,2,30,15,2014,0
+43,Bad Company,1,6,30,30,2021,0
+524,Star Realms,2,2,20,20,2014,0
+167,DONUTS,2,2,15,10,2023,0
+289,Jaipur,2,2,30,30,2009,0
+413,Planted: A Game of Nature & Nurture,2,5,30,20,2022,0
+54,BattleCON: Fate of Indines,2,2,60,30,2015,0
+535,Sushi Roll!,3,8,10,10,2009,0
+178,Dungeon Petz,2,4,90,90,2011,0
+300,The King's Guild,1,6,120,60,2018,0
+424,Project: ELITE,1,4,30,30,2016,0
+65,Bloodborne: The Card Game,3,5,45,30,2016,0
+546,Teotihuacan: City of Gods,1,4,120,90,2018,0
+189,Eminent Domain: Microcosm,2,2,15,15,2014,0
+311,Lawless Empire,3,5,120,90,2016,0
+435,Race for the Galaxy,2,4,60,30,2007,0
+76,Bridge Troll,3,6,45,45,2009,0
+557,Tides of Time,2,2,20,20,2015,0
+200,Evolution: Climate,2,6,60,60,2016,0
+322,Light Speed: Arena,1,4,15,5,2025,0
+446,Reef,2,4,45,30,2018,0
+87,Camel Up,2,8,30,20,2014,0
+568,Tiny Epic Galaxies,1,5,45,30,2015,0
+211,Flamecraft,1,5,60,60,2022,0
+333,Lost Ruins of Arnak,1,4,120,30,2020,0
+457,Rise of Augustus,2,6,30,30,2013,0
+98,Castle Dice,1,4,45,45,2013,0
+579,Tutankhamun,2,6,30,30,2021,0
+222,The Fox Experiment,1,4,60,60,2023,0
+344,Master of Respect,3,5,60,60,2016,0
+468,Roll Player,1,4,90,60,2016,0
+109,Chinese Checkers,2,6,30,30,1893,0
+590,UNO Stacko,2,10,20,20,1994,0
+233,Get Bit!,2,7,20,10,2007,0
+355,Mission: Red Planet,3,5,60,60,2005,0
+479,Saint Petersburg,2,4,60,45,2004,0
+120,Coimbra,2,4,90,60,2018,0
+601,The Voyages of Marco Polo,2,4,100,40,2015,0
+244,"Going, Going, GONE!",2,6,20,20,2013,0
+366,Nations: The Dice Game,1,4,40,20,2014,0
+490,Sea Salt & Paper,2,4,45,30,2022,0
+7,Abandon All Artichokes,2,4,20,20,2020,0
+131,Coup: Rebellion G54,3,6,15,15,2014,0
+612,Wok and Roll,1,5,45,30,2020,0
+255,Hail Hydra,5,8,75,40,2018,0
+377,Nobody but Us Chickens,3,6,20,20,2003,0
+501,Sherlock Holmes Consulting Detective: The Thames Murders & Other Cases,1,8,120,60,1981,0
+18,Alchemists,2,4,120,120,2014,0
+142,CV,2,4,60,60,2013,0
+623,Yedo,2,5,180,120,2012,0
+264,Le Havre,1,5,150,30,2008,0
+388,One Night Ultimate Werewolf,3,10,10,10,2014,0
+29,Arcane Academy,2,4,45,30,2016,0
+153,Diabolo,3,5,30,30,2006,0
+275,Imaginiff,3,8,30,30,1998,0
+399,Party Panda Pirates,2,6,45,30,2024,0
+40,Azul,2,4,45,30,2017,0
+521,Splendor Duel,2,2,30,30,2022,0
+164,Dominion,2,4,30,30,2008,0
+286,Islebound,2,4,120,60,2016,0
+410,The Pillars of the Earth,2,4,120,90,2006,0
+51,BasketBoss,2,5,50,50,2009,0
+532,Survive: Escape from Atlantis!,2,4,60,45,1982,0
+175,Drop It,2,4,30,30,2018,0
+297,Keyflower,2,6,120,90,2012,0
+421,The Price Is Right,3,5,60,60,1973,0
+62,Blokus,2,4,20,20,2000,0
+543,Targi,2,2,60,60,2012,0
+186,Eldritch Horror,1,8,240,120,2013,0
+308,Lanterns: The Harvest Festival,2,4,30,30,2015,0
+432,The Quest for El Dorado,2,4,60,30,2017,0
+73,Bosworth,2,4,60,60,1998,0
+554,Thurn and Taxis,2,4,60,60,2006,0
+197,Ethnos,2,6,60,45,2017,0
+319,Lewis & Clark: The Expedition,1,5,120,120,2013,0
+443,Ready Set Bet,2,9,60,45,2022,0
+84,BuyWord,1,4,45,45,2004,0
+565,Timeline: Music & Cinema,2,8,15,15,2013,0
+208,First Empires,2,5,60,45,2022,0
+330,Lords of Xidit,3,5,90,90,2014,0
+454,Ricochet Robots,1,99,30,30,1999,0
+95,Cascadia,1,4,45,30,2021,0
+576,Trio,3,6,15,15,2021,0
+219,Formula De,2,10,120,120,1997,0
+341,Martian Dice,2,99,10,10,2011,0
+465,RoboRally,2,8,120,45,1994,0
+106,The Chameleon,3,8,15,15,2017,0
+587,Unlock!: Heroic Adventures,1,6,60,60,2018,0
+230,Game of Thrones: The Iron Throne,3,5,60,30,2016,0
+352,Merkator,1,4,90,45,2010,0
+476,Saboteur,3,10,30,30,2004,0
+117,Clue: The Card Game,3,5,45,45,2002,0
+598,Vindication,2,5,150,45,2018,0
+241,Gloom,2,5,60,60,2005,0
+363,Mystic Market,2,4,45,30,2019,0
+487,Say Anything Family Edition,3,6,30,30,2011,0
+4,7 Wonders: Architects,2,7,25,25,2021,0
+128,Cottage Garden,1,4,60,60,2016,0
+609,Wingspan,1,5,70,40,2019,0
+252,Guildhall,2,4,45,30,2012,0
+374,Nimalia,2,4,30,25,2023,0
+498,Shadowrift,1,6,120,45,2012,0
+15,Akropolis,1,4,30,20,2022,0
+139,Crusaders: Thy Will Be Done,2,4,60,40,2018,0
+620,XenoShyft: Onslaught,1,4,60,30,2015,0
+261,Happy Salmon,3,8,2,2,2016,0
+385,On Tour: Paris and New York,1,8,30,20,2022,0
+509,Small World Underground,2,5,90,30,2011,0
+26,Anomia,3,6,30,30,2010,0
+150,Defenders of the Realm,1,4,90,90,2010,0
 631,testgame,1,20,210,200,2026,0
+272,I'm the Boss!,3,6,60,60,1994,0
+396,Pandemic: Rapid Response,2,4,20,20,2019,0
+37,At the Gates of Loyang,1,4,120,60,2009,0
+518,Spirit Island,1,4,120,90,2017,0
+161,Dixit,3,6,30,30,2008,0
+283,Intrigue,3,5,45,45,1994,0
+407,Phantom Ink,2,8,15,10,2022,0
+48,BANG! The Dice Game,3,8,15,15,2013,0
+529,Stone Age,2,4,90,60,2008,0
+172,Dragonkeepers,2,4,20,20,2023,0
+294,Just One,3,7,60,20,2018,0
+418,Poo: The Card Game,2,8,15,5,2009,0
+59,Between Two Cities,1,7,25,25,2015,0
+540,Takenoko,2,4,45,45,2011,0
+183,Eclipse: New Dawn for the Galaxy,2,6,180,60,2011,0
+305,Kodama: The Tree Spirits,2,5,30,30,2016,0
+429,QE,3,5,45,45,2019,0
+70,Bohnanza,2,7,45,45,1997,0
+551,Those Pesky Humans!,2,4,90,90,2009,0
+194,Eruption,2,6,60,30,2011,0
+316,Let's Kill!,2,6,20,20,1997,0
+440,Rat-a-Tat Cat,2,6,10,10,1995,0
+81,Bunny Kingdom,2,4,60,40,2017,0
+562,Time's Up! Title Recall!,4,18,60,60,2008,0
+205,Fantastic Factories,1,5,60,45,2019,0
+327,Lord of the Rings,2,5,20,20,2003,0
+451,The Resistance,5,10,30,30,2009,0
+92,Carcassonne,2,5,45,30,2000,0
+573,Tournay,2,4,60,30,2011,0
+216,Forbidden Desert,2,5,45,45,2013,0
+338,The Manhattan Project: Energy Empire,1,5,120,60,2016,0
+462,River of Gold,2,4,90,60,2024,0
+103,Caylus,2,5,150,60,2005,0
+584,Unlock!: Exotic Adventures,1,6,90,60,2018,0
+227,Fury of Dracula (Third/Fourth Edition),2,5,180,120,2015,0
+349,Medina (Second Edition),2,4,60,60,2014,0
+473,"Run, Fight, or Die!",1,4,40,40,2014,0
+114,Citadels,2,8,60,20,2000,0
+595,Via Nebula,2,4,60,45,2016,0
+238,Give Me the Brain!,3,8,15,15,1996,0
+360,Munchkin Dungeon,2,5,90,60,2020,0
+484,Santo Domingo,2,6,30,20,2017,0
+1,5-Minute Marvel,2,5,5,5,2018,0
+125,Concordia,2,5,100,100,2013,0
+606,Wheel of Fortune,2,4,60,60,1975,0
+249,The Great Split,2,7,45,45,2022,0
+371,Nidavellir,2,5,45,45,2020,0
+495,The Settlers of Catan,3,6,75,60,2008,0
+12,Aeon's End: War Eternal,1,4,60,60,2017,0
+136,Cretaceous Rails,1,4,120,30,2025,0
+617,World's Fair 1893,2,4,45,35,2016,0
+258,Hanabi,2,5,25,25,2010,0
+382,OddVille,2,4,60,30,2012,0
+506,Skull,3,6,45,15,2011,0
+23,Das Amulett,3,6,60,60,2001,0
+147,Deadwood,2,5,60,30,2011,0
+628,Zooloretto,2,5,45,45,2007,0
+269,High Society,3,5,30,15,1995,0
+393,Paleo,2,4,60,45,2020,0
+34,"Artifacts, Inc.",2,4,60,60,2014,0
+515,Sonora,1,4,45,30,2020,0
+158,Discoveries: The Journals of Lewis & Clark,2,4,60,60,2015,0
+280,Ingenious,1,4,45,30,2004,0
+404,Pay Dirt,2,5,90,90,2014,0
+45,Bandido,1,4,15,10,2016,0
+526,Steam Time,2,4,90,90,2015,0
+169,Dr. Eureka,2,4,15,15,2015,0
+291,Jump Drive,2,4,30,10,2017,0
+415,Plunder,2,6,45,30,2013,0
+56,Beer!,2,6,0,0,2001,0
+537,Taboo,4,10,20,20,1989,0
+180,Dutch Blitz,2,4,15,1,1960,0
+302,Kitchen Rush,1,4,45,30,2017,0
+426,Pulsar 2849,2,4,90,60,2017,0
+67,Blueprints,2,4,30,30,2013,0
+548,Terror in Meeple City,2,4,30,30,2013,0
+191,Empire's End,2,4,60,45,2023,0
+313,Legacy: The Testament of Duke de Crecy,1,4,60,60,2013,0
+437,Raiders of the North Sea,2,4,80,60,2015,0
+78,Bruges,2,4,60,60,2013,0
+559,Tigris & Euphrates,2,4,120,60,1997,0
+202,Explorers of Navoria,2,4,80,40,2024,0
+324,Livingstone,2,5,35,35,2009,0
+448,Rent a Hero,3,5,30,20,2012,0
+89,The Capitals,2,5,120,120,2013,0
+570,Tofu Kingdom,3,8,30,10,2015,0
+213,Fleet,2,4,45,30,2012,0
+335,Magic Maze,1,8,15,15,2017,0
+459,Risk,2,6,120,120,1959,0
+100,The Castles of Burgundy,2,4,90,30,2011,0
+581,Uglydoll Card Game,2,6,15,15,2006,0
+224,Friday,1,1,25,25,2011,0
+346,Mechs vs. Minions,2,4,120,60,2016,0
+470,Room 25,1,6,30,30,2013,0
+111,Chronicles of Crime: 1900,1,4,90,60,2021,0
+592,The Vale of Eternity,2,4,45,30,2023,0
+235,Ghost Blitz,2,8,20,20,2010,0
+357,Monster Caf�,2,4,20,20,2013,0
+481,San Juan,2,4,60,45,2004,0
+122,Colony,1,4,60,45,2016,0
+603,Wasteland Express Delivery Service,2,5,120,90,2017,0
+246,Grand Austria Hotel,2,4,120,60,2015,0
+368,New Haven,2,4,60,60,2013,0
+492,Secret Hitler,5,10,45,45,2016,0
+9,Acquire,2,6,90,90,1963,0
+133,Cranium,4,99,60,60,1998,0
+614,Word Slam,3,99,45,45,2016,0
+379,Notre Dame,2,5,75,45,2007,0
+503,Shogun,3,5,120,90,2006,0
+20,Alhambra,2,6,60,45,2003,0
+144,Dead Cells: The Rogue-Lite Board Game,1,4,45,45,2024,0
+625,Zendo,2,6,60,15,2001,0
+266,Herd Mentality,4,20,30,20,2020,0
+390,Orleans,2,5,90,90,2014,0
+31,Archaeology: The New Expedition,2,5,30,20,2016,0
+512,Sneaks & Snitches,2,5,20,20,2010,0
+155,Dice Forge,2,4,45,45,2017,0
+277,Imhotep: The Duel,2,2,30,30,2018,0
+401,Pass the Bomb,2,10,20,20,1994,0
+42,Back to the Future: Back in Time,2,4,50,50,2020,0
+523,Squint,3,8,30,30,2002,0
+166,Don't Mess with Cthulhu Deluxe,4,8,30,1,2018,0
+288,Istanbul: The Dice Game,2,4,40,20,2017,0
+412,Pit,3,8,90,30,1903,0
+53,Battle Merchants,2,4,120,120,2014,0
+534,Sushi Roll,2,5,20,20,2019,0
+177,Dungeon Fighter,1,6,60,45,2011,0
+299,King of Tokyo,2,6,30,30,2011,0
+423,Project L,1,4,40,20,2020,0
+64,Blood Rage,2,4,90,60,2015,0
+545,Tenpenny Parks,1,4,75,45,2022,0
+188,Elysium,2,4,60,60,2015,0
+310,Last Will,2,5,75,45,2011,0
+434,Raccoon Tycoon: Deluxe Edition,2,6,120,30,2021,0
+75,Brass: Birmingham,2,4,120,60,2018,0
+556,Ticket to Ride: Europe,2,5,60,30,2005,0
+199,Evolution,2,6,60,60,2014,0
+321,Lift it!,1,8,30,30,2012,0
+445,Red7,2,4,30,5,2014,0
+86,Ca$h 'n Gun$: Live,8,20,30,30,2007,0
+567,Tiny Epic Defenders,1,4,30,30,2015,0
+210,Fjords,1,2,30,30,2005,0
+332,Lost Legends,3,5,70,70,2013,0
+456,Rise,2,4,60,60,2022,0
+97,Castle Combo,2,5,25,10,2024,0
+578,Tumult Royale,2,4,40,40,2015,0
+221,Fortune and Glory: The Cliffhanger Game,1,8,240,90,2011,0
+343,Master of Orion: The Board Game,2,4,60,40,2016,0
+467,Roll for the Galaxy,2,5,45,45,2014,0
+108,Chimera Station,2,4,90,60,2017,0
+589,Unlock!: Secret Adventures,1,6,60,60,2017,0
+232,Geek Out!,2,99,30,30,2013,0
+354,The Mines of Zavandor,2,4,90,45,2010,0
+478,Saint Malo,2,5,45,45,2012,0
+119,Codenames,2,8,15,15,2015,0
+600,VivaJava: The Coffee Game: The Dice Game,1,4,40,20,2014,0
+243,Going Postal,3,6,15,10,2019,0
+365,Nations,1,5,200,40,2013,0
+489,Scythe,1,5,115,115,2016,0
+6,Abalone,2,2,30,30,1987,0
+130,Coup,2,6,15,15,2012,0
+611,Wits & Wagers,3,7,25,25,2005,0
+254,Habitats,1,5,50,30,2016,0
+376,No Thanks!,3,7,20,20,2004,0
+500,Shadows over Camelot,3,7,90,60,2005,0
+17,Aladdin's Dragons,3,5,90,60,2000,0
+141,Cutthroat Caverns,3,6,90,90,2007,0
+622,Yardmaster,2,5,20,20,2014,0
+263,Hardback,1,5,90,45,2018,0
+387,One Night Revolution,3,10,15,15,2015,0
+511,Snake Oil: Elixir,3,8,30,30,2015,0
+28,Arboretum,2,4,30,30,2015,0
+152,Deus,2,4,90,60,2014,0
+274,Ideology: The War of Ideas,2,5,90,90,2003,0
+398,Parade,2,6,45,45,2007,0
+39,Automania,2,4,90,60,2015,0
+520,Splendor,2,4,30,30,2014,0
+163,Dog Lover,2,4,30,30,2021,0
+285,Isle of Skye: From Chieftain to King,2,5,50,30,2015,0
+409,Pick-a-Dog,1,5,15,15,2012,0
+50,Bargain Quest,2,6,60,30,2017,0
+531,Suburbia,1,4,90,60,2012,0
+174,Dream Home,2,4,30,30,2016,0
+296,Karuba,2,4,40,30,2015,0
+420,Power Grid,2,6,120,120,2004,0
+61,Black Friday,2,5,55,55,2010,0
+542,Tapple,2,10,30,30,2012,0
+185,Elder Sign,1,8,90,90,2011,0
+307,Lady Alice,3,5,30,30,2012,0
+431,Quadropolis,2,4,60,30,2016,0
+72,Boss Monster: The Dungeon Building Card Game,2,4,30,30,2013,0
+553,Thunderstone Advance: Towers of Ruin,1,5,45,45,2012,0
+196,Escape Room: The Game,3,5,60,60,2016,0
+318,Level 7 [Omega Protocol],2,6,90,60,2013,0
+442,RattleSnake,2,4,15,15,2007,0
+83,Butterfly Garden,2,4,30,30,2012,0
+564,Timeline: Inventions,2,8,15,15,2010,0
+207,Fidelitas,1,4,30,30,2015,0
+329,Lords of Scotland,2,5,35,35,2010,0
+453,Revolution!,3,4,60,60,2009,0
+94,Cartographers,1,100,45,30,2019,0
+575,Tribes: Dawn of Humanity,2,4,45,45,2018,0
+218,Forest Shuffle,2,5,60,40,2023,0
+340,Mansions of Madness: Second Edition,1,5,180,120,2016,0
+464,Robinson Crusoe: Adventures on the Cursed Island,1,4,120,60,2012,0
+105,Challengers!,1,8,45,45,2022,0
+586,Unlock!: Game Adventures,1,6,60,30,2021,0
+229,The Game,1,5,20,20,2015,0
+351,Meeple War,2,4,60,30,2016,0
+475,Saboteur,3,10,30,30,2004,0
+116,Clans of Caledonia,1,4,120,30,2017,0
+597,Village Pillage,2,5,20,20,2019,0
+240,Glass Road,1,4,80,20,2013,0
+362,Mysterium Park,2,6,45,30,2020,0
+486,Say Anything,3,8,30,30,2008,0
+3,7 Wonders Duel,2,2,30,30,2015,0
+127,Copycat,2,4,95,95,2012,0
+608,Wild Space,1,5,40,15,2020,0
+251,The Guild of Merchant Explorers,1,4,45,45,2022,0
+373,Night of the Ninja,4,11,30,15,2021,0
+497,Shadow Hunters,4,8,60,60,2005,0
+14,Airlines Europe,2,5,75,75,2011,0
+138,Crossfire,5,10,10,5,2017,0
+619,Wreckage,2,4,45,45,2003,0
+260,Hansa Teutonica: Big Box,3,5,90,45,2020,0
+384,Old Maid,2,6,5,5,1874,0
+508,Small World,2,5,80,40,2009,0
+25,Animals on Board,2,4,30,15,2016,0
+149,Decrypto,3,8,45,15,2018,0
+630,monopoly: ultimate banking,2,6,30,10,2026,1
+271,Horrified,1,5,60,60,2019,0
+395,Pandemic,2,4,45,45,2008,0
+36,Ascension: Storm of Souls,1,4,30,30,2011,0
+517,Specter Ops,2,5,120,60,2015,0
+160,Dive! Diver! Die!,3,5,45,45,2010,0
+282,Innovation,2,5,60,20,2010,0
+406,Perudo,2,10,30,15,1800,0
+47,BANG! The Dice Game,3,8,15,15,2013,0
+528,Stockpile,2,5,45,45,2015,0
+171,Dragon's Gold,3,6,45,45,2001,0
+293,Jurassic Jumble,3,9,10,10,2004,0
+417,Police Precinct,1,6,90,90,2013,0
+58,Betrayal at House on the Hill,3,6,60,60,2004,0
+539,Take 5,2,10,45,45,1994,0
+182,Earth,1,5,90,45,2023,0
+304,Knarr,2,4,30,30,2023,0
+428,PUSH,2,6,25,20,2018,0
+69,Boggle,1,8,10,10,1972,0
+550,This Game Is Killer: Alien on Board,3,10,15,10,2024,0
+193,Entropy,2,6,15,15,2015,0
+315,Legendary: A Marvel Deck Building Game,1,5,60,30,2012,0
+439,Rat-a-Tat Cat,2,6,10,10,1995,0
+80,Buccaneer Bones,1,4,15,15,2013,0
+561,Time's Up!,4,18,90,90,1999,0
+204,Family Business,2,6,30,30,1982,0
+326,Loot,2,8,20,20,1992,0
+450,The Resistance,5,10,30,30,2009,0
+91,Carcassonne,2,5,45,30,2000,0
+572,Torres,2,4,60,60,1999,0
+215,For Sale,3,6,30,30,1997,0
+337,The Manhattan Project,2,5,120,120,2012,0
+461,Risk: Star Wars Edition,2,4,45,30,2015,0
+102,Cat Packs,1,4,45,30,2024,0
+583,Undermining,2,5,45,45,2011,0
+226,Funfair,2,4,60,30,2021,0
+348,Medieval Merchant,2,6,90,60,1998,0
+472,Rummikub,2,4,60,60,1977,0
+113,Citadels,2,8,60,20,2000,0
+594,Il Vecchio,2,4,60,60,2012,0
+237,Ghosts Love Candy Too,2,6,45,20,2022,0
+359,Mr. Jack,2,2,30,30,2006,0
+483,Santa Maria,1,4,90,45,2017,0
