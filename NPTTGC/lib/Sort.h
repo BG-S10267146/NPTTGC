@@ -4,13 +4,9 @@
 #include <functional>
 #include "Vector.h"
 
-/**
- * Goh Jun Liang Bryan, Group 2, S10267146, P01
- * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
- */
 namespace Sort
 {
-    /// Median-of-three pivot selection helper for improved quicksort performance.
+    /*Median-of-three pivot selection helper for improved quicksort performance.*/
     template <typename T, typename Compare>
     void medianOfThree(Vector<T> &vec, int low, int high, Compare compare)
     {
@@ -40,7 +36,7 @@ namespace Sort
         vec[high] = temp;
     }
 
-    /// Partitions the vector around a pivot using median-of-three selection.
+    /*Partitions the vector around a pivot using median-of-three selection.*/
     template <typename T, typename Compare>
     int partition(Vector<T> &vec, int low, int high, Compare compare)
     {
@@ -78,8 +74,9 @@ namespace Sort
         }
     }
 
-    /// In-place quicksort with median-of-three pivot selection.
-    /// The compare function should return: negative if a < b, 0 if a == b, positive if a > b.
+    /*In-place quicksort with median-of-three pivot selection.
+    The compare function should return: negative if a < b, 0 if a == b, positive if a > b.
+    */
     template <typename T, typename Compare>
     void quicksort(Vector<T> &vec, Compare compare)
     {

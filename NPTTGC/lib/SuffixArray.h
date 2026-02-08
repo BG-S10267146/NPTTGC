@@ -10,22 +10,23 @@
 #include "Search.h"
 #include "Sort.h"
 
-/**
- * Goh Jun Liang Bryan, Group 2, S10267146, P01
- * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
- */
 struct SuffixEntry
 {
-    // Position in combined string
+    /*Position in combined string*/ 
     int i;
-    // Item index (which item this suffix belongs to)
+    /*Item index (which item this suffix belongs to)*/ 
     int j;
 
     SuffixEntry() : i(0), j(0) {}
     SuffixEntry(int i, int j) : i(i), j(j) {}
 };
 
-/// Suffix array data structure for efficient substring searching across multiple strings.
+/*
+ * Goh Jun Liang Bryan, Group 2, S10267146, P01
+ * Haziq Danish Bin Hairil Rizal, Group2, S10267828, P01
+ * 
+ * Suffix array data structure for efficient substring searching across multiple strings.
+ */
 class SuffixArray
 {
 private:
@@ -48,7 +49,7 @@ public:
     {
     }
 
-    /// Builds a suffix array from multiple strings for efficient substring searching.
+    /*Builds a suffix array from multiple strings for efficient substring searching.*/ 
     template <typename T>
     static SuffixArray build(
         const Vector<T> &data,
@@ -106,7 +107,7 @@ public:
         return sa;
     }
 
-    /// Searches for a query string and returns indices of all items containing it as a substring.
+    /*Searches for a query string and returns indices of all items containing it as a substring.*/ 
     Vector<int> search(const std::string &query)
     {
         Vector<int> results;
