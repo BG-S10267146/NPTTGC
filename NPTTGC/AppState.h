@@ -24,7 +24,7 @@ public:
     Dictionary<int, Borrow> borrows;
     Set<int> borrowedGames;
     Dictionary<int, Review> reviews;
-    Dictionary<int, int> reviewsByGame;
+    Dictionary<int, Vector<int>> reviewsByGame;
 
     AppState();
 

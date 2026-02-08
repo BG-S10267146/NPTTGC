@@ -1,6 +1,7 @@
 id,username,isAdmin
-1,admin,1
 2,john,0
-3,alice,0
 4,josh,0
+6,test,0
+1,admin,1
+3,alice,0
 5,boy,0
