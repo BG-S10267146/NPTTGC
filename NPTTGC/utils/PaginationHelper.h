@@ -18,17 +18,17 @@ private:
 
     /// Validates pagination input
     /// Returns: '0'-'9' if digit selected, 'N' for next, 'P' for previous, 'G' for goto, 'Q' for quit, 'I' for invalid
-    char validateInput(const char *input)
+    char validateInput(const std::string &input)
     {
-        if (!input || strlen(input) == 0)
+        if (input.empty())
             return 'I';
 
         // Single digit (0-9)
-        if (strlen(input) == 1 && input[0] >= '0' && input[0] <= '9')
+        if (input.length() == 1 && input[0] >= '0' && input[0] <= '9')
             return input[0];
 
         // Single character commands (case-insensitive)
-        if (strlen(input) == 1)
+        if (input.length() == 1)
         {
             char cmd = input[0];
             if (cmd == 'N' || cmd == 'n')
@@ -49,8 +49,8 @@ public:
     /// @param totalItems Total number of items to paginate (must be >= 0)
     /// @param itemsPerPage Number of items per page (must be > 0, default: 10)
     PaginationHelper(int totalItems, int itemsPerPage = 10)
-        : totalItems(totalItems < 0 ? 0 : totalItems), 
-          itemsPerPage(itemsPerPage <= 0 ? 10 : itemsPerPage), 
+        : totalItems(totalItems < 0 ? 0 : totalItems),
+          itemsPerPage(itemsPerPage <= 0 ? 10 : itemsPerPage),
           currentPage(0)
     {
         if (this->totalItems == 0)
@@ -116,9 +116,8 @@ public:
     /// @return -1 if quit, -2 if navigation only (page changed), or 0-9 for selected item index
     int handleInput(bool withSelection)
     {
-        char choice[10];
         printf("Enter your choice: ");
-        StringHelper::readLine(choice, sizeof(choice));
+        std::string choice = StringHelper::readLine();
 
         char validatedInput = validateInput(choice);
 
@@ -170,20 +169,20 @@ public:
             else
             {
                 printf("Enter page number (1-%d): ", totalPages);
-                char pageBuf[10];
-                StringHelper::readLine(pageBuf, sizeof(pageBuf));
+                std::string pageBuf = StringHelper::readLine();
 
                 // Validate input contains only digits (and optional leading spaces)
                 bool validInput = true;
                 size_t i = 0;
-                while (pageBuf[i] == ' ') i++; // skip leading spaces
-                if (pageBuf[i] == '\0')
+                while (i < pageBuf.length() && pageBuf[i] == ' ')
+                    i++; // skip leading spaces
+                if (i >= pageBuf.length())
                 {
                     validInput = false;
                 }
                 else
                 {
-                    while (pageBuf[i] != '\0')
+                    while (i < pageBuf.length())
                     {
                         if (pageBuf[i] < '0' || pageBuf[i] > '9')
                         {
@@ -196,7 +195,7 @@ public:
 
                 if (validInput)
                 {
-                    int pageNum = atoi(pageBuf);
+                    int pageNum = atoi(pageBuf.c_str());
                     if (pageNum > 0 && pageNum <= totalPages)
                     {
                         currentPage = pageNum - 1;

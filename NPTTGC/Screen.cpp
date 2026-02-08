@@ -31,7 +31,7 @@ void Screen::login()
         printf("====================================\n");
 
         printf("Username (or 'quit' to exit): ");
-        std::string username = StringHelper::readLineToString();
+        std::string username = StringHelper::readLine();
 
         if (username == "quit")
         {
@@ -173,7 +173,7 @@ void Screen::addGame()
     printf("\n=== Add New Board Game ===\n");
 
     printf("Enter game name: ");
-    std::string gameName = StringHelper::readLineToString();
+    std::string gameName = StringHelper::readLine();
 
     if (gameName.empty())
     {
@@ -207,7 +207,7 @@ void Screen::addGame()
         printf("\nAll parameters must match the existing game to add a duplicate copy.\n");
         printf("Press Enter to use these values or type 'cancel' to abort.\n");
 
-        std::string confirmation = StringHelper::readLineToString();
+        std::string confirmation = StringHelper::readLine();
 
         if (confirmation == "cancel")
         {
@@ -271,7 +271,7 @@ void Screen::addGame()
         int currentYear = now.tm_year + 1900;
 
         printf("Enter year published (or press Enter for current year %d): ", currentYear);
-        std::string yearInput = StringHelper::readLineToString();
+        std::string yearInput = StringHelper::readLine();
 
         if (yearInput.empty())
         {
@@ -279,7 +279,7 @@ void Screen::addGame()
         }
         else
         {
-            if (!readIntegerFromString(yearInput.c_str(), yearPublished) || yearPublished < 1990 || yearPublished > currentYear)
+            if (!readIntegerFromString(yearInput, yearPublished) || yearPublished < 1990 || yearPublished > currentYear)
             {
                 printf("Error: Year published must be a valid number between 1990 and %d.\n", currentYear);
                 return;
@@ -313,7 +313,7 @@ void Screen::removeGame()
     printf("\n=== Remove Board Game ===\n");
 
     printf("Enter game name to search: ");
-    std::string searchTerm = StringHelper::readLineToString();
+    std::string searchTerm = StringHelper::readLine();
 
     Vector<Game> activeGames = appState.searchGames(
         searchTerm,
@@ -391,7 +391,7 @@ void Screen::addMember()
     printf("\n=== Add New Member ===\n");
 
     printf("Enter username: ");
-    std::string username = StringHelper::readLineToString();
+    std::string username = StringHelper::readLine();
 
     printf("Is this an admin account? (y/n): ");
     char isAdminChoice;
@@ -529,7 +529,7 @@ void Screen::viewReviews()
     printf("\n=== View Game Reviews ===\n");
 
     printf("Enter game name to search: ");
-    std::string searchTerm = StringHelper::readLineToString();
+    std::string searchTerm = StringHelper::readLine();
 
     Set<std::string> seenGameNames;
     Vector<Game> activeGames = appState.searchGames(
@@ -622,7 +622,7 @@ void Screen::borrowGame()
     printf("\n=== Borrow Board Game ===\n");
 
     printf("Enter game name to search: ");
-    std::string searchTerm = StringHelper::readLineToString();
+    std::string searchTerm = StringHelper::readLine();
 
     Vector<Game> availableGames = appState.searchGames(
         searchTerm,
@@ -817,7 +817,7 @@ void Screen::writeReview()
     printf("\n=== Write a Review ===\n");
 
     printf("Enter game name to search: ");
-    std::string searchTerm = StringHelper::readLineToString();
+    std::string searchTerm = StringHelper::readLine();
 
     Set<std::string> seenGameNames;
     Vector<Game> activeGames = appState.searchGames(
@@ -897,7 +897,7 @@ void Screen::writeReview()
         }
 
         printf("Enter review content: ");
-        std::string content = StringHelper::readLineToString();
+        std::string content = StringHelper::readLine();
 
         if (appState.addReview(selectedGameObj.id, rating, content))
         {

@@ -4,6 +4,7 @@
 #include <cctype>
 #include <cerrno>
 #include <climits>
+#include <string>
 
 namespace InputHelper
 {
@@ -42,9 +43,9 @@ namespace InputHelper
         return true;
     }
 
-    bool readIntegerFromString(const char *str, int &value)
+    bool readIntegerFromString(const std::string &str, int &value)
     {
-        if (str == nullptr || str[0] == '\0')
+        if (str.empty())
         {
             return false;
         }
@@ -52,7 +53,7 @@ namespace InputHelper
         // Reset errno before strtol to detect overflow
         errno = 0;
         char *endPtr;
-        long result = strtol(str, &endPtr, 10);
+        long result = strtol(str.c_str(), &endPtr, 10);
 
         // Check for conversion errors
         if (errno == ERANGE || result > INT_MAX || result < INT_MIN)
