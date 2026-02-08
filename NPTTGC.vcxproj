@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{f7bc14e7-418e-41da-9bc8-a4fc52ebb31f}</ProjectGuid>
+    <ProjectGuid>{81c357bd-f996-4789-9f5c-c9de8edd3872}</ProjectGuid>
     <RootNamespace>NPTTGC</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -58,24 +58,16 @@
   <ImportGroup Label="Shared">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"
-      Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
-      Label="LocalAppDataPlatform" />
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"
-      Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
-      Label="LocalAppDataPlatform" />
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"
-      Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
-      Label="LocalAppDataPlatform" />
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"
-      Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
-      Label="LocalAppDataPlatform" />
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -84,7 +76,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -99,7 +90,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,7 +117,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,40 +124,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="AppState.cpp" />
-    <ClCompile Include="Screen.cpp" />
-    <ClCompile Include="models\Member.cpp" />
-    <ClCompile Include="models\Game.cpp" />
+    <ClCompile Include="lib\Search.cpp" />
     <ClCompile Include="models\Borrow.cpp" />
+    <ClCompile Include="models\Game.cpp" />
+    <ClCompile Include="models\Member.cpp" />
     <ClCompile Include="models\Review.cpp" />
-    <ClCompile Include="lib\Sort.cpp" />
-    <ClCompile Include="Search.cpp" />
-    <ClCompile Include="utils\Input.cpp" />
+    <ClCompile Include="NPTTGC.cpp" />
+    <ClCompile Include="Screen.cpp" />
     <ClCompile Include="utils\Date.cpp" />
+    <ClCompile Include="utils\Input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppState.h" />
-    <ClInclude Include="lib\Search.h" />
-    <ClInclude Include="Screen.h" />
-    <ClInclude Include="models\Member.h" />
-    <ClInclude Include="models\Game.h" />
-    <ClInclude Include="models\Borrow.h" />
-    <ClInclude Include="models\Review.h" />
-    <ClInclude Include="utils\Input.h" />
-    <ClInclude Include="utils\Date.h" />
     <ClInclude Include="lib\CSVHelper.h" />
     <ClInclude Include="lib\Dictionary.h" />
+    <ClInclude Include="lib\Hash.h" />
+    <ClInclude Include="lib\Search.h" />
     <ClInclude Include="lib\Set.h" />
     <ClInclude Include="lib\Sort.h" />
     <ClInclude Include="lib\SuffixArray.h" />
     <ClInclude Include="lib\Vector.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="borrows.csv" />
-    <None Include="games.csv" />
-    <None Include="members.csv" />
-    <None Include="reviews.csv" />
+    <ClInclude Include="models\Borrow.h" />
+    <ClInclude Include="models\Game.h" />
+    <ClInclude Include="models\Member.h" />
+    <ClInclude Include="models\Review.h" />
+    <ClInclude Include="Screen.h" />
+    <ClInclude Include="utils\Date.h" />
+    <ClInclude Include="utils\Input.h" />
+    <ClInclude Include="utils\PaginationHelper.h" />
+    <ClInclude Include="utils\StringHelper.h" />
+    <ClInclude Include="utils\UIHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

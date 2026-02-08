@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="NPTTGC.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AppState.cpp">
@@ -24,60 +24,45 @@
     <ClCompile Include="Screen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="models\Member.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="models\Game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="models\Borrow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="models\Review.cpp">
+    <ClCompile Include="utils\Date.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="utils\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utils\Date.cpp">
+    <ClCompile Include="models\Borrow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Search.cpp">
+    <ClCompile Include="models\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="models\Member.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="models\Review.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\Search.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AppState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Screen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="models\Member.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="models\Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="models\Borrow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="models\Review.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utils\Input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utils\Date.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="lib\CSVHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\Dictionary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="lib\Hash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\Search.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="lib\Set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\Sort.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\SuffixArray.h">
@@ -86,22 +71,38 @@
     <ClInclude Include="lib\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\Search.h">
+    <ClInclude Include="models\Borrow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="borrows.csv">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="games.csv">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="members.csv">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="reviews.csv">
-      <Filter>Resource Files</Filter>
-    </None>
+    <ClInclude Include="models\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="models\Member.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="models\Review.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\Date.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\PaginationHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\StringHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\UIHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AppState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
