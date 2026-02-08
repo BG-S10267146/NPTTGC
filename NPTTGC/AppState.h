@@ -32,7 +32,6 @@ public:
     AppState();
 
     void loadData();
-    void saveData();
     void loadMembers(const std::string &filename);
     void loadGames(const std::string &filename);
     void loadBorrows(const std::string &filename);
@@ -46,7 +45,6 @@ public:
     bool removeGame(int gameId);
     Vector<Game> getGamesForPlayerCount(int playerCount);
     Vector<Game> searchGames(const std::string &query, std::function<bool(const Game &)> filter = nullptr);
-    Game *getGameById(int gameId);
     std::string getGameNameById(int gameId);
     void rebuildGameNames();
 
@@ -59,12 +57,10 @@ public:
     bool addReview(int gameId, int rating, const std::string &content);
     Vector<Review> getReviewsForGame(int gameId);
     Vector<Review> getReviewsForGameName(const std::string &gameName);
-    float getAverageRating(int gameId);
     float getAverageRatingByGameName(const std::string &gameName);
 
     std::string getMemberNameById(int memberId);
     Vector<Game> getGames();
-    Vector<Member> getMembers();
 };
 
 #endif

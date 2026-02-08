@@ -30,35 +30,6 @@ namespace StringHelper
         return true;
     }
 
-    /// Reads a line from stdin, trims newline, and checks if it's empty
-    /// @param buffer The buffer to store the input
-    /// @param bufferSize The size of the buffer
-    /// @return true if input is non-empty, false if empty
-    inline bool readNonEmptyLine(char *buffer, size_t bufferSize)
-    {
-        if (!readLine(buffer, bufferSize))
-        {
-            return false;
-        }
-        return strlen(buffer) > 0;
-    }
-
-    /// Compares two strings case-insensitively
-    /// @param str1 First string
-    /// @param str2 Second string
-    /// @return true if strings are equal (case-insensitive), false otherwise
-    inline bool equalsIgnoreCase(const char *str1, const char *str2)
-    {
-        if (!str1 || !str2)
-            return false;
-
-#ifdef _WIN32
-        return _stricmp(str1, str2) == 0;
-#else
-        return strcasecmp(str1, str2) == 0;
-#endif
-    }
-
     /// Reads a line from stdin and returns it as a std::string
     /// Trims the trailing newline character
     /// @return The input string with newline removed
