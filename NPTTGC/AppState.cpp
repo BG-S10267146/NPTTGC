@@ -367,9 +367,59 @@ Vector<Review> AppState::getReviewsForGame(int gameId)
     return gameReviews;
 }
 
+Vector<Review> AppState::getReviewsForGameName(const std::string &gameName)
+{
+    Vector<Review> allReviews;
+    Vector<Game> allGames = games.toVector();
+    
+    // First check if at least one non-deleted game with this name exists
+    bool hasActiveGame = false;
+    for (int i = 0; i < allGames.getSize(); i++)
+    {
+        if (allGames.get(i).name == gameName && !allGames.get(i).isDeleted)
+        {
+            hasActiveGame = true;
+            break;
+        }
+    }
+    
+    // If at least one copy exists, get reviews from ALL games with this name (including deleted ones)
+    if (hasActiveGame)
+    {
+        for (int i = 0; i < allGames.getSize(); i++)
+        {
+            if (allGames.get(i).name == gameName)
+            {
+                Vector<Review> gameReviews = getReviewsForGame(allGames.get(i).id);
+                for (int j = 0; j < gameReviews.getSize(); j++)
+                {
+                    allReviews.append(gameReviews.get(j));
+                }
+            }
+        }
+    }
+    
+    return allReviews;
+}
+
 float AppState::getAverageRating(int gameId)
 {
     Vector<Review> gameReviews = getReviewsForGame(gameId);
+    if (gameReviews.isEmpty())
+        return 0.0f;
+
+    int totalRating = 0;
+    for (int i = 0; i < gameReviews.getSize(); i++)
+    {
+        totalRating += gameReviews.get(i).rating;
+    }
+
+    return (float)totalRating / gameReviews.getSize();
+}
+
+float AppState::getAverageRatingByGameName(const std::string &gameName)
+{
+    Vector<Review> gameReviews = getReviewsForGameName(gameName);
     if (gameReviews.isEmpty())
         return 0.0f;
 

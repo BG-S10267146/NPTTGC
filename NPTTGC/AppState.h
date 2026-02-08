@@ -56,7 +56,9 @@ public:
 
     bool addReview(int gameId, int rating, const std::string &content);
     Vector<Review> getReviewsForGame(int gameId);
+    Vector<Review> getReviewsForGameName(const std::string &gameName);
     float getAverageRating(int gameId);
+    float getAverageRatingByGameName(const std::string &gameName);
 
     std::string getMemberNameById(int memberId);
     Vector<Game> getGames();
