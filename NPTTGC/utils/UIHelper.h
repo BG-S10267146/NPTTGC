@@ -17,21 +17,6 @@ namespace UIHelper
         printf("\n");
     }
 
-    /// Prints a header with title and separator
-    /// @param title The title to display
-    /// @param separatorLength Length of the separator lines
-    inline void printHeader(const char *title, int separatorLength = 65)
-    {
-        if (!title)
-        {
-            return;
-        }
-        printf("\n");
-        printSeparator(separatorLength);
-        printf("%s\n", title);
-        printSeparator(separatorLength);
-    }
-
     /// Prints pagination info line
     /// @param currentPage Current page number (1-indexed)
     /// @param totalPages Total number of pages

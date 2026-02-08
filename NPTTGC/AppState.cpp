@@ -14,14 +14,6 @@ void AppState::loadData()
     loadReviews("reviews.csv");
 }
 
-void AppState::saveData()
-{
-    saveToFile<int, Member>("members.csv", Member::csvHeader(), members, Member::toCSVRow);
-    saveToFile<int, Game>("games.csv", Game::csvHeader(), games, Game::toCSVRow);
-    saveToFile<int, Borrow>("borrows.csv", Borrow::csvHeader(), borrows, Borrow::toCSVRow);
-    saveToFile<int, Review>("reviews.csv", Review::csvHeader(), reviews, Review::toCSVRow);
-}
-
 void AppState::loadMembers(const std::string &filename)
 {
     auto buildMemberAndIndexUsername = [&](const Vector<std::string> &row)
@@ -214,16 +206,6 @@ Vector<Game> AppState::searchGames(const std::string &query, std::function<bool(
     return result;
 }
 
-Game *AppState::getGameById(int gameId)
-{
-    if (!games.exists(gameId))
-        return nullptr;
-
-    static Game gameCache;
-    gameCache = games.get(gameId);
-    return &gameCache;
-}
-
 std::string AppState::getGameNameById(int gameId)
 {
     if (games.exists(gameId))
@@ -389,21 +371,6 @@ Vector<Review> AppState::getReviewsForGameName(const std::string &gameName)
     return allReviews;
 }
 
-float AppState::getAverageRating(int gameId)
-{
-    Vector<Review> gameReviews = getReviewsForGame(gameId);
-    if (gameReviews.isEmpty())
-        return 0.0f;
-
-    int totalRating = 0;
-    for (int i = 0; i < gameReviews.getSize(); i++)
-    {
-        totalRating += gameReviews.get(i).rating;
-    }
-
-    return (float)totalRating / gameReviews.getSize();
-}
-
 float AppState::getAverageRatingByGameName(const std::string &gameName)
 {
     Vector<Review> gameReviews = getReviewsForGameName(gameName);
@@ -431,11 +398,6 @@ std::string AppState::getMemberNameById(int memberId)
 Vector<Game> AppState::getGames()
 {
     return games.toVector();
-}
-
-Vector<Member> AppState::getMembers()
-{
-    return members.toVector();
 }
 
 void AppState::rebuildGameNames()
