@@ -45,31 +45,37 @@ public:
     }
 
     /// Builds a suffix array from multiple strings for efficient substring searching.
-    static SuffixArray build(int itemCount, std::function<std::string(int)> getItem)
+    template <typename T>
+    static SuffixArray build(
+        const Vector<T> &data,
+        std::function<std::string(const T &)> getContent,
+        std::function<int(const T &)> getId)
     {
         SuffixArray sa;
 
-        for (int i = 0, k = 0; i < itemCount; i++)
+        for (int i = 0, k = 0; i < data.getSize(); i++)
         {
             if (i > 0)
             {
                 sa.text += '\x1F';
-                sa.suffixes.append(SuffixEntry(k, i - 1));
+                sa.suffixes.append(SuffixEntry(k, getId(data[i - 1])));
                 k++;
             }
 
-            sa.text += sa.toLowerCase(getItem(i));
+            const T &item = data[i];
+            std::string content = getContent(item);
+            sa.text += sa.toLowerCase(content);
 
-            for (int j = 0; j < getItem(i).length(); j++, k++)
+            for (int j = 0; j < content.length(); j++, k++)
             {
-                sa.suffixes.append(SuffixEntry(k, i));
+                sa.suffixes.append(SuffixEntry(k, getId(item)));
             }
         }
 
         sa.size = sa.text.length();
 
-        std::function<int(const SuffixEntry &, const SuffixEntry &)> compareFunc =
-            [&sa](const SuffixEntry &a, const SuffixEntry &b) -> int
+        auto compareFunc =
+            [&](const SuffixEntry &a, const SuffixEntry &b)
         {
             int pos1 = a.i;
             int pos2 = b.i;
@@ -90,6 +96,7 @@ public:
             return (pos1 == (int)sa.text.length()) ? -1 : 1;
         };
 
+        sa.size = sa.suffixes.getSize();
         Sort::quicksort<SuffixEntry>(sa.suffixes, compareFunc);
 
         return sa;
@@ -131,11 +138,6 @@ public:
         }
 
         return results;
-    }
-
-    int getSize() const
-    {
-        return size;
     }
 };
 

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <optional>
+#include <functional>
 #include "lib/Vector.h"
 #include "lib/Dictionary.h"
 #include "lib/Set.h"
@@ -44,9 +45,10 @@ public:
     bool addGame(const Game &game);
     bool removeGame(int gameId);
     Vector<Game> getGamesForPlayerCount(int playerCount);
-    Vector<int> searchGames(const std::string &query);
+    Vector<Game> searchGames(const std::string &query, std::function<bool(const Game &)> filter = nullptr);
     Game *getGameById(int gameId);
     std::string getGameNameById(int gameId);
+    void rebuildGameNames();
 
     bool borrowGame(int gameId);
     bool returnGame(int borrowId);

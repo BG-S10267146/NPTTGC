@@ -331,7 +331,8 @@ public:
         return result;
     }
 
-    /// Applies a function to each key-value pair in the dictionary.
+    /// Applies a function to each key-value pair in the dictionary. If no modifications
+    /// are made to the dictionary, this will always iterate in the same order.
     void forEach(std::function<void(const K &, const V &)> func) const
     {
         for (int i = 0; i < capacity; i++)

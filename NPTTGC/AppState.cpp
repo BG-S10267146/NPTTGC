@@ -55,11 +55,8 @@ void AppState::loadGames(const std::string &filename)
         Game::fromCSVRow,
         [](const Game &g)
         { return g.id; });
+    rebuildGameNames();
 
-    Vector<Game> gameList = games.toVector();
-    gameNames = SuffixArray::build(gameList.getSize(), [&](int i)
-                                   { return gameList[i].name; });
-    
     printf("Loaded %d games from %s\n", games.getSize(), filename.c_str());
 }
 
@@ -158,12 +155,8 @@ void AppState::logout()
 bool AppState::addGame(const Game &game)
 {
     games.insert(game.id, game);
-    Vector<Game> gameList = games.toVector();
-    gameNames = SuffixArray::build(
-        gameList.getSize(),
-        [&](int i)
-        { return gameList[i].name; });
-    saveToFile<Game>("games.csv", Game::csvHeader(), gameList, Game::toCSVRow);
+    rebuildGameNames();
+    saveToFile<int, Game>("games.csv", Game::csvHeader(), games, Game::toCSVRow);
     return true;
 }
 
@@ -182,39 +175,43 @@ bool AppState::removeGame(int gameId)
     Game game = games.get(gameId);
     game.isDeleted = true;
     games.insert(gameId, game);
-
-    Vector<Game> gameList = games.toVector();
-    gameNames = SuffixArray::build(gameList.getSize(), [&](int i)
-                                   { return gameList[i].name; });
-    saveToFile<Game>("games.csv", Game::csvHeader(), gameList, Game::toCSVRow);
+    rebuildGameNames();
+    saveToFile<int, Game>("games.csv", Game::csvHeader(), games, Game::toCSVRow);
     return true;
 }
 
 Vector<Game> AppState::getGamesForPlayerCount(int playerCount)
 {
-    Vector<Game> allGames = games.toVector();
     Vector<Game> matchingGames;
-    for (int i = 0; i < allGames.getSize(); i++)
-    {
-        Game game = allGames.get(i);
+    games.forEach([&](const int &id, const Game &game)
+                  {
         if (!game.isDeleted && playerCount >= game.minPlayers && playerCount <= game.maxPlayers)
         {
             matchingGames.append(game);
-        }
-    }
+        } });
 
-    if (matchingGames.getSize() > 0)
-    {
-        Sort::quicksort(matchingGames, [](const Game &a, const Game &b)
-                        { return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0); });
-    }
+    Sort::quicksort(
+        matchingGames,
+        [](const Game &a, const Game &b)
+        { return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0); });
 
     return matchingGames;
 }
 
-Vector<int> AppState::searchGames(const std::string &query)
+Vector<Game> AppState::searchGames(const std::string &query, std::function<bool(const Game &)> filter)
 {
-    return gameNames.search(query);
+    Vector<int> ids = gameNames.search(query);
+    Vector<Game> result;
+    for (int i = 0; i < ids.getSize(); i++)
+    {
+        Game game = games.get(ids[i]);
+        if (filter == nullptr || filter(game))
+        {
+            result.append(game);
+        }
+    }
+
+    return result;
 }
 
 Game *AppState::getGameById(int gameId)
@@ -371,7 +368,7 @@ Vector<Review> AppState::getReviewsForGameName(const std::string &gameName)
 {
     Vector<Review> allReviews;
     Vector<Game> allGames = games.toVector();
-    
+
     // First check if at least one non-deleted game with this name exists
     bool hasActiveGame = false;
     for (int i = 0; i < allGames.getSize(); i++)
@@ -382,7 +379,7 @@ Vector<Review> AppState::getReviewsForGameName(const std::string &gameName)
             break;
         }
     }
-    
+
     // If at least one copy exists, get reviews from ALL games with this name (including deleted ones)
     if (hasActiveGame)
     {
@@ -398,7 +395,7 @@ Vector<Review> AppState::getReviewsForGameName(const std::string &gameName)
             }
         }
     }
-    
+
     return allReviews;
 }
 
@@ -449,4 +446,14 @@ Vector<Game> AppState::getGames()
 Vector<Member> AppState::getMembers()
 {
     return members.toVector();
+}
+
+void AppState::rebuildGameNames()
+{
+    gameNames = SuffixArray::build<Game>(
+        games.toVector(),
+        [](const Game &game)
+        { return game.name; },
+        [](const Game &game)
+        { return game.id; });
 }

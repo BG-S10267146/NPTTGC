@@ -8,26 +8,30 @@ Screen::Screen(AppState &state) : appState(state) {}
 
 // Helper function to validate pagination input
 // Returns: '0'-'9' if digit selected, 'N' for next, 'P' for previous, 'G' for goto, 'Q' for quit, 'I' for invalid
-char Screen::validatePaginationInput(const char* input)
+char Screen::validatePaginationInput(const char *input)
 {
     if (!input || strlen(input) == 0)
         return 'I';
-    
+
     // Single digit (0-9)
     if (strlen(input) == 1 && input[0] >= '0' && input[0] <= '9')
         return input[0];
-    
+
     // Single character commands (case-insensitive)
     if (strlen(input) == 1)
     {
         char cmd = input[0];
-        if (cmd == 'N' || cmd == 'n') return 'N';
-        if (cmd == 'P' || cmd == 'p') return 'P';
-        if (cmd == 'G' || cmd == 'g') return 'G';
-        if (cmd == 'Q' || cmd == 'q') return 'Q';
+        if (cmd == 'N' || cmd == 'n')
+            return 'N';
+        if (cmd == 'P' || cmd == 'p')
+            return 'P';
+        if (cmd == 'G' || cmd == 'g')
+            return 'G';
+        if (cmd == 'Q' || cmd == 'q')
+            return 'Q';
     }
-    
-    return 'I';  // Invalid
+
+    return 'I'; // Invalid
 }
 
 void Screen::startup()
@@ -303,26 +307,10 @@ void Screen::removeGame()
     searchBuf[strcspn(searchBuf, "\n")] = 0;
     std::string searchTerm = searchBuf;
 
-    Vector<int> matchingGameIndices = appState.searchGames(searchTerm);
-
-    if (matchingGameIndices.isEmpty())
-    {
-        printf("No games found matching your search.\n");
-        return;
-    }
-
-    Vector<Game> activeGames;
-    const Vector<Game> &allGames = appState.getGames();
-
-    for (int i = 0; i < matchingGameIndices.getSize(); i++)
-    {
-        int gameIdx = matchingGameIndices.get(i);
-        Game game = allGames.get(gameIdx);
-        if (!game.isDeleted)
-        {
-            activeGames.append(game);
-        }
-    }
+    Vector<Game> activeGames = appState.searchGames(
+        searchTerm,
+        [](const Game &g)
+        { return !g.isDeleted; });
 
     if (activeGames.isEmpty())
     {
@@ -728,28 +716,10 @@ void Screen::viewReviews()
     searchBuf[strcspn(searchBuf, "\n")] = 0;
     std::string searchTerm = searchBuf;
 
-    Vector<int> matchingGameIndices = appState.searchGames(searchTerm);
-
-    if (matchingGameIndices.isEmpty())
-    {
-        printf("No games found matching your search.\n");
-        return;
-    }
-
-    Vector<Game> activeGames;
-    Set<std::string> seenGameNames;
-    const Vector<Game> &allGames = appState.getGames();
-
-    for (int i = 0; i < matchingGameIndices.getSize(); i++)
-    {
-        int gameIdx = matchingGameIndices.get(i);
-        Game game = allGames.get(gameIdx);
-        if (!game.isDeleted && !seenGameNames.exists(game.name))
-        {
-            activeGames.append(game);
-            seenGameNames.insert(game.name);
-        }
-    }
+    Vector<Game> activeGames = appState.searchGames(
+        searchTerm,
+        [](const Game &g)
+        { return !g.isDeleted; });
 
     if (activeGames.isEmpty())
     {
@@ -904,21 +874,10 @@ void Screen::borrowGame()
     searchBuf[strcspn(searchBuf, "\n")] = 0;
     std::string searchTerm = searchBuf;
 
-    Vector<int> matchingGameIndices = appState.searchGames(searchTerm);
-
-    Vector<Game> availableGames;
-    const Vector<Game> &allGames = appState.getGames();
-
-    for (int i = 0; i < matchingGameIndices.getSize(); i++)
-    {
-        int gameIdx = matchingGameIndices.get(i);
-        Game game = allGames.get(gameIdx);
-
-        if (!game.isDeleted && !appState.isGameBorrowed(game.id))
-        {
-            availableGames.append(game);
-        }
-    }
+    Vector<Game> availableGames = appState.searchGames(
+        searchTerm,
+        [&](const Game &g)
+        { return !g.isDeleted && !appState.isGameBorrowed(g.id); });
 
     if (availableGames.isEmpty())
     {
@@ -1311,28 +1270,10 @@ void Screen::writeReview()
     searchBuf[strcspn(searchBuf, "\n")] = 0;
     std::string searchTerm = searchBuf;
 
-    Vector<int> matchingGameIndices = appState.searchGames(searchTerm);
-
-    if (matchingGameIndices.isEmpty())
-    {
-        printf("No games found matching your search.\n");
-        return;
-    }
-
-    Vector<Game> activeGames;
-    Set<std::string> seenGameNames;
-    const Vector<Game> &allGames = appState.getGames();
-
-    for (int i = 0; i < matchingGameIndices.getSize(); i++)
-    {
-        int gameIdx = matchingGameIndices.get(i);
-        Game game = allGames.get(gameIdx);
-        if (!game.isDeleted && !seenGameNames.exists(game.name))
-        {
-            activeGames.append(game);
-            seenGameNames.insert(game.name);
-        }
-    }
+    Vector<Game> activeGames = appState.searchGames(
+        searchTerm,
+        [](const Game &g)
+        { return !g.isDeleted; });
 
     if (activeGames.isEmpty())
     {
