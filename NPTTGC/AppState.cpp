@@ -89,7 +89,13 @@ void AppState::loadReviews(const std::string &filename)
     auto buildReviewAndIndexByGame = [&](const Vector<std::string> &row)
     {
         Review r = Review::fromCSVRow(row);
-        reviewsByGame.insert(r.gameId, r.reviewId);
+        Vector<int> reviewIds;
+        if (reviewsByGame.exists(r.gameId))
+        {
+            reviewIds = reviewsByGame.get(r.gameId);
+        }
+        reviewIds.append(r.reviewId);
+        reviewsByGame.insert(r.gameId, reviewIds);
         return r;
     };
 
@@ -320,7 +326,13 @@ bool AppState::addReview(int gameId, int rating, const std::string &content)
     newReview.content = content;
 
     reviews.insert(newReview.reviewId, newReview);
-    reviewsByGame.insert(gameId, newReview.reviewId);
+    Vector<int> reviewIds;
+    if (reviewsByGame.exists(gameId))
+    {
+        reviewIds = reviewsByGame.get(gameId);
+    }
+    reviewIds.append(newReview.reviewId);
+    reviewsByGame.insert(gameId, reviewIds);
 
     saveToFile<int, Review>("reviews.csv", Review::csvHeader(), reviews, Review::toCSVRow);
     return true;
@@ -328,15 +340,15 @@ bool AppState::addReview(int gameId, int rating, const std::string &content)
 
 Vector<Review> AppState::getReviewsForGame(int gameId)
 {
-    Vector<Review> allReviews = reviews.toVector();
     Vector<Review> gameReviews;
-    for (int i = 0; i < allReviews.getSize(); i++)
+    if (!reviewsByGame.exists(gameId))
+        return gameReviews;
+
+    Vector<int> reviewIds = reviewsByGame.get(gameId);
+    for (int i = 0; i < reviewIds.getSize(); i++)
     {
-        Review review = allReviews.get(i);
-        if (review.gameId == gameId)
-        {
-            gameReviews.append(review);
-        }
+        int reviewId = reviewIds.get(i);
+        gameReviews.append(reviews.get(reviewId));
     }
     return gameReviews;
 }
