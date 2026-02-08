@@ -241,12 +241,7 @@ bool AppState::borrowGame(int gameId)
     if (borrowedGames.exists(gameId))
         return false;
 
-    Borrow newBorrow;
-    newBorrow.borrowId = borrows.maxKey() + 1;
-    newBorrow.memberId = currentUserId;
-    newBorrow.gameId = gameId;
-    newBorrow.dateBorrowed = getCurrentDateTime();
-    newBorrow.dateReturned = "N/A";
+    Borrow newBorrow(borrows.maxKey() + 1, currentUserId, gameId, getCurrentDateTime());
 
     borrows.insert(newBorrow.borrowId, newBorrow);
     Vector<int> borrowIds;
@@ -329,12 +324,7 @@ bool AppState::addReview(int gameId, int rating, const std::string &content)
     if (currentUserId == -1)
         return false;
 
-    Review newReview;
-    newReview.reviewId = reviews.maxKey() + 1;
-    newReview.userId = currentUserId;
-    newReview.gameId = gameId;
-    newReview.rating = rating;
-    newReview.content = content;
+    Review newReview(reviews.maxKey() + 1, currentUserId, gameId, rating, content);
 
     reviews.insert(newReview.reviewId, newReview);
     Vector<int> reviewIds;
